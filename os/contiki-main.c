@@ -46,6 +46,7 @@
 #include "sys/energest.h"
 #include "sys/stack-check.h"
 #include "dev/watchdog.h"
+#include "lib/null-seeder.h"
 
 #include "net/app-layer/coap/coap-engine.h"
 #include "services/rpl-border-router/rpl-border-router.h"
@@ -85,6 +86,8 @@ main(void)
 #endif
 
   platform_init_stage_two();
+
+  null_seeder_seed();
 
   LOG_INFO("Starting " CONTIKI_VERSION_STRING "\n");
   LOG_INFO("- Routing: %s\n", NETSTACK_ROUTING.name);
