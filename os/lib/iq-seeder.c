@@ -45,6 +45,12 @@
 #include "lib/aes-128.h"
 #include <string.h>
 
+#ifdef IQ_SEEDER_CONF_RADIO
+#define RADIO IQ_SEEDER_CONF_RADIO
+#else /* IQ_SEEDER_CONF_RADIO */
+#define RADIO NETSTACK_RADIO
+#endif /* IQ_SEEDER_CONF_RADIO */
+
 #define COLUMN_COUNT  50
 #define ROW_COUNT     16
 
@@ -122,9 +128,9 @@ seed_16_bytes(uint8_t *result)
   byte_pos = 0;
   memset(accumulator, 0, COLUMN_COUNT);
 
-  NETSTACK_RADIO.on();
+  RADIO.on();
   for(iq_count = 0; iq_count < (COLUMN_COUNT * 8 / 2); iq_count++) {
-    NETSTACK_RADIO.get_value(RADIO_PARAM_IQ_LSBS, &iq);
+    RADIO.get_value(RADIO_PARAM_IQ_LSBS, &iq);
 
     /* append I/Q LSBs to accumulator */
     accumulator[byte_pos] |= iq << bit_pos;
@@ -134,7 +140,7 @@ seed_16_bytes(uint8_t *result)
       byte_pos++;
     }
   }
-  NETSTACK_RADIO.off();
+  RADIO.off();
   extract(result, accumulator);
 }
 /*---------------------------------------------------------------------------*/
