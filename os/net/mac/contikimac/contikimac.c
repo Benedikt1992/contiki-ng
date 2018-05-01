@@ -207,6 +207,7 @@ struct buffered_frame {
 };
 
 static void schedule_duty_cycle(rtimer_clock_t time);
+static int schedule_duty_cycle_precise(rtimer_clock_t time);
 static void duty_cycle_wrapper(struct rtimer *t, void *ptr);
 static char duty_cycle(void);
 static void on_sfd(void);
@@ -228,6 +229,7 @@ static struct contikimac_phase *obtain_phase_lock_data(void);
 static void strobe_soon(void);
 #endif /* !ILOS_ENABLED */
 static void schedule_strobe(rtimer_clock_t time);
+static int schedule_strobe_precise(rtimer_clock_t time);
 static void strobe_wrapper(struct rtimer *rt, void *ptr);
 static char strobe(void);
 static int should_strobe_again(void);
@@ -331,7 +333,7 @@ shift_to_future(rtimer_clock_t time)
   /* this assumes that WAKE_UP_COUNTER_INTERVAL is a power of 2 */
   time = (RTIMER_NOW() & (~(WAKE_UP_COUNTER_INTERVAL - 1)))
       | (time & (WAKE_UP_COUNTER_INTERVAL - 1));
-  while(!rtimer_is_schedulable(time)) {
+  while(rtimer_has_timed_out(time)) {
     time += WAKE_UP_COUNTER_INTERVAL;
   }
 
@@ -371,6 +373,15 @@ schedule_duty_cycle(rtimer_clock_t time)
   if(rtimer_set(&timer, time, 1, duty_cycle_wrapper, NULL) != RTIMER_OK) {
     LOG_ERR("rtimer_set failed\n");
   }
+}
+/*---------------------------------------------------------------------------*/
+static int
+schedule_duty_cycle_precise(rtimer_clock_t time)
+{
+  timer.time = time;
+  timer.func = duty_cycle_wrapper;
+  timer.ptr = NULL;
+  return rtimer_set_precise(&timer);
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -453,8 +464,8 @@ duty_cycle(void)
               + RADIO_ASYNC_SHR_TIME
               + 3 /* some tolerance */);
           PT_YIELD(&pt); /* wait for timeout or on_fifop, whatever comes first */
-          if(u.duty_cycle.rejected_frame && rtimer_is_schedulable(timer.time)) {
-            rtimer_arch_schedule(RTIMER_NOW());
+          if(u.duty_cycle.rejected_frame) {
+            rtimer_cancel();
           }
           u.duty_cycle.waiting_for_shr = 0;
           if(!u.duty_cycle.got_shr) {
@@ -930,15 +941,6 @@ PROCESS_THREAD(post_processing, ev, data)
         NETSTACK_RADIO_ASYNC.prepare(u.strobe.prepared_frame);
 
         /* schedule strobe */
-#if ILOS_ENABLED
-        if(!rtimer_is_schedulable(u.strobe.next_transmission - STROBE_GUARD_TIME)) {
-          LOG_ERR("strobe starts too early\n");
-          u.strobe.result = MAC_TX_ERR_FATAL;
-          on_strobed();
-          continue;
-        }
-#endif /* ILOS_ENABLED */
-
 #if !ILOS_ENABLED && CONTIKIMAC_WITH_SECURE_PHASE_LOCK
         if(u.strobe.is_broadcast) {
           strobe_soon();
@@ -969,9 +971,6 @@ PROCESS_THREAD(post_processing, ev, data)
             strobe_soon();
           } else {
             u.strobe.next_transmission = shift_to_future(phase->t - uncertainty);
-            if(!rtimer_is_schedulable(u.strobe.next_transmission - STROBE_GUARD_TIME)) {
-              u.strobe.next_transmission += WAKE_UP_COUNTER_INTERVAL;
-            }
             u.strobe.timeout = u.strobe.next_transmission + 2 * uncertainty;
           }
         }
@@ -992,9 +991,6 @@ PROCESS_THREAD(post_processing, ev, data)
             strobe_soon();
           } else {
             u.strobe.next_transmission = shift_to_future(phase->t - PHASE_LOCK_GUARD_TIME);
-            if(!rtimer_is_schedulable(u.strobe.next_transmission - STROBE_GUARD_TIME)) {
-              u.strobe.next_transmission += WAKE_UP_COUNTER_INTERVAL;
-            }
             /* TODO this timeout does not resemble ContikiMAC's original behavior */
             u.strobe.timeout = u.strobe.next_transmission + WAKE_UP_COUNTER_INTERVAL;
           }
@@ -1005,7 +1001,19 @@ PROCESS_THREAD(post_processing, ev, data)
         strobe_soon();
 #endif /* !CONTIKIMAC_WITH_PHASE_LOCK */
 
-        schedule_strobe(u.strobe.next_transmission - STROBE_GUARD_TIME);
+#if ILOS_ENABLED
+        if(schedule_strobe_precise(u.strobe.next_transmission - STROBE_GUARD_TIME) != RTIMER_OK) {
+          LOG_ERR("strobe starts too early\n");
+          u.strobe.result = MAC_TX_ERR_FATAL;
+          on_strobed();
+          continue;
+        }
+#else /* ILOS_ENABLED */
+        while(schedule_strobe_precise(u.strobe.next_transmission - STROBE_GUARD_TIME) != RTIMER_OK) {
+          u.strobe.next_transmission += WAKE_UP_COUNTER_INTERVAL;
+          u.strobe.timeout += WAKE_UP_COUNTER_INTERVAL;
+        }
+#endif /* ILOS_ENABLED */
 
         /* process strobe result */
         PROCESS_YIELD_UNTIL(ev == PROCESS_EVENT_POLL);
@@ -1020,10 +1028,10 @@ PROCESS_THREAD(post_processing, ev, data)
     /* prepare next duty cycle */
     memset(&u.duty_cycle, 0, sizeof(u.duty_cycle));
     duty_cycle_next = shift_to_future(duty_cycle_next);
-    while(!rtimer_is_schedulable(duty_cycle_next - LPM_DEEP_SWITCHING)) {
+
+    while(schedule_duty_cycle_precise(duty_cycle_next - LPM_DEEP_SWITCHING) != RTIMER_OK) {
       duty_cycle_next += WAKE_UP_COUNTER_INTERVAL;
     }
-    schedule_duty_cycle(duty_cycle_next - LPM_DEEP_SWITCHING);
     can_skip = 1;
   }
 
@@ -1116,6 +1124,15 @@ schedule_strobe(rtimer_clock_t time)
   if(rtimer_set(&timer, time, 1, strobe_wrapper, NULL) != RTIMER_OK) {
     LOG_ERR("rtimer_set failed\n");
   }
+}
+/*---------------------------------------------------------------------------*/
+static int
+schedule_strobe_precise(rtimer_clock_t time)
+{
+  timer.time = time;
+  timer.func = strobe_wrapper;
+  timer.ptr = NULL;
+  return rtimer_set_precise(&timer);
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -1234,12 +1251,9 @@ strobe(void)
       }
 
       /* go back to sleep if time allows */
-      if(rtimer_is_schedulable(u.strobe.next_transmission
+      if(schedule_strobe_precise(u.strobe.next_transmission
           - LPM_SWITCHING
-          - RADIO_ASYNC_TRANSMIT_CALIBRATION_TIME)) {
-        schedule_strobe(u.strobe.next_transmission
-            - LPM_SWITCHING
-            - RADIO_ASYNC_TRANSMIT_CALIBRATION_TIME);
+          - RADIO_ASYNC_TRANSMIT_CALIBRATION_TIME) == RTIMER_OK) {
         PT_YIELD(&pt);
       }
     }
@@ -1449,11 +1463,8 @@ send(mac_callback_t sent, void *ptr)
 static void
 try_skip_to_send(void)
 {
-  if(!skipped
-      && can_skip
-      && rtimer_is_schedulable(timer.time)) {
+  if(!skipped && can_skip && rtimer_cancel()) {
     skipped = 1;
-    rtimer_arch_schedule(RTIMER_NOW());
   }
 }
 /*---------------------------------------------------------------------------*/
