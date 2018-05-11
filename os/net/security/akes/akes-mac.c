@@ -41,6 +41,8 @@
 #include "net/security/akes/akes-trickle.h"
 #include "net/security/akes/akes.h"
 #include "net/mac/csma/csma-ccm-inputs.h"
+#include "net/mac/contikimac/contikimac-ccm-inputs.h"
+#include "net/mac/contikimac/ilos.h"
 #include "net/mac/csl/csl-ccm-inputs.h"
 #include "net/mac/csl/csl-framer.h"
 #include "net/mac/cmd-broker.h"
@@ -56,6 +58,10 @@
 #include "sys/log.h"
 #define LOG_MODULE "AKES-MAC"
 #define LOG_LEVEL LOG_LEVEL_MAC
+
+#if AKES_NBR_WITH_GROUP_KEYS
+uint8_t akes_mac_group_key[AES_128_KEY_LENGTH];
+#endif /* AKES_NBR_WITH_GROUP_KEYS */
 
 /*---------------------------------------------------------------------------*/
 clock_time_t
@@ -141,6 +147,9 @@ akes_mac_get_sec_lvl(void)
     case AKES_ACK_IDENTIFIER:
       return AKES_ACKS_SEC_LVL;
     case AKES_UPDATE_IDENTIFIER:
+#if AKES_DELETE_WITH_UPDATEACKS
+    case AKES_UPDATEACK_IDENTIFIER:
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
       return AKES_UPDATES_SEC_LVL;
     }
     break;
@@ -152,6 +161,19 @@ akes_mac_get_sec_lvl(void)
   }
   return 0;
 }
+/*---------------------------------------------------------------------------*/
+#if LLSEC802154_USES_FRAME_COUNTER
+void
+akes_mac_add_security_header(struct akes_nbr *receiver)
+{
+  if(!anti_replay_set_counter(receiver ? &receiver->anti_replay_info : NULL)) {
+    watchdog_reboot();
+  }
+#if !ANTI_REPLAY_WITH_SUPPRESSION
+  packetbuf_set_attr(PACKETBUF_ATTR_SECURITY_LEVEL, akes_mac_get_sec_lvl());
+#endif /* !ANTI_REPLAY_WITH_SUPPRESSION */
+}
+#endif /* LLSEC802154_USES_FRAME_COUNTER */
 /*---------------------------------------------------------------------------*/
 uint8_t *
 akes_mac_prepare_command(uint8_t cmd_id, const linkaddr_t *dest)
@@ -196,8 +218,29 @@ send(mac_callback_t sent, void *ptr)
       return;
     }
     receiver = entry->permanent;
+#if ANTI_REPLAY_WITH_SUPPRESSION
+    packetbuf_set_attr(PACKETBUF_ATTR_NEIGHBOR_INDEX, akes_nbr_index_of(entry->permanent));
+#endif /* ANTI_REPLAY_WITH_SUPPRESSION */
+#if MAC_CONF_WITH_CSL
     csl_framer_set_seqno(receiver);
+#endif /* MAC_CONF_WITH_CSL */
   }
+
+#if ILOS_ENABLED
+  if(receiver) {
+    potr_set_seqno(receiver);
+  }
+#elif POTR_ENABLED
+  if(receiver) {
+    potr_set_seqno(receiver);
+  } else {
+    akes_mac_add_security_header(receiver);
+    anti_replay_suppress_counter();
+  }
+#elif LLSEC802154_USES_FRAME_COUNTER
+  akes_mac_add_security_header(receiver);
+  anti_replay_suppress_counter();
+#endif /* LLSEC802154_USES_FRAME_COUNTER */
 
   AKES_MAC_STRATEGY.send(sent, ptr);
 }
@@ -206,6 +249,15 @@ static int
 create(void)
 {
   int result;
+
+#if POTR_ENABLED && !ILOS_ENABLED
+  if(!packetbuf_holds_broadcast()) {
+    /* increment frame counter of unicasts in each transmission and retransmission */
+    akes_mac_add_security_header(akes_mac_is_helloack()
+        ? akes_nbr_get_receiver_entry()->tentative
+        : akes_nbr_get_receiver_entry()->permanent);
+  }
+#endif /* POTR_ENABLED && !ILOS_ENABLED */
 
   if(akes_mac_is_hello()) {
     akes_create_hello();
@@ -254,7 +306,11 @@ akes_mac_aead(uint8_t *key, int shall_encrypt, uint8_t *result, int forward)
   AKES_MAC_STRATEGY.set_nonce(nonce, forward);
   a = packetbuf_hdrptr();
   if(shall_encrypt) {
+#if AKES_NBR_WITH_GROUP_KEYS && PACKETBUF_WITH_UNENCRYPTED_BYTES
+    a_len = packetbuf_hdrlen() + packetbuf_attr(PACKETBUF_ATTR_UNENCRYPTED_BYTES);
+#else /* AKES_NBR_WITH_GROUP_KEYS && PACKETBUF_WITH_UNENCRYPTED_BYTES */
     a_len = packetbuf_hdrlen();
+#endif /* AKES_NBR_WITH_GROUP_KEYS && PACKETBUF_WITH_UNENCRYPTED_BYTES */
     m = a + a_len;
     m_len = packetbuf_totlen() - a_len;
   } else {
@@ -264,7 +320,11 @@ akes_mac_aead(uint8_t *key, int shall_encrypt, uint8_t *result, int forward)
   }
 
   AES_128_GET_LOCK();
+#if MAC_CONF_WITH_CONTIKIMAC
+  contikimac_ccm_inputs_set_derived_key(key);
+#else /* MAC_CONF_WITH_CONTIKIMAC */
   CCM_STAR.set_key(key);
+#endif /* MAC_CONF_WITH_CONTIKIMAC */
   CCM_STAR.aead(nonce,
       m, m_len,
       a, a_len,
@@ -288,10 +348,25 @@ akes_mac_verify(uint8_t *key)
       akes_mac_mic_len());
 }
 /*---------------------------------------------------------------------------*/
+#if MAC_CONF_WITH_CSMA
 static void
 input(void)
 {
+  /* redirect input calls from radio drivers to CSMA */
+  csma_driver.input();
+}
+void
+akes_mac_input_from_csma(void)
+#else /* MAC_CONF_WITH_CSMA */
+static void
+input(void)
+#endif /* MAC_CONF_WITH_CSMA */
+{
   struct akes_nbr_entry *entry;
+
+#if LLSEC802154_USES_AUX_HEADER && POTR_ENABLED
+  packetbuf_set_attr(PACKETBUF_ATTR_SECURITY_LEVEL, akes_mac_get_sec_lvl());
+#endif /* LLSEC802154_USES_AUX_HEADER && POTR_ENABLED */
 
   switch(packetbuf_attr(PACKETBUF_ATTR_FRAME_TYPE)) {
   case FRAME802154_CMDFRAME:
@@ -304,10 +379,36 @@ input(void)
       return;
     }
 
+#if ANTI_REPLAY_WITH_SUPPRESSION && !POTR_ENABLED
+    anti_replay_restore_counter(&entry->permanent->anti_replay_info);
+#endif /* ANTI_REPLAY_WITH_SUPPRESSION && !POTR_ENABLED */
+
+#if !MAC_CONF_WITH_CSL
+    if(
+#if CONTIKIMAC_WITH_SECURE_PHASE_LOCK
+        packetbuf_holds_broadcast() &&
+#endif /* CONTIKIMAC_WITH_SECURE_PHASE_LOCK */
+        AKES_MAC_STRATEGY.verify(entry->permanent) != AKES_MAC_VERIFY_SUCCESS) {
+      return;
+    }
+#endif /* !MAC_CONF_WITH_CSL */
+
+#if MAC_CONF_WITH_CSL
     if(csl_framer_received_duplicate()) {
       LOG_ERR("duplicate\n");
       return;
     }
+#else /* MAC_CONF_WITH_CSL */
+#if POTR_ENABLED
+    if(potr_received_duplicate()) {
+      LOG_ERR("duplicate\n");
+      return;
+    }
+#endif /* POTR_ENABLED */
+#if !ILOS_ENABLED
+    akes_nbr_prolong(entry->permanent);
+#endif /* !ILOS_ENABLED */
+#endif /* MAC_CONF_WITH_CSL */
 
     NETSTACK_NETWORK.input();
     break;
@@ -319,6 +420,9 @@ init(void)
 {
   AKES_MAC_DECORATED_MAC.init();
   cmd_broker_init();
+#if AKES_NBR_WITH_GROUP_KEYS
+  csprng_rand(akes_mac_group_key, AES_128_KEY_LENGTH);
+#endif /* AKES_NBR_WITH_GROUP_KEYS */
   AKES_MAC_STRATEGY.init();
   akes_init();
 }
@@ -327,6 +431,9 @@ static int
 length(void)
 {
   return AKES_MAC_DECORATED_FRAMER.length()
+#if !ANTI_REPLAY_WITH_SUPPRESSION && !MAC_CONF_WITH_CSL && !POTR_ENABLED
+      + 5
+#endif /* !ANTI_REPLAY_WITH_SUPPRESSION && !MAC_CONF_WITH_CSL && !POTR_ENABLED */
       + AKES_MAC_STRATEGY.get_overhead();
 }
 /*---------------------------------------------------------------------------*/
@@ -343,7 +450,13 @@ off(void)
 }
 /*---------------------------------------------------------------------------*/
 const struct mac_driver akes_mac_driver = {
+#if MAC_CONF_WITH_CSL
   "AKES/CSL",
+#elif MAC_CONF_WITH_CONTIKIMAC
+  "AKES/ContikiMAC",
+#else
+  "AKES/CSMA",
+#endif
   init,
   send,
   input,

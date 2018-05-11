@@ -40,12 +40,16 @@
 #ifndef AKES_NBR_H_
 #define AKES_NBR_H_
 
+#include "net/mac/framer/anti-replay.h"
 #include "net/linkaddr.h"
 #include "net/nbr-table.h"
 #include "lib/aes-128.h"
 #include "sys/clock.h"
 #include "sys/ctimer.h"
 #include "net/mac/csl/csl.h"
+#include "net/mac/contikimac/contikimac.h"
+#include "net/mac/contikimac/ilos.h"
+#include "net/mac/contikimac/potr.h"
 
 #ifdef AKES_NBR_CONF_MAX_TENTATIVES
 #define AKES_NBR_MAX_TENTATIVES AKES_NBR_CONF_MAX_TENTATIVES
@@ -58,6 +62,24 @@
 #else /* AKES_NBR_CONF_MAX */
 #define AKES_NBR_MAX (NBR_TABLE_MAX_NEIGHBORS + 1)
 #endif /* AKES_NBR_CONF_MAX */
+
+#ifdef AKES_NBR_CONF_WITH_PAIRWISE_KEYS
+#define AKES_NBR_WITH_PAIRWISE_KEYS AKES_NBR_CONF_WITH_PAIRWISE_KEYS
+#else /* AKES_NBR_CONF_WITH_PAIRWISE_KEYS */
+#define AKES_NBR_WITH_PAIRWISE_KEYS 0
+#endif /* AKES_NBR_CONF_WITH_PAIRWISE_KEYS */
+
+#ifdef AKES_NBR_CONF_WITH_GROUP_KEYS
+#define AKES_NBR_WITH_GROUP_KEYS AKES_NBR_CONF_WITH_GROUP_KEYS
+#else /* AKES_NBR_CONF_WITH_GROUP_KEYS */
+#define AKES_NBR_WITH_GROUP_KEYS 1
+#endif /* AKES_NBR_CONF_WITH_GROUP_KEYS */
+
+#ifdef AKES_NBR_CONF_WITH_INDICES
+#define AKES_NBR_WITH_INDICES AKES_NBR_CONF_WITH_INDICES
+#else /* AKES_NBR_CONF_WITH_INDICES */
+#define AKES_NBR_WITH_INDICES ANTI_REPLAY_WITH_SUPPRESSION
+#endif /* AKES_NBR_CONF_WITH_INDICES */
 
 #ifndef AKES_NBR_CONF_WITH_LOCKING
 #define AKES_NBR_CONF_WITH_LOCKING 0
@@ -92,25 +114,75 @@ struct akes_nbr_entry {
 
 struct akes_nbr_tentative {
   struct ctimer wait_timer;
+#if !AKES_NBR_WITH_PAIRWISE_KEYS
+  uint8_t has_wait_timer;
+#endif /* !AKES_NBR_WITH_PAIRWISE_KEYS */
+#if MAC_CONF_WITH_CSL
   uint8_t q[AKES_NBR_CHALLENGE_LEN];
   rtimer_clock_t helloack_sfd_timestamp;
   wake_up_counter_t predicted_wake_up_counter;
+#endif /* MAC_CONF_WITH_CSL */
+#if POTR_ENABLED
+  potr_otp_t helloack_otp;
+  potr_otp_t ack_otp;
+#endif /* POTR_ENABLED */
+#if CONTIKIMAC_WITH_SECURE_PHASE_LOCK
+  uint8_t q[CONTIKIMAC_Q_LEN];
+  rtimer_clock_t t1;
+  uint8_t strobe_index;
+  int was_helloack_sent;
+#if ILOS_ENABLED
+  unsigned long expiration_time;
+#endif /* ILOS_ENABLED */
+#endif /* CONTIKIMAC_WITH_SECURE_PHASE_LOCK */
 };
 
 struct akes_nbr {
+#if MAC_CONF_WITH_CSL
   struct csl_sync_data sync_data;
+#elif !ILOS_ENABLED
+  struct anti_replay_info anti_replay_info;
+  unsigned long expiration_time;
+#endif /* MAC_CONF_WITH_CSL */
+#if CONTIKIMAC_WITH_ORIGINAL_PHASE_LOCK
+  struct contikimac_phase phase;
+#endif /* CONTIKIMAC_WITH_ORIGINAL_PHASE_LOCK */
 
   union {
     /* permanent */
     struct {
+#if AKES_NBR_WITH_PAIRWISE_KEYS
       uint8_t pairwise_key[AES_128_KEY_LENGTH];
+#endif /* AKES_NBR_WITH_PAIRWISE_KEYS */
+#if AKES_NBR_WITH_GROUP_KEYS
+      uint8_t group_key[AES_128_KEY_LENGTH];
+#endif /* AKES_NBR_WITH_GROUP_KEYS */
+#if AKES_DELETE_WITH_UPDATEACKS
+      uint8_t sent_authentic_hello;
+#else /* AKES_DELETE_WITH_UPDATEACKS */
       uint8_t sent_authentic_hello:1;
       uint8_t is_receiving_update:1;
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
+#if !AKES_NBR_WITH_PAIRWISE_KEYS && !POTR_ENABLED
+      uint8_t helloack_challenge[AKES_NBR_CACHED_HELLOACK_CHALLENGE_LEN];
+#endif /* !AKES_NBR_WITH_PAIRWISE_KEYS && !POTR_ENABLED */
+#if MAC_CONF_WITH_CSL || POTR_ENABLED
       uint8_t my_unicast_seqno;
       uint8_t his_unicast_seqno;
+#endif /* MAC_CONF_WITH_CSL || POTR_ENABLED */
+#if ANTI_REPLAY_WITH_SUPPRESSION
+      uint8_t last_was_broadcast;
+#endif /* ANTI_REPLAY_WITH_SUPPRESSION */
+#if AKES_NBR_WITH_INDICES
       uint8_t foreign_index;
+#endif /* AKES_NBR_WITH_INDICES */
+#if CONTIKIMAC_WITH_SECURE_PHASE_LOCK
+      struct contikimac_phase phase;
+#endif /* CONTIKIMAC_WITH_SECURE_PHASE_LOCK */
+#if MAC_CONF_WITH_CSL
       int32_t drift;
       struct csl_sync_data historical_sync_data;
+#endif /* MAC_CONF_WITH_CSL */
     };
 
     /* tentative */
@@ -142,6 +214,10 @@ struct akes_nbr_entry *akes_nbr_next(struct akes_nbr_entry *current);
 int akes_nbr_count(enum akes_nbr_status status);
 int akes_nbr_free_slots(void);
 struct akes_nbr_entry *akes_nbr_new(enum akes_nbr_status status);
+#if !MAC_CONF_WITH_CSL && !ILOS_ENABLED
+void akes_nbr_do_prolong(struct akes_nbr *nbr, uint16_t seconds);
+void akes_nbr_prolong(struct akes_nbr *nbr);
+#endif /* !MAC_CONF_WITH_CSL && !ILOS_ENABLED */
 struct akes_nbr_entry *akes_nbr_get_entry(const linkaddr_t *addr);
 struct akes_nbr_entry *akes_nbr_get_sender_entry(void);
 struct akes_nbr_entry *akes_nbr_get_receiver_entry(void);
@@ -149,5 +225,9 @@ void akes_nbr_delete(struct akes_nbr_entry *entry, enum akes_nbr_status status);
 int akes_nbr_is_expired(struct akes_nbr_entry *entry, enum akes_nbr_status status);
 void akes_nbr_delete_expired_tentatives(void);
 void akes_nbr_init(void);
+#if POTR_ENABLED
+/* declared here to avoid compilation errors */
+void potr_set_seqno(struct akes_nbr *receiver);
+#endif /* POTR_ENABLED */
 
 #endif /* AKES_NBR_H_ */

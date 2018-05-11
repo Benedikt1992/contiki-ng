@@ -41,6 +41,7 @@
 #include "net/mac/llsec802154.h"
 #include "net/security/akes/akes-nbr.h"
 #include "net/security/akes/akes.h"
+#include "net/mac/contikimac/contikimac.h"
 #include "net/packetbuf.h"
 #include "lib/memb.h"
 #include "lib/list.h"
@@ -191,6 +192,9 @@ akes_nbr_new(enum akes_nbr_status status)
     return NULL;
   }
   nbr_table_lock(entries_table, entry);
+#if LLSEC802154_USES_FRAME_COUNTER
+  anti_replay_init_info(&entry->refs[status]->anti_replay_info);
+#endif /* LLSEC802154_USES_FRAME_COUNTER */
   if(status) {
     entry->refs[status]->meta = memb_alloc(&tentatives_memb);
     if(!entry->refs[status]->meta) {
@@ -199,9 +203,38 @@ akes_nbr_new(enum akes_nbr_status status)
       return NULL;
     }
   }
+#if CONTIKIMAC_WITH_ORIGINAL_PHASE_LOCK
+  entry->refs[status]->phase.t = 0;
+#endif /* CONTIKIMAC_WITH_ORIGINAL_PHASE_LOCK */
   AKES_NBR_RELEASE_LOCK();
   return entry;
 }
+/*---------------------------------------------------------------------------*/
+#if !MAC_CONF_WITH_CSL && !ILOS_ENABLED
+void
+akes_nbr_do_prolong(struct akes_nbr *nbr, uint16_t seconds)
+{
+  nbr->expiration_time = clock_seconds() + seconds;
+}
+/*---------------------------------------------------------------------------*/
+void
+akes_nbr_prolong(struct akes_nbr *nbr)
+{
+#if ANTI_REPLAY_WITH_SUPPRESSION
+  int is_broadcast;
+
+  is_broadcast = packetbuf_holds_broadcast();
+  if(!is_broadcast && !nbr->last_was_broadcast) {
+    return;
+  }
+  if(is_broadcast && nbr->last_was_broadcast) {
+    return;
+  }
+  nbr->last_was_broadcast = is_broadcast;
+#endif /* ANTI_REPLAY_WITH_SUPPRESSION */
+  akes_nbr_do_prolong(nbr, LIFETIME);
+}
+#endif /* !MAC_CONF_WITH_CSL && !ILOS_ENABLED */
 /*---------------------------------------------------------------------------*/
 struct akes_nbr_entry *
 akes_nbr_get_entry(const linkaddr_t *addr)
@@ -237,6 +270,7 @@ akes_nbr_delete(struct akes_nbr_entry *entry, enum akes_nbr_status status)
 int
 akes_nbr_is_expired(struct akes_nbr_entry *entry, enum akes_nbr_status status)
 {
+#if MAC_CONF_WITH_CSL
   rtimer_clock_t delta;
 
   delta = rtimer_delta(entry->refs[status]->sync_data.t, RTIMER_NOW());
@@ -245,6 +279,28 @@ akes_nbr_is_expired(struct akes_nbr_entry *entry, enum akes_nbr_status status)
       : (entry->permanent->drift != AKES_NBR_UNINITIALIZED_DRIFT
           ? CSL_SUBSEQUENT_UPDATE_THRESHOLD
           : CSL_INITIAL_UPDATE_THRESHOLD)));
+#else /* MAC_CONF_WITH_CSL */
+#if ILOS_ENABLED
+  if(status) {
+    return entry->tentative->meta->expiration_time < clock_seconds();
+  }
+#else /* ILOS_ENABLED */
+  if(entry->refs[status]->expiration_time < clock_seconds()) {
+    return 1;
+  }
+#endif /* ILOS_ENABLED */
+#if CONTIKIMAC_WITH_SECURE_PHASE_LOCK
+#if !ILOS_ENABLED
+  if(status) {
+    return 0;
+  }
+#endif /* !ILOS_ENABLED */
+  return rtimer_delta(entry->refs[status]->phase.t, RTIMER_NOW())
+      >= (LIFETIME * RTIMER_ARCH_SECOND);
+#else /* CONTIKIMAC_WITH_SECURE_PHASE_LOCK */
+  return 0;
+#endif /* CONTIKIMAC_WITH_SECURE_PHASE_LOCK */
+#endif /* MAC_CONF_WITH_CSL */
 }
 /*---------------------------------------------------------------------------*/
 void

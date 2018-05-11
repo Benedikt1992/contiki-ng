@@ -54,6 +54,14 @@
 #define MAX_RETRANSMISSIONS 2
 #endif /* AKES_DELETE_CONF_MAX_RETRANSMISSIONS */
 
+#if AKES_DELETE_WITH_UPDATEACKS
+#ifdef AKES_DELETE_CONF_UPDATEACK_WAITING_PERIOD
+#define UPDATEACK_WAITING_PERIOD AKES_DELETE_CONF_UPDATEACK_WAITING_PERIOD
+#else /* AKES_DELETE_CONF_UPDATEACK_WAITING_PERIOD */
+#define UPDATEACK_WAITING_PERIOD (15) /* seconds */
+#endif /* AKES_DELETE_CONF_UPDATEACK_WAITING_PERIOD */
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
+
 #ifdef AKES_DELETE_CONF_ENABLED
 #define ENABLED AKES_DELETE_CONF_ENABLED
 #else /* AKES_DELETE_CONF_ENABLED */
@@ -73,6 +81,9 @@ PROCESS_THREAD(delete_process, ev, data)
 {
   static struct etimer update_check_timer;
   struct akes_nbr_entry *next;
+#if AKES_DELETE_WITH_UPDATEACKS
+  static linkaddr_t addr;
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
 
   PROCESS_BEGIN();
 
@@ -86,14 +97,34 @@ PROCESS_THREAD(delete_process, ev, data)
     while(next) {
       if(!next->permanent
           || !akes_nbr_is_expired(next, AKES_NBR_PERMANENT)
-          || next->permanent->is_receiving_update) {
+#if !AKES_DELETE_WITH_UPDATEACKS
+          || next->permanent->is_receiving_update
+#endif /* !AKES_DELETE_WITH_UPDATEACKS */
+          ) {
         next = akes_nbr_next(next);
         continue;
       }
+#if AKES_DELETE_WITH_UPDATEACKS
+      linkaddr_copy(&addr, akes_nbr_get_addr(next));
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
 
       /* send UPDATE */
       akes_send_update(next);
+#if AKES_DELETE_WITH_UPDATEACKS
+      PROCESS_YIELD_UNTIL(ev == PROCESS_EVENT_POLL);
+      LOG_INFO("sent UPDATE\n");
+      etimer_set(&update_check_timer, UPDATEACK_WAITING_PERIOD * CLOCK_SECOND);
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&update_check_timer));
+
+      next = akes_nbr_get_entry(&addr);
+      if(next
+          && next->permanent
+          && akes_nbr_is_expired(next, AKES_NBR_PERMANENT)) {
+        akes_nbr_delete(next, AKES_NBR_PERMANENT);
+      }
+#else /* AKES_DELETE_WITH_UPDATEACKS */
       next->permanent->is_receiving_update = 1;
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
       next = akes_nbr_head();
     }
   }
@@ -104,6 +135,9 @@ PROCESS_THREAD(delete_process, ev, data)
 void
 akes_delete_on_update_sent(void *ptr, int status, int transmissions)
 {
+#if AKES_DELETE_WITH_UPDATEACKS
+  process_poll(&delete_process);
+#else /* AKES_DELETE_WITH_UPDATEACKS */
   struct akes_nbr_entry *entry;
 
   entry = akes_nbr_get_receiver_entry();
@@ -118,6 +152,7 @@ akes_delete_on_update_sent(void *ptr, int status, int transmissions)
   } else {
     entry->permanent->is_receiving_update = 0;
   }
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
 }
 /*---------------------------------------------------------------------------*/
 void

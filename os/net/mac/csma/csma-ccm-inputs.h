@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2013, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,21 +32,17 @@
 
 /**
  * \file
- *         Deletes inactive permanent neighbors.
+ *         CCM* convenience functions for MAC security
  * \author
+ *         Justin King-Lacroix <justin.kinglacroix@gmail.com>
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-#ifndef AKES_DELETE_H_
-#define AKES_DELETE_H_
+#ifndef CSMA_CCM_INPUTS_H_
+#define CSMA_CCM_INPUTS_H_
 
-#ifdef AKES_DELETE_CONF_WITH_UPDATEACKS
-#define AKES_DELETE_WITH_UPDATEACKS AKES_DELETE_CONF_WITH_UPDATEACKS
-#else /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-#define AKES_DELETE_WITH_UPDATEACKS 1
-#endif /* AKES_DELETE_CONF_WITH_UPDATEACKS */
+#include "lib/ccm-star.h"
 
-void akes_delete_on_update_sent(void *ptr, int status, int transmissions);
-void akes_delete_init(void);
+void csma_ccm_inputs_set_nonce(uint8_t *nonce, int forward);
 
-#endif /* AKES_DELETE_H_ */
+#endif /* CSMA_CCM_INPUTS_H_ */

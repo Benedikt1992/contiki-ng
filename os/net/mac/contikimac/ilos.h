@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2016, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,21 +32,36 @@
 
 /**
  * \file
- *         Deletes inactive permanent neighbors.
+ *         Intra-Layer Optimization for 802.15.4 Security (ILOS)
  * \author
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-#ifndef AKES_DELETE_H_
-#define AKES_DELETE_H_
+#ifndef ILOS_H_
+#define ILOS_H_
 
-#ifdef AKES_DELETE_CONF_WITH_UPDATEACKS
-#define AKES_DELETE_WITH_UPDATEACKS AKES_DELETE_CONF_WITH_UPDATEACKS
-#else /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-#define AKES_DELETE_WITH_UPDATEACKS 1
-#endif /* AKES_DELETE_CONF_WITH_UPDATEACKS */
+#include "contiki.h"
+#include "sys/rtimer.h"
+#include "net/mac/wake-up-counter.h"
 
-void akes_delete_on_update_sent(void *ptr, int status, int transmissions);
-void akes_delete_init(void);
+#ifdef ILOS_CONF_ENABLED
+#define ILOS_ENABLED ILOS_CONF_ENABLED
+#else /* ILOS_CONF_ENABLED */
+#define ILOS_ENABLED 0
+#endif /* ILOS_CONF_ENABLED */
 
-#endif /* AKES_DELETE_H_ */
+#define ILOS_MIN_TIME_TO_STROBE US_TO_RTIMERTICKS(2000)
+#if ILOS_ENABLED
+#define ILOS_WAKE_UP_COUNTER_LEN (4)
+#else /* ILOS_ENABLED */
+#define ILOS_WAKE_UP_COUNTER_LEN (0)
+#endif /* ILOS_ENABLED */
+
+struct contikimac_phase {
+  rtimer_clock_t t;
+#if ILOS_ENABLED
+  wake_up_counter_t his_wake_up_counter_at_t;
+#endif /* ILOS_ENABLED */
+};
+
+#endif /* ILOS_H_ */
