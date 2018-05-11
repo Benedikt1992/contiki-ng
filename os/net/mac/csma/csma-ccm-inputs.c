@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2013, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,21 +32,37 @@
 
 /**
  * \file
- *         Deletes inactive permanent neighbors.
+ *         CCM* convenience functions for LLSEC use
  * \author
+ *         Justin King-Lacroix <justin.kinglacroix@gmail.com>
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-#ifndef AKES_DELETE_H_
-#define AKES_DELETE_H_
+#include "net/mac/csma/csma-ccm-inputs.h"
+#include "net/mac/framer/anti-replay.h"
+#include "net/linkaddr.h"
+#include "net/packetbuf.h"
+#include "net/mac/llsec802154.h"
 
-#ifdef AKES_DELETE_CONF_WITH_UPDATEACKS
-#define AKES_DELETE_WITH_UPDATEACKS AKES_DELETE_CONF_WITH_UPDATEACKS
-#else /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-#define AKES_DELETE_WITH_UPDATEACKS 1
-#endif /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-
-void akes_delete_on_update_sent(void *ptr, int status, int transmissions);
-void akes_delete_init(void);
-
-#endif /* AKES_DELETE_H_ */
+/*---------------------------------------------------------------------------*/
+#if LLSEC802154_USES_FRAME_COUNTER
+void
+csma_ccm_inputs_set_nonce(uint8_t *nonce, int forward)
+{
+  const linkaddr_t *source_addr;
+  
+  source_addr = forward ? &linkaddr_node_addr : packetbuf_addr(PACKETBUF_ADDR_SENDER);
+  memcpy(nonce, source_addr->u8, LINKADDR_SIZE);
+  memset(nonce + LINKADDR_SIZE, 0, 8 - LINKADDR_SIZE);
+  nonce[8] = packetbuf_attr(PACKETBUF_ATTR_FRAME_COUNTER_BYTES_2_3) >> 8;
+  nonce[9] = packetbuf_attr(PACKETBUF_ATTR_FRAME_COUNTER_BYTES_2_3) & 0xff;
+  nonce[10] = packetbuf_attr(PACKETBUF_ATTR_FRAME_COUNTER_BYTES_0_1) >> 8;
+  nonce[11] = packetbuf_attr(PACKETBUF_ATTR_FRAME_COUNTER_BYTES_0_1) & 0xff;
+#if ANTI_REPLAY_WITH_SUPPRESSION
+  nonce[12] = packetbuf_holds_broadcast() ? 0xFF : packetbuf_attr(PACKETBUF_ATTR_NEIGHBOR_INDEX);
+#else /* ANTI_REPLAY_WITH_SUPPRESSION */
+  nonce[12] = packetbuf_attr(PACKETBUF_ATTR_SECURITY_LEVEL);
+#endif /* ANTI_REPLAY_WITH_SUPPRESSION */
+}
+#endif /* LLSEC802154_USES_FRAME_COUNTER */
+/*---------------------------------------------------------------------------*/

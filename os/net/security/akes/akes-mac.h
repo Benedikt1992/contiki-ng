@@ -45,6 +45,13 @@
 #include "net/mac/csl/csl.h"
 #include "lib/ccm-star.h"
 #include "lib/aes-128.h"
+#include "net/mac/contikimac/potr.h"
+
+#ifdef AKES_MAC_CONF_ENABLED
+#define AKES_MAC_ENABLED AKES_MAC_CONF_ENABLED
+#else /* AKES_MAC_CONF_ENABLED */
+#define AKES_MAC_ENABLED 0
+#endif /* AKES_MAC_CONF_ENABLED */
 
 #ifdef AKES_MAC_CONF_DECORATED_FRAMER
 #define AKES_MAC_DECORATED_FRAMER AKES_MAC_CONF_DECORATED_FRAMER
@@ -91,6 +98,9 @@
 enum akes_mac_verify {
   AKES_MAC_VERIFY_SUCCESS,
   AKES_MAC_VERIFY_INAUTHENTIC,
+#if !MAC_CONF_WITH_CSL && !POTR_ENABLED
+  AKES_MAC_VERIFY_REPLAYED
+#endif /* !MAC_CONF_WITH_CSL && !POTR_ENABLED */
 };
 
 /**
@@ -122,6 +132,9 @@ extern const struct akes_mac_kes AKES_MAC_KES;
 extern const struct akes_mac_strategy AKES_MAC_STRATEGY;
 extern const struct mac_driver akes_mac_driver;
 extern const struct framer akes_mac_framer;
+#if AKES_NBR_WITH_GROUP_KEYS
+extern uint8_t akes_mac_group_key[AES_128_KEY_LENGTH];
+#endif /* AKES_NBR_WITH_GROUP_KEYS */
 
 clock_time_t akes_mac_random_clock_time(clock_time_t min, clock_time_t max);
 uint8_t akes_mac_get_cmd_id(void);
@@ -129,6 +142,9 @@ int akes_mac_is_hello(void);
 int akes_mac_is_helloack(void);
 int akes_mac_is_ack(void);
 uint8_t akes_mac_get_sec_lvl(void);
+#if LLSEC802154_USES_FRAME_COUNTER
+void akes_mac_add_security_header(struct akes_nbr *receiver);
+#endif /* LLSEC802154_USES_FRAME_COUNTER */
 uint8_t *akes_mac_prepare_command(uint8_t cmd_id, const linkaddr_t *dest);
 void akes_mac_send_command_frame(void);
 uint8_t akes_mac_mic_len(void);

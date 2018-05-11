@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2010, Swedish Institute of Computer Science.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,21 +32,32 @@
 
 /**
  * \file
- *         Deletes inactive permanent neighbors.
+ *         Creates and parses the ContikiMAC header.
  * \author
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-#ifndef AKES_DELETE_H_
-#define AKES_DELETE_H_
+#ifndef CONTIKIMAC_FRAMER_H_
+#define CONTIKIMAC_FRAMER_H_
 
-#ifdef AKES_DELETE_CONF_WITH_UPDATEACKS
-#define AKES_DELETE_WITH_UPDATEACKS AKES_DELETE_CONF_WITH_UPDATEACKS
-#else /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-#define AKES_DELETE_WITH_UPDATEACKS 1
-#endif /* AKES_DELETE_CONF_WITH_UPDATEACKS */
+#include "contiki.h"
+#include "net/mac/framer/framer.h"
 
-void akes_delete_on_update_sent(void *ptr, int status, int transmissions);
-void akes_delete_init(void);
+/* CONTIKIMAC_FRAMER_SHORTEST_PACKET_SIZE is the shortest packet that ContikiMAC
+   allows. Packets have to be a certain size to be able to be detected
+   by two consecutive CCA checks, and here is where we define this
+   shortest size.
+   Padded packets will have the wrong ipv6 checksum unless CONTIKIMAC_HEADER
+   is used (on both sides) and the receiver will ignore them.
+   With no header, reduce to transmit a proper multicast RPL DIS. */
+#ifdef CONTIKIMAC_FRAMER_CONF_SHORTEST_PACKET_SIZE
+#define CONTIKIMAC_FRAMER_SHORTEST_PACKET_SIZE CONTIKIMAC_FRAMER_CONF_SHORTEST_PACKET_SIZE
+#else /* CONTIKIMAC_FRAMER_CONF_SHORTEST_PACKET_SIZE */
+#define CONTIKIMAC_FRAMER_SHORTEST_PACKET_SIZE 43
+#endif /* CONTIKIMAC_FRAMER_CONF_SHORTEST_PACKET_SIZE */
 
-#endif /* AKES_DELETE_H_ */
+#define CONTIKIMAC_FRAMER_HEADER_LEN 1
+
+extern const struct framer contikimac_framer;
+
+#endif /* CONTIKIMAC_FRAMER_H_ */

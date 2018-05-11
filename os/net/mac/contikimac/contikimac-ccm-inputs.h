@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2018, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,21 +32,20 @@
 
 /**
  * \file
- *         Deletes inactive permanent neighbors.
+ *         Generates CCM inputs as required by ContikiMAC.
  * \author
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-#ifndef AKES_DELETE_H_
-#define AKES_DELETE_H_
+#ifndef CONTIKIMAC_CCM_INPUTS_H_
+#define CONTIKIMAC_CCM_INPUTS_H_
 
-#ifdef AKES_DELETE_CONF_WITH_UPDATEACKS
-#define AKES_DELETE_WITH_UPDATEACKS AKES_DELETE_CONF_WITH_UPDATEACKS
-#else /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-#define AKES_DELETE_WITH_UPDATEACKS 1
-#endif /* AKES_DELETE_CONF_WITH_UPDATEACKS */
+#include "lib/ccm-star.h"
+#include "net/mac/contikimac/ilos.h"
 
-void akes_delete_on_update_sent(void *ptr, int status, int transmissions);
-void akes_delete_init(void);
+void contikimac_ccm_inputs_set_nonce(uint8_t *nonce, int forward);
+void contikimac_ccm_inputs_to_acknowledgement_nonce(uint8_t *nonce);
+void contikimac_ccm_inputs_derive_key(uint8_t *dst, uint8_t *key);
+void contikimac_ccm_inputs_set_derived_key(uint8_t *key);
 
-#endif /* AKES_DELETE_H_ */
+#endif /* CONTIKIMAC_CCM_INPUTS_H_ */

@@ -32,21 +32,16 @@
 
 /**
  * \file
- *         Deletes inactive permanent neighbors.
+ *         Uses group session keys for securing frames.
  * \author
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-#ifndef AKES_DELETE_H_
-#define AKES_DELETE_H_
+#ifndef CONTIKIMAC_STRATEGY_H_
+#define CONTIKIMAC_STRATEGY_H_
 
-#ifdef AKES_DELETE_CONF_WITH_UPDATEACKS
-#define AKES_DELETE_WITH_UPDATEACKS AKES_DELETE_CONF_WITH_UPDATEACKS
-#else /* AKES_DELETE_CONF_WITH_UPDATEACKS */
-#define AKES_DELETE_WITH_UPDATEACKS 1
-#endif /* AKES_DELETE_CONF_WITH_UPDATEACKS */
+#include "net/security/akes/akes-mac.h"
 
-void akes_delete_on_update_sent(void *ptr, int status, int transmissions);
-void akes_delete_init(void);
+extern const struct akes_mac_strategy contikimac_strategy;
 
-#endif /* AKES_DELETE_H_ */
+#endif /* CONTIKIMAC_STRATEGY_H_ */

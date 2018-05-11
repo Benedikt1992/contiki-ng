@@ -65,7 +65,11 @@
 #define AKES_SCHEME akes_single_scheme
 #endif /* AKES_CONF_SCHEME */
 
+#if AKES_NBR_WITH_GROUP_KEYS
+#define AKES_ACKS_SEC_LVL (AKES_MAC_UNICAST_SEC_LVL | (1 << 2))
+#else /* AKES_NBR_WITH_GROUP_KEYS */
 #define AKES_ACKS_SEC_LVL (AKES_MAC_UNICAST_SEC_LVL & 3)
+#endif /* AKES_NBR_WITH_GROUP_KEYS */
 
 #define AKES_UPDATES_SEC_LVL (AKES_MAC_UNICAST_SEC_LVL & 3)
 #define AKES_HELLO_DATALEN (1 /* command frame identifier */ \
@@ -83,11 +87,21 @@
 
 /* Command frame identifiers */
 enum {
+#if POTR_ENABLED
+  AKES_HELLO_IDENTIFIER = POTR_FRAME_TYPE_HELLO,
+  AKES_HELLOACK_IDENTIFIER = POTR_FRAME_TYPE_HELLOACK,
+  AKES_HELLOACK_P_IDENTIFIER = POTR_FRAME_TYPE_HELLOACK_P,
+  AKES_ACK_IDENTIFIER = POTR_FRAME_TYPE_ACK,
+#else /* POTR_ENABLED */
   AKES_HELLO_IDENTIFIER = 0x0A,
   AKES_HELLOACK_IDENTIFIER = 0x0B,
   AKES_HELLOACK_P_IDENTIFIER = 0x1B,
   AKES_ACK_IDENTIFIER = 0x0C,
+#endif /* POTR_ENABLED */
   AKES_UPDATE_IDENTIFIER = 0x0E,
+#if AKES_DELETE_WITH_UPDATEACKS
+  AKES_UPDATEACK_IDENTIFIER = 0x0F
+#endif /* AKES_DELETE_WITH_UPDATEACKS */
 };
 
 /**
@@ -113,6 +127,9 @@ struct akes_scheme {
 
 extern const struct akes_scheme AKES_SCHEME;
 
+#if POTR_ENABLED
+uint8_t * akes_get_hello_challenge(void);
+#endif /* POTR_ENABLED */
 void akes_broadcast_hello(void);
 int akes_is_acceptable_hello(void);
 void akes_create_hello(void);
