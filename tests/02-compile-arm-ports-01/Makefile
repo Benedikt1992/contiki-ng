@@ -59,7 +59,8 @@ platform-specific/nrf52dk/mqtt-demo/nrf52dk \
 platform-specific/nrf52dk/blink-hello/nrf52dk \
 platform-specific/nrf52dk/timer-test/nrf52dk \
 libs/data-structures/nrf52dk \
-libs/logging/nrf52dk
+libs/logging/nrf52dk \
+libs/csprng/cc2538dk
 
 TOOLS=
 
