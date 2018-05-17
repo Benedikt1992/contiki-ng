@@ -126,9 +126,9 @@ soc_init()
   lpm_init();
   rtimer_init();
   gpio_hal_init();
-#if LPM_CONF_ENABLE && (LPM_CONF_MAX_PM >= 2)
+#if LPM_CONF_ENABLE && (LPM_CONF_MAX_PM >= LPM_PM2)
   cc2538_sram_seeder_seed();
-#endif /* LPM_CONF_ENABLE && (LPM_CONF_MAX_PM >= 2) */
+#endif /* LPM_CONF_ENABLE && (LPM_CONF_MAX_PM >= LPM_PM2) */
 }
 /*----------------------------------------------------------------------------*/
 /** @} */

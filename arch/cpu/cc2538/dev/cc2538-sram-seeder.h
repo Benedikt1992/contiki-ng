@@ -50,7 +50,7 @@
  *        random due to manufacturing variations. For randomness extraction,
  *        this function uses the well-known von Neumann extractor. Note that
  *        this function can only be called at start up and only if
- *        LPM_CONF_MAX_PM >= 2.
+ *        LPM_CONF_MAX_PM >= LPM_PM2.
  */
 void cc2538_sram_seeder_seed(void);
 
