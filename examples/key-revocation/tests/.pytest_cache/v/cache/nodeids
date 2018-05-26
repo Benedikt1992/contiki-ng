@@ -1,0 +1,4 @@
+[
+  "test_key_revocation.py::test_revokeNodeInWholeNetwork", 
+  "test_key_revocation.py::test_revokeNodeReplayed"
+]

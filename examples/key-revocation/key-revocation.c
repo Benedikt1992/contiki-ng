@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2017, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,52 +32,68 @@
 
 /**
  * \file
- *         Network-wide key scheme.
+ *      Key revocation example using the Erbium (Er) REST Engine.
  * \author
- *         Konrad Krentz <konrad.krentz@gmail.com>
+ *      Daniel Werner <daniel.werner@student.hpi.de>
  */
+
+#include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
-#include "net/security/akes/akes-single.h"
-#include "lib/aes-128.h"
+#include "contiki.h"
+#include "contiki-net.h"
+#include "rest-engine.h"
+#include "uip.h"
 
-#ifdef AKES_SINGLE_CONF_KEY
-#define KEY AKES_SINGLE_CONF_KEY
-#else /* AKES_SINGLE_CONF_KEY */
-#define KEY { 0x00 , 0x01 , 0x02 , 0x03 , \
-              0x04 , 0x05 , 0x06 , 0x07 , \
-              0x08 , 0x09 , 0x0A , 0x0B , \
-              0x0C , 0x0D , 0x0E , 0x0F }
-#endif /* AKES_SINGLE_CONF_KEY */
+#define DEBUG 0
+#if DEBUG
+#include <stdio.h>
+#define PRINTF(...) printf(__VA_ARGS__)
+#else
+#define PRINTF(...)
+#endif
 
-static uint8_t key[AES_128_KEY_LENGTH] = KEY;
+extern resource_t res_key_revocation;
 
-/*---------------------------------------------------------------------------*/
-static uint8_t *
-get_secret_with(const linkaddr_t *addr)
-{
-  return (uint8_t *)key;
-}
-/*---------------------------------------------------------------------------*/
-static int
-update_secret_with(const linkaddr_t *addr, const uint8_t *new_secret, const int secret_len)
-{
-  if (secret_len >= AES_128_KEY_LENGTH) {
-    memcpy(key, new_secret, AES_128_KEY_LENGTH);
-    return 0;
-  }
-  return 1;
-}
-/*---------------------------------------------------------------------------*/
 static void
-init(void)
+set_own_address(void)
 {
+  uip_ipaddr_t addr;
+
+  /* First, set our v6 global */
+  uip_ip6addr(&addr, UIP_DS6_DEFAULT_PREFIX, 0, 0, 0, 0, 0, 0, 0);
+  uip_ds6_set_addr_iid(&addr, &uip_lladdr);
+  uip_ds6_addr_add(&addr, 0, ADDR_AUTOCONF);
 }
-/*---------------------------------------------------------------------------*/
-const struct akes_scheme akes_single_scheme = {
-  init,
-  get_secret_with,
-  get_secret_with,
-  update_secret_with
-};
-/*---------------------------------------------------------------------------*/
+
+PROCESS(key_revocation_server, "Key Revocation CoAP Server");
+AUTOSTART_PROCESSES(&key_revocation_server);
+
+PROCESS_THREAD(key_revocation_server, ev, data)
+{
+  PROCESS_BEGIN();
+
+  PROCESS_PAUSE();
+
+  set_own_address();
+
+#ifdef RF_CHANNEL
+  PRINTF("RF channel: %u\n", RF_CHANNEL);
+#endif
+
+#if KEY_REVOCATION_ENABLED
+  /* Initialize the REST engine. */
+  rest_init_engine();
+
+  PRINTF("key-rev: Starting Key Revocation CoAP Server\n");
+  rest_activate_resource(&res_key_revocation, (char *) "akes/key-revocation");
+  PRINTF("key-rev: Key revocation enabled.\n");
+#endif /* KEY_REVOCATION_ENABLED */
+
+  while(1) {
+    PROCESS_WAIT_EVENT();
+  } /* while (1) */
+
+  PROCESS_END();
+}

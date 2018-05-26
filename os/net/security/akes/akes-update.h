@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Hasso-Plattner-Institut.
+ * Copyright (c) 2017, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,52 +32,19 @@
 
 /**
  * \file
- *         Network-wide key scheme.
+ *         Updates group key and re-distributes it to all neighbors
  * \author
- *         Konrad Krentz <konrad.krentz@gmail.com>
+ *         Daniel Werner <daniel.werner@student.hpi.de>
  */
-#include <stdint.h>
-#include <string.h>
-#include "net/security/akes/akes-single.h"
-#include "lib/aes-128.h"
 
-#ifdef AKES_SINGLE_CONF_KEY
-#define KEY AKES_SINGLE_CONF_KEY
-#else /* AKES_SINGLE_CONF_KEY */
-#define KEY { 0x00 , 0x01 , 0x02 , 0x03 , \
-              0x04 , 0x05 , 0x06 , 0x07 , \
-              0x08 , 0x09 , 0x0A , 0x0B , \
-              0x0C , 0x0D , 0x0E , 0x0F }
-#endif /* AKES_SINGLE_CONF_KEY */
+#ifndef AKES_UPDATE_H_
+#define AKES_UPDATE_H_
 
-static uint8_t key[AES_128_KEY_LENGTH] = KEY;
+#include "net/linkaddr.h"
 
-/*---------------------------------------------------------------------------*/
-static uint8_t *
-get_secret_with(const linkaddr_t *addr)
-{
-  return (uint8_t *)key;
-}
-/*---------------------------------------------------------------------------*/
-static int
-update_secret_with(const linkaddr_t *addr, const uint8_t *new_secret, const int secret_len)
-{
-  if (secret_len >= AES_128_KEY_LENGTH) {
-    memcpy(key, new_secret, AES_128_KEY_LENGTH);
-    return 0;
-  }
-  return 1;
-}
-/*---------------------------------------------------------------------------*/
-static void
-init(void)
-{
-}
-/*---------------------------------------------------------------------------*/
-const struct akes_scheme akes_single_scheme = {
-  init,
-  get_secret_with,
-  get_secret_with,
-  update_secret_with
-};
-/*---------------------------------------------------------------------------*/
+enum REVOCATION_STATUS {SUCCESS, ERROR, ERROR_INCORRECT_FORMAT, ERROR_NRL_FULL};
+
+void akes_update_group_key(void);
+int akes_revoke_node(const linkaddr_t *addr, int add_to_nrl);
+
+#endif /* AKES_UPDATE_H_ */
