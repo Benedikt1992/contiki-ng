@@ -41,6 +41,7 @@
 #include "net/security/akes/akes-delete.h"
 #include "net/security/akes/akes-trickle.h"
 #include "net/security/akes/akes-mac.h"
+#include "net/security/akes/nrl.h"
 #include "net/mac/framer/anti-replay.h"
 #include "net/mac/cmd-broker.h"
 #include "net/packetbuf.h"
@@ -255,6 +256,7 @@ prepare_update_command(uint8_t cmd_id,
   case AKES_HELLOACK_IDENTIFIER:
   case AKES_HELLOACK_P_IDENTIFIER:
   case AKES_ACK_IDENTIFIER:
+  case AKES_UPDATE_IDENTIFIER:
     akes_nbr_copy_key(payload, akes_mac_group_key);
     packetbuf_set_attr(PACKETBUF_ATTR_UNENCRYPTED_BYTES, payload_len);
     payload_len += AES_128_KEY_LENGTH;
@@ -556,6 +558,14 @@ send_helloack(void *ptr)
   LOG_INFO("sending HELLOACK\n");
 
   entry = (struct akes_nbr_entry *)ptr;
+
+#if KEY_REVOCATION_ENABLED
+  if(nrl_is_revoked(akes_nbr_get_addr(entry))) {
+  PRINTF("akes: HELLO sender is revoked, communication aborted\n");
+  return;
+  }
+#endif /* KEY_REVOCATION_ENABLED */
+
   akes_nbr_copy_challenge(challenges, entry->tentative->challenge);
   csprng_rand(challenges + AKES_NBR_CHALLENGE_LEN, AKES_NBR_CHALLENGE_LEN);
   akes_nbr_copy_challenge(entry->tentative->challenge, challenges + AKES_NBR_CHALLENGE_LEN);
@@ -653,6 +663,13 @@ on_helloack_sent(void *ptr, int status, int transmissions)
 {
   struct akes_nbr *nbr;
   struct akes_nbr_entry *entry;
+
+#if KEY_REVOCATION_ENABLED
+  if(nrl_is_revoked(packetbuf_addr(PACKETBUF_ADDR_SENDER))) {
+    PRINTF("akes: HELLOACK sender is revoked, communication aborted\n");
+    return CMD_BROKER_ERROR;
+  }
+#endif /* KEY_REVOCATION_ENABLED */
 
   entry = akes_nbr_get_receiver_entry();
   if(!entry || !((nbr = entry->tentative))) {
@@ -1045,6 +1062,9 @@ akes_init(void)
   leaky_bucket_init(&hello_bucket, MAX_CONSECUTIVE_HELLOS, MAX_HELLO_RATE);
   leaky_bucket_init(&helloack_bucket, MAX_CONSECUTIVE_HELLOACKS, MAX_HELLOACK_RATE);
   leaky_bucket_init(&ack_bucket, MAX_CONSECUTIVE_ACKS, MAX_ACK_RATE);
+#if KEY_REVOCATION_ENABLED
+  nrl_init();
+#endif /* KEY_REVOCATION_ENABLED */
   subscription.on_command = on_command;
   cmd_broker_subscribe(&subscription);
   akes_nbr_init();

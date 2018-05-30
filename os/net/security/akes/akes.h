@@ -123,6 +123,13 @@ struct akes_scheme {
    * \retval NULL HELLOACK shall be discarded
    */
   uint8_t * (* get_secret_with_helloack_sender)(const linkaddr_t *addr);
+
+  /**
+   * \return      Status code indicating the result of the secret update
+   * \retval 0    Success
+   * \retval 1    Failure
+   */
+  int (* update_secret_with_sender)(const linkaddr_t *addr, const uint8_t *new_secret, const int secret_len);
 };
 
 extern const struct akes_scheme AKES_SCHEME;
