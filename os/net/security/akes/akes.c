@@ -41,6 +41,7 @@
 #include "net/security/akes/akes-delete.h"
 #include "net/security/akes/akes-trickle.h"
 #include "net/security/akes/akes-mac.h"
+#include "net/security/akes/akes-revocation.h"
 #include "net/mac/framer/anti-replay.h"
 #include "net/mac/cmd-broker.h"
 #include "net/packetbuf.h"
@@ -1044,6 +1045,7 @@ akes_init(void)
   AKES_SCHEME.init();
   akes_delete_init();
   change_hello_challenge();
+  akes_revokation_init();
   akes_trickle_start();
 }
 /*---------------------------------------------------------------------------*/
