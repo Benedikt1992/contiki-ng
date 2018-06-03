@@ -33,14 +33,14 @@
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
-/* configure RADIO layer */
-// comment in for hardware
-//#include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
-
-/* configure MAC layer */
-// comment in for hardware
-//#include "net/mac/csl/csl-autoconf.h"
-
-#include "net/mac/csma/csma-autoconf.h"
+/* ON_MOTE might be set via the Makefile */
+#ifdef ON_MOTE
+    /* configure RADIO layer */
+    #include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
+    /* configure MAC layer */
+    #include "net/mac/csl/csl-autoconf.h"
+#else
+    #include "net/mac/csma/csma-autoconf.h"
+#endif /* ON_MOTE */
 
 #endif /* PROJECT_CONF_H_ */
