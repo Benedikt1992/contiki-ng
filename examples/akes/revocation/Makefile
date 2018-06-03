@@ -6,7 +6,7 @@ CONTIKI=../../..
 SMALL=1
 
 # 0 => run in cooja; 1 => run on openmote
-ON_MOTE=1
+ON_MOTE=0
 
 ifeq ($(ON_MOTE),1)
 	CFLAGS += -DON_MOTE

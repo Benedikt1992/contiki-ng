@@ -66,6 +66,12 @@ static enum cmd_broker_result
 on_hello(uint8_t *payload)
 {
     LOG_INFO("received revocation HELLO\n");
+    LOG_INFO("Payload: %02x\n", payload[0] & 0xff);
+
+    /* -----------------------
+     * Do whatever is necessary when a node received a revocation message (authenticate?, remove, reply)
+     * TODO: rename method to something useful
+     */
 
     return CMD_BROKER_CONSUMED;
 }
