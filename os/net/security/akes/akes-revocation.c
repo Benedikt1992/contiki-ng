@@ -55,7 +55,7 @@ static enum cmd_broker_result
 on_command(uint8_t cmd_id, uint8_t *payload)
 {
     switch(cmd_id) {
-        case AKES_REVOCATION_HELLO:
+        case AKES_REVOCATION_REVOKE:
             return on_hello(payload);
         default:
             return CMD_BROKER_UNCONSUMED;
@@ -76,20 +76,60 @@ on_hello(uint8_t *payload)
     return CMD_BROKER_CONSUMED;
 }
 /*---------------------------------------------------------------------------*/
-void akes_revokation_send_revoke(struct akes_nbr_entry * entry) {
+void akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     LOG_INFO("revokation_send_revoke\n");
     uint8_t *payload;
     uint8_t payload_len;
 
-    payload = akes_mac_prepare_command(AKES_REVOCATION_HELLO, akes_nbr_get_addr(entry) ); // points to payload memory after cmd_id
-    payload[0] = 0x00;
+    payload = akes_mac_prepare_command(AKES_REVOCATION_REVOKE, addr_revoke ); // points to payload memory after cmd_id
+    *payload = 0xAF;
     payload_len = 2; // cmd_id is the first byte of the payload
     packetbuf_set_datalen(payload_len);
     akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
+void akes_revocation_send_revoke(){
+
+
+}
+/*---------------------------------------------------------------------------*/
+void akes_revocation_send_ack(const linkaddr_t * addr_revoke) {
+    LOG_INFO("revokation_send_ack\n");
+    uint8_t *payload;
+    uint8_t payload_len;
+
+    payload = akes_mac_prepare_command(AKES_REVOCATION_ACK, addr_revoke ); // points to payload memory after cmd_id
+
+    //the address of this node
+    memcpy(payload, &linkaddr_node_addr, LINKADDR_SIZE);
+    payload += LINKADDR_SIZE;
+
+    //reserve space for the number of neighbors
+    uint8_t *nbr_count = payload;
+    payload += sizeof(uint8_t);
+
+    //the neighbor addresses
+    struct akes_nbr_entry *next;
+
+    *nbr_count = 0;
+    next = akes_nbr_head();
+    while(next) {
+        if(next->refs[AKES_NBR_PERMANENT]) {
+            (*nbr_count)++;
+            memcpy(payload, akes_nbr_get_addr(next) , LINKADDR_SIZE);
+            payload += LINKADDR_SIZE;
+        }
+        next = akes_nbr_next(next);
+    }
+
+    payload_len = payload - ((uint8_t *)packetbuf_hdrptr());
+
+    packetbuf_set_datalen(payload_len);
+    akes_mac_send_command_frame();
+}
+/*---------------------------------------------------------------------------*/
 void
-akes_revokation_init(void) {
+akes_revocation_init(void) {
     subscription.on_command = on_command;
     cmd_broker_subscribe(&subscription);
 }

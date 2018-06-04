@@ -1045,7 +1045,7 @@ akes_init(void)
   AKES_SCHEME.init();
   akes_delete_init();
   change_hello_challenge();
-  akes_revokation_init();
+  akes_revocation_init();
   akes_trickle_start();
 }
 /*---------------------------------------------------------------------------*/

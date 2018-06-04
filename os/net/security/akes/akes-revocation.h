@@ -43,7 +43,9 @@
 #include "net/security/akes/akes.h"
 #include "net/security/akes/akes-nbr.h"
 
-void akes_revokation_send_revoke(struct akes_nbr_entry * entry);
-void akes_revokation_init(void);
+void akes_revocation_revoke_node(const linkaddr_t * addr_revoke);
+void akes_revocation_send_revoke();
+void akes_revocation_send_ack(const linkaddr_t * addr_revoke);
+void akes_revocation_init(void);
 
 #endif /* AKES_REVOCATION_H_ */

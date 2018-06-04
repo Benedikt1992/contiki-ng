@@ -62,7 +62,7 @@ PROCESS_THREAD(revocation_process, ev, data)
     entry = akes_nbr_head();
     if(entry && entry->permanent) {
       printf("sending revocation\n");
-      akes_revokation_send_revoke(entry);
+      akes_revocation_revoke_node(akes_nbr_get_addr(entry));
       break;
     }
   }
