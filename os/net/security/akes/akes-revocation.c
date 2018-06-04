@@ -49,29 +49,43 @@
 #include "net/security/akes/akes-revocation.h"
 
 static struct cmd_broker_subscription subscription;
-static enum cmd_broker_result on_hello(uint8_t *payload);
+static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
 /*---------------------------------------------------------------------------*/
 static enum cmd_broker_result
 on_command(uint8_t cmd_id, uint8_t *payload)
 {
     switch(cmd_id) {
         case AKES_REVOCATION_REVOKE:
-            return on_hello(payload);
+            return on_revocation_revoke(payload);
         default:
             return CMD_BROKER_UNCONSUMED;
     }
 }
 /*---------------------------------------------------------------------------*/
 static enum cmd_broker_result
-on_hello(uint8_t *payload)
+on_revocation_revoke(uint8_t *payload)
 {
-    LOG_INFO("received revocation HELLO\n");
+    LOG_INFO("received revocation Revoke\n");
     LOG_INFO("Payload: %02x\n", payload[0] & 0xff);
 
-    /* -----------------------
-     * Do whatever is necessary when a node received a revocation message (authenticate?, remove, reply)
-     * TODO: rename method to something useful
-     */
+    uint8_t hop_index = *payload++;
+    uint8_t hop_count = *payload++;
+
+    if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
+
+    if (hop_index == hop_count) {
+        //revoke the addr_revoke node
+        //linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
+        //linkaddr_t *addr_revoke = &addr_route[hop_count];
+        //TODO: revoke the node
+
+
+
+    } else {
+        //forward the message
+        linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
+        akes_revocation_send_revoke(&addr_route[hop_count],hop_index+1,hop_count,addr_route);
+    }
 
     return CMD_BROKER_CONSUMED;
 }
@@ -88,17 +102,57 @@ void akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
-void akes_revocation_send_revoke(){
+void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route){
+    LOG_INFO("revokation_send_revoke\n");
+    uint8_t *payload;
+    uint8_t payload_len;
 
+    payload = akes_mac_prepare_command(AKES_REVOCATION_REVOKE, addr_revoke ); // points to payload memory after cmd_id
 
+    //the current hop
+    *payload = hop_index;
+    payload++;
+
+    //the number of hops
+    *payload = hop_count;
+    payload++;
+
+    //the hop addresses
+    for (uint8_t i = 0; i < hop_count; i++) {
+        memcpy(&payload[i], &addr_route[i], LINKADDR_SIZE);
+        payload += LINKADDR_SIZE;
+    }
+
+    //the address of this node
+    memcpy(payload, addr_revoke, LINKADDR_SIZE);
+    payload += LINKADDR_SIZE;
+
+    payload_len = payload - ((uint8_t *)packetbuf_hdrptr());
+
+    packetbuf_set_datalen(payload_len);
+    akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
-void akes_revocation_send_ack(const linkaddr_t * addr_revoke) {
+void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route) {
     LOG_INFO("revokation_send_ack\n");
     uint8_t *payload;
     uint8_t payload_len;
 
     payload = akes_mac_prepare_command(AKES_REVOCATION_ACK, addr_revoke ); // points to payload memory after cmd_id
+
+    //the current hop
+    *payload = hop_index;
+    payload++;
+
+    //the number of hops
+    *payload = hop_count;
+    payload++;
+
+    //the hop addresses
+    for (uint8_t i = 0; i < hop_count; i++) {
+        memcpy(&payload[i], &addr_route[i], LINKADDR_SIZE);
+        payload += LINKADDR_SIZE;
+    }
 
     //the address of this node
     memcpy(payload, &linkaddr_node_addr, LINKADDR_SIZE);
@@ -106,7 +160,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke) {
 
     //reserve space for the number of neighbors
     uint8_t *nbr_count = payload;
-    payload += sizeof(uint8_t);
+    payload++;
 
     //the neighbor addresses
     struct akes_nbr_entry *next;
