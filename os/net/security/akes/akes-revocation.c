@@ -99,10 +99,10 @@ on_revocation_revoke(uint8_t *payload)
         for (uint8_t i = 0; i <= hop_count; i++) {
             memcpy(&((linkaddr_t *)route_memb.mem)[i], &addr_route[hop_count-i], LINKADDR_SIZE);
         }
-        akes_revocation_send_ack(addr_revoke, 1, hop_count, addr_route, NULL);
+        akes_revocation_send_ack(addr_revoke, 1, hop_count, ((linkaddr_t *)route_memb.mem), NULL);
     } else {
         //forward the message
-        akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, ((linkaddr_t *)route_memb.mem), payload);
+        akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, addr_route, payload);
     }
 
     return CMD_BROKER_CONSUMED;
@@ -181,7 +181,7 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
 
     //the hop addresses
     for (uint8_t i = 0; i <= hop_count; i++) {
-        memcpy(&payload[i], &addr_route[i], LINKADDR_SIZE);
+        memcpy(&payload, &addr_route[i], LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
     }
 
@@ -191,7 +191,6 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
         //the address of the revoked node
         memcpy(payload, data, LINKADDR_SIZE);
         data += LINKADDR_SIZE;
-
     } else {
         /* TODO: encrypt the following information with the session key */
 
@@ -233,7 +232,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
 
     //the hop addresses
     for (uint8_t i = 0; i <= hop_count; i++) {
-        memcpy(&payload[i], &addr_route[i], LINKADDR_SIZE);
+        memcpy(&payload, &addr_route[i], LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
     }
 
@@ -243,9 +242,12 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
         //the address of the revoked node
         memcpy(payload, data, LINKADDR_SIZE);
         data += LINKADDR_SIZE;
+        payload += LINKADDR_SIZE;
 
         //the number of neighbors
-        uint8_t nbr_count = payload[0];
+        uint8_t nbr_count = *data++;
+        *payload = nbr_count;
+        payload++;
 
         //the neighbors
         memcpy(payload, data, LINKADDR_SIZE * nbr_count);

@@ -43,7 +43,7 @@
 #include "net/security/akes/akes.h"
 #include "net/security/akes/akes-nbr.h"
 
-#define AKES_REVOCATION_MAX_ROUTE_LEN 8
+#define AKES_REVOCATION_MAX_ROUTE_LEN 8 //define this value based on the depth of the network topology
 
 struct akes_revocation {
 
