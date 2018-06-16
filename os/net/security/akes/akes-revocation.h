@@ -32,9 +32,9 @@
 
 /**
  * \file
- *         ??
+ *         akes-revocation.h
  * \author
- *         Konrad Krentz <konrad.krentz@gmail.com>
+ *         ??
  */
 
 #ifndef AKES_REVOCATION_H_
@@ -44,13 +44,7 @@
 #include "net/security/akes/akes-nbr.h"
 
 #define AKES_REVOCATION_MAX_ROUTE_LEN 8 //define this value based on the depth of the network topology
-
-struct akes_revocation {
-
-
-};
-
-extern struct akes_revokation *akes_revokation;
+#define AKES_REVOCATION_MAX_QUEUE 16
 
 void akes_revocation_revoke_node(const linkaddr_t * addr_revoke);
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);

@@ -45,15 +45,37 @@
 #include "net/mac/cmd-broker.h"
 #include "net/packetbuf.h"
 #include "lib/memb.h"
+#include "lib/list.h"
 #include "net/security/akes/akes.h"
 #include "net/security/akes/akes-mac.h"
 #include "net/security/akes/akes-revocation.h"
 
-MEMB(route_memb, linkaddr_t, AKES_REVOCATION_MAX_ROUTE_LEN);
+struct traversal_entry {
+    linkaddr_t addr;
+    struct traversal_entry *parent;
+};
+
+MEMB(traversal_memb, struct traversal_entry, AKES_REVOCATION_MAX_QUEUE);
+LIST(traversal_list);
+static linkaddr_t addr_revoke_node;
+static uint8_t traversal_index;
 
 static struct cmd_broker_subscription subscription;
 static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
 static enum cmd_broker_result on_revocation_ack(uint8_t *payload);
+/*---------------------------------------------------------------------------*/
+static struct traversal_entry *
+traversal_entry_from_addr(const linkaddr_t *addr)
+{
+    struct traversal_entry *n = list_head(traversal_list);
+    while(n != NULL) {
+        if(linkaddr_cmp(&n->addr, addr)) {
+            return n;
+        }
+        n = list_item_next(n);
+    }
+    return NULL;
+}
 /*---------------------------------------------------------------------------*/
 /*
  * Multiplexer for received messages
@@ -69,6 +91,25 @@ on_command(uint8_t cmd_id, uint8_t *payload)
         default:
             return CMD_BROKER_UNCONSUMED;
     }
+}
+/*---------------------------------------------------------------------------*/
+void
+process_node(struct traversal_entry * entry) {
+    uint8_t route_length = 0;
+    linkaddr_t route[AKES_REVOCATION_MAX_ROUTE_LEN];
+    struct traversal_entry *next = entry;
+
+    traversal_index++;
+
+    while(next) {
+        memcpy(&route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length -1], &next->addr , LINKADDR_SIZE);
+        next = next->parent;
+        route_length++;
+    }
+    memcpy(&route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length -1], &linkaddr_node_addr , LINKADDR_SIZE);
+    route_length++;
+
+    akes_revocation_send_revoke(&addr_revoke_node, 1, route_length, &route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length] ,NULL);
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -95,11 +136,12 @@ on_revocation_revoke(uint8_t *payload)
         //revoke the addr_revoke node
         //TODO: revoke the node
 
+        linkaddr_t temp_buffer[AKES_REVOCATION_MAX_ROUTE_LEN];
         //reverse the route
         for (uint8_t i = 0; i <= hop_count; i++) {
-            memcpy(&((linkaddr_t *)route_memb.mem)[i], &addr_route[hop_count-i], LINKADDR_SIZE);
+            memcpy(&(temp_buffer[i]), &addr_route[hop_count-i], LINKADDR_SIZE);
         }
-        akes_revocation_send_ack(addr_revoke, 1, hop_count, ((linkaddr_t *)route_memb.mem), NULL);
+        akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
     } else {
         //forward the message
         akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, addr_route, payload);
@@ -125,12 +167,29 @@ on_revocation_ack(uint8_t *payload)
     payload += LINKADDR_SIZE * hop_count+1;
 
     linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
+    payload += LINKADDR_SIZE;
+    uint8_t nbr_count = *payload++;
+    linkaddr_t *nbr_addrs = (linkaddr_t *)(void*)payload;
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
     if (hop_index == hop_count) {
-        //TODO: digest the information, calculate new route and send the stuff out
+        if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) return CMD_BROKER_ERROR;
+        struct traversal_entry *entry = traversal_entry_from_addr(&addr_route[0]);
+        if (!entry) return CMD_BROKER_ERROR;
 
+        struct traversal_entry *new_entry;
+        for (uint8_t i = 0; i < nbr_count; i++) {
+            // Check whether we already processed this node
+            if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
+
+            new_entry = memb_alloc(&traversal_memb);
+            memcpy(&new_entry->addr, &nbr_addrs[i] , LINKADDR_SIZE);
+            new_entry->parent = traversal_entry_from_addr(&addr_route[0]);
+            list_add(traversal_list, new_entry);
+
+            process_node(new_entry);
+        }
     } else {
         //forward the message
         akes_revocation_send_ack(addr_revoke, hop_index+1, hop_count, addr_route, payload);
@@ -143,16 +202,28 @@ on_revocation_ack(uint8_t *payload)
  * public AKES API for revoking a node
  * addr_revoke - the address of the node that should be revoked
  */
-void akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
+void
+akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     LOG_INFO("revokation_send_revoke\n");
-    uint8_t *payload;
-    uint8_t payload_len;
 
-    payload = akes_mac_prepare_command(AKES_REVOCATION_REVOKE, addr_revoke ); // points to payload memory after cmd_id
-    *payload = 0xAF;
-    payload_len = 2; // cmd_id is the first byte of the payload
-    packetbuf_set_datalen(payload_len);
-    akes_mac_send_command_frame();
+    traversal_index = 0;
+    addr_revoke_node = *addr_revoke;
+
+    struct traversal_entry *new_entry;
+
+    struct akes_nbr_entry *next;
+    next = akes_nbr_head();
+    while(next) {
+        if(next->refs[AKES_NBR_PERMANENT]) {
+            new_entry = memb_alloc(&traversal_memb);
+            memcpy(&new_entry->addr, akes_nbr_get_addr(next) , LINKADDR_SIZE);
+            new_entry->parent = NULL;
+            list_add(traversal_list, new_entry);
+
+            process_node(new_entry);
+        }
+        next = akes_nbr_next(next);
+    }
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -290,6 +361,8 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
  */
 void
 akes_revocation_init(void) {
+    memb_init(&traversal_memb);
+    list_init(traversal_list);
     subscription.on_command = on_command;
     cmd_broker_subscribe(&subscription);
 }
