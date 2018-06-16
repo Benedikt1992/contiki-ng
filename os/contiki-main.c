@@ -47,7 +47,7 @@
 #include "sys/energest.h"
 #include "sys/stack-check.h"
 #include "dev/watchdog.h"
-
+#include "lib/null-seeder.h"
 #include "net/app-layer/coap/coap-engine.h"
 #include "services/rpl-border-router/rpl-border-router.h"
 #include "services/orchestra/orchestra.h"
@@ -90,6 +90,9 @@ main(void)
 
   netstack_init();
   node_id_init();
+#if CSPRNG_ENABLED
+  null_seeder_seed();
+#endif /* CSPRNG_ENABLED */
 
   LOG_INFO("Starting " CONTIKI_VERSION_STRING "\n");
   LOG_INFO("- Routing: %s\n", NETSTACK_ROUTING.name);
