@@ -43,28 +43,22 @@
 #define PRINTF(...)
 #endif /* DEBUG */
 
-PROCESS(revocation_process, "revocation_process");
-AUTOSTART_PROCESSES(&revocation_process);
+PROCESS(revocation_node_process, "revocation_node_process");
+AUTOSTART_PROCESSES(&revocation_node_process);
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(revocation_process, ev, data)
+PROCESS_THREAD(revocation_node_process, ev, data)
 {
-  struct akes_nbr_entry *entry;
   static struct etimer periodic_timer;
 
   PROCESS_BEGIN();
 
   etimer_set(&periodic_timer, CLOCK_SECOND);
+  printf("Revocation enabled node started.\n");
+
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
-
-    entry = akes_nbr_head();
-    if(entry && entry->permanent) {
-      printf("sending revocation\n");
-      akes_revocation_revoke_node(akes_nbr_get_addr(entry));
-      break;
-    }
   }
 
   PROCESS_END();

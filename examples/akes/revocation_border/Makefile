@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = revocation
+CONTIKI_PROJECT = revocation_border
 all: $(CONTIKI_PROJECT)
 
 CONTIKI=../../..
