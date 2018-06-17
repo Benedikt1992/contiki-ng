@@ -255,7 +255,13 @@ akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
  * | cmd_id | hop_index | hop_count | addr_sender,addr_hop1..addr_dest | addr_revoke |
  */
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data){
+    //TODO remove debug output
     LOG_INFO("revokation_send_revoke\n");
+    LOG_INFO("Call Params: ");
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_(", %d, %d, ", hop_index, hop_count);
+    LOG_INFO_LLADDR(&addr_route[hop_index]);
+    LOG_INFO_("\n");
     uint8_t *payload;
     uint8_t payload_len;
 
@@ -270,8 +276,8 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     payload++;
 
     //the hop addresses
-    for (uint8_t i = 0; i <= hop_count; i++) {
-        memcpy(&payload, &addr_route[i], LINKADDR_SIZE);
+    for (uint8_t i = 0; i < hop_count; i++) {
+        memcpy(payload, &addr_route[i], LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
     }
 
