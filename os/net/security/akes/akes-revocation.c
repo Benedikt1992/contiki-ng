@@ -106,7 +106,6 @@ process_node(struct traversal_entry *entry) {
     uint8_t route_length = 0;
     linkaddr_t route[AKES_REVOCATION_MAX_ROUTE_LEN];
     struct traversal_entry *next = entry;
-    LOG_INFO_("entry %x ", entry);
 
     traversal_index++;
 
@@ -115,7 +114,6 @@ process_node(struct traversal_entry *entry) {
         route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length -1] = next->addr;
         next = next->parent;
         route_length++;
-        LOG_INFO_("route_length %d ", route_length);
     }
 
     uint8_t hop_count = route_length-1;
@@ -128,9 +126,7 @@ process_node(struct traversal_entry *entry) {
  */
 void
 akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
-    LOG_INFO("Node  ");
-    LOG_INFO_LLADDR(&linkaddr_node_addr);
-    LOG_INFO("revoked ");
+    LOG_INFO("locally revoked ");
     LOG_INFO_LLADDR(addr_revoke);
     LOG_INFO_("\n");
 }
@@ -202,7 +198,7 @@ on_revocation_revoke(uint8_t *payload)
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
     if (hop_index == hop_count) {
-        LOG_INFO("revoke message is for myself.");
+        LOG_INFO("revoke message is for myself.\n");
 
         //revoke the addr_revoke node
         akes_revocation_revoke_node_internal(addr_revoke);
@@ -215,7 +211,7 @@ on_revocation_revoke(uint8_t *payload)
         akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
     } else {
         //forward the message
-        LOG_INFO("revoke message is goint to be forwarded.");
+        LOG_INFO("revoke message is goint to be forwarded.\n");
         akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, addr_route, payload);
     }
 
@@ -264,6 +260,10 @@ on_revocation_ack(uint8_t *payload)
             new_entry->addr = nbr_addrs[i];
             new_entry->parent = traversal_entry_from_addr(&addr_route[0]);
             list_add(traversal_list, new_entry);
+
+            LOG_INFO("Going to send revocation message to ");
+            LOG_INFO_LLADDR(&new_entry->addr);
+            LOG_INFO_("\n");
 
             process_node(new_entry);
         }
@@ -330,6 +330,7 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     payload_len = payload - ((uint8_t *)packetbuf_hdrptr());
 
     packetbuf_set_datalen(payload_len);
+    LOG_INFO("I'm just about to send a revoke message\n");
     akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
@@ -416,6 +417,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
     payload_len = payload - ((uint8_t *)packetbuf_hdrptr());
 
     packetbuf_set_datalen(payload_len);
+    LOG_INFO("I'm just about to send an ack message\n");
     akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
