@@ -51,7 +51,10 @@
 #include "net/security/akes/akes-revocation.h"
 
 struct traversal_entry {
+    //for iterating through all visited nodes
     struct traversal_entry *next;
+    //for iterating through the node topology
+    struct traversal_entry *parent;
     linkaddr_t addr;
 };
 
@@ -98,25 +101,83 @@ on_command(uint8_t cmd_id, uint8_t *payload)
  * This method builds the link layer route to the node 'entry' and triggers the revoke message
  */
 void
-process_node(struct traversal_entry * entry) {
+process_node(struct traversal_entry *entry) {
     //TODO I doubt that this will work on a semantical level
     uint8_t route_length = 0;
     linkaddr_t route[AKES_REVOCATION_MAX_ROUTE_LEN];
     struct traversal_entry *next = entry;
+    LOG_INFO_("entry %x ", entry);
 
     traversal_index++;
 
+    //build the route from receiver upwards in network topology
     while(next) {
         route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length -1] = next->addr;
-        next = list_item_next(next);
+        next = next->parent;
         route_length++;
+        LOG_INFO_("route_length %d ", route_length);
     }
 
-    memcpy(&route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length -1], &linkaddr_node_addr , LINKADDR_SIZE);
-    route_length++;
+    uint8_t hop_count = route_length-1;
+    akes_revocation_send_revoke(&addr_revoke_node, 1, hop_count, &route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length], NULL);
+}
+/*---------------------------------------------------------------------------*/
+/*
+ * private AKES method for revoking a node
+ * addr_revoke - the address of the node that should be revoked
+ */
+void
+akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
+    LOG_INFO("Node  ");
+    LOG_INFO_LLADDR(&linkaddr_node_addr);
+    LOG_INFO("revoked ");
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_("\n");
+}
 
-    //TODO within this call is an huge bug! (cooja crashes)
-    akes_revocation_send_revoke(&addr_revoke_node, 1, route_length, &route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length] ,NULL);
+/*---------------------------------------------------------------------------*/
+/*
+ * public AKES API for revoking a node
+ * addr_revoke - the address of the node that should be revoked
+ */
+void
+akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
+    struct traversal_entry *root_entry;
+
+    LOG_INFO("revokation_send_revoke for node: ");
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_("\n");
+
+    traversal_index = 0;
+    addr_revoke_node = *addr_revoke;
+
+    //Revoke the node locally
+    akes_revocation_revoke_node_internal(&addr_revoke_node);
+    //Save us in the traversal List
+    root_entry = memb_alloc(&traversal_memb);
+    root_entry->addr = linkaddr_node_addr;
+    root_entry->parent = NULL;
+    list_add(traversal_list, root_entry);
+
+    struct traversal_entry *new_entry;
+    struct akes_nbr_entry *next;
+    next = akes_nbr_head();
+    while(next) {
+        //TODO don't send to the revoked node itself
+        if(next->refs[AKES_NBR_PERMANENT]) {
+            new_entry = memb_alloc(&traversal_memb);
+            new_entry->parent = root_entry;
+            new_entry->addr = *akes_nbr_get_addr(next);
+            list_add(traversal_list, new_entry);
+
+            LOG_INFO("Going to send revocation message to ");
+            LOG_INFO_LLADDR(&new_entry->addr);
+            LOG_INFO_("\n");
+
+            process_node(new_entry);
+        }
+        next = akes_nbr_next(next);
+    }
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -134,21 +195,22 @@ on_revocation_revoke(uint8_t *payload)
     uint8_t hop_index = *payload++;
     uint8_t hop_count = *payload++;
     linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
-    payload += LINKADDR_SIZE * hop_count+1;
+    payload += LINKADDR_SIZE * (hop_count+1);
 
     linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
     if (hop_index == hop_count) {
-        //revoke the addr_revoke node
-        //TODO: revoke the node
         LOG_INFO("revoke message is for myself.");
 
-        linkaddr_t temp_buffer[AKES_REVOCATION_MAX_ROUTE_LEN];
+        //revoke the addr_revoke node
+        akes_revocation_revoke_node_internal(addr_revoke);
+
         //reverse the route
-        for (uint8_t i = 0; i <= hop_count; i++) {
-            memcpy(&(temp_buffer[i]), &addr_route[hop_count-i], LINKADDR_SIZE);
+        linkaddr_t temp_buffer[AKES_REVOCATION_MAX_ROUTE_LEN];
+        for (uint8_t i = 0; i < hop_count+1; i++) {
+            temp_buffer[i] = addr_route[hop_count-i];
         }
         akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
     } else {
@@ -175,12 +237,15 @@ on_revocation_ack(uint8_t *payload)
     uint8_t hop_index = *payload++;
     uint8_t hop_count = *payload++;
     linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
-    payload += LINKADDR_SIZE * hop_count+1;
+    payload += LINKADDR_SIZE * (hop_count+1);
+
+    uint8_t *forwarded_payload = payload;
 
     linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
     payload += LINKADDR_SIZE;
     uint8_t nbr_count = *payload++;
     linkaddr_t *nbr_addrs = (linkaddr_t *)(void*)payload;
+    payload += LINKADDR_SIZE * nbr_count;
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
@@ -196,8 +261,8 @@ on_revocation_ack(uint8_t *payload)
             if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
 
             new_entry = memb_alloc(&traversal_memb);
-            memcpy(&new_entry->addr, &nbr_addrs[i] , LINKADDR_SIZE);
-            new_entry->next = traversal_entry_from_addr(&addr_route[0]);
+            new_entry->addr = nbr_addrs[i];
+            new_entry->parent = traversal_entry_from_addr(&addr_route[0]);
             list_add(traversal_list, new_entry);
 
             process_node(new_entry);
@@ -205,44 +270,10 @@ on_revocation_ack(uint8_t *payload)
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.");
-        akes_revocation_send_ack(addr_revoke, hop_index+1, hop_count, addr_route, payload);
+        akes_revocation_send_ack(addr_revoke, hop_index+1, hop_count, addr_route, forwarded_payload);
     }
 
     return CMD_BROKER_CONSUMED;
-}
-/*---------------------------------------------------------------------------*/
-/*
- * public AKES API for revoking a node
- * addr_revoke - the address of the node that should be revoked
- */
-void
-akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
-    LOG_INFO("revokation_send_revoke for node: ");
-    LOG_INFO_LLADDR(addr_revoke);
-    LOG_INFO_("\n");
-
-    traversal_index = 0;
-    addr_revoke_node = *addr_revoke;
-
-    struct traversal_entry *new_entry;
-
-    struct akes_nbr_entry *next;
-    next = akes_nbr_head();
-    while(next) {
-        //TODO don't send to the revoked node itself
-        if(next->refs[AKES_NBR_PERMANENT]) {
-            new_entry = memb_alloc(&traversal_memb);
-            memcpy(&new_entry->addr, akes_nbr_get_addr(next) , LINKADDR_SIZE);
-            new_entry->next = NULL;
-            list_add(traversal_list, new_entry);
-            LOG_INFO("Going to send revocation message to ");
-            LOG_INFO_LLADDR(&new_entry->addr);
-            LOG_INFO_("\n");
-
-            process_node(new_entry);
-        }
-        next = akes_nbr_next(next);
-    }
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -276,7 +307,8 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     payload++;
 
     //the hop addresses
-    for (uint8_t i = 0; i < hop_count; i++) {
+    //we have hop_count+1 addresses in the route
+    for (uint8_t i = 0; i < hop_count+1; i++) {
         memcpy(payload, &addr_route[i], LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
     }
@@ -327,8 +359,9 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
     payload++;
 
     //the hop addresses
-    for (uint8_t i = 0; i <= hop_count; i++) {
-        memcpy(&payload, &addr_route[i], LINKADDR_SIZE);
+    //we have hop_count+1 addresses in the route
+    for (uint8_t i = 0; i < hop_count+1; i++) {
+        memcpy(payload, &addr_route[i], LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
     }
 
@@ -350,7 +383,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
         payload += LINKADDR_SIZE * nbr_count;
     }
     else {
-        /* TODO: encrypt the following information with the session key */
+        // TODO: encrypt the following information with the session key
 
         //the address of the revoked node
         memcpy(payload, addr_revoke, LINKADDR_SIZE);
@@ -366,9 +399,14 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
         *nbr_count = 0;
         next = akes_nbr_head();
         while(next) {
-            if(next->refs[AKES_NBR_PERMANENT]) {
+            if(next->permanent) {
                 (*nbr_count)++;
-                memcpy(payload, akes_nbr_get_addr(next) , LINKADDR_SIZE);
+                linkaddr_t *nbr_addr = akes_nbr_get_addr(next);
+                LOG_INFO("nbr entry: ");
+                LOG_INFO_LLADDR(nbr_addr);
+                LOG_INFO_("\n");
+
+                memcpy(payload, nbr_addr , LINKADDR_SIZE);
                 payload += LINKADDR_SIZE;
             }
             next = akes_nbr_next(next);
