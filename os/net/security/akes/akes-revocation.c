@@ -97,12 +97,10 @@ on_command(uint8_t cmd_id, uint8_t *payload)
 }
 /*---------------------------------------------------------------------------*/
 /*
- * TODO: correct?
  * This method builds the link layer route to the node 'entry' and triggers the revoke message
  */
 void
 process_node(struct traversal_entry *entry) {
-    //TODO I doubt that this will work on a semantical level
     uint8_t route_length = 0;
     linkaddr_t route[AKES_REVOCATION_MAX_ROUTE_LEN];
     struct traversal_entry *next = entry;
@@ -160,7 +158,7 @@ akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     next = akes_nbr_head();
     while(next) {
         //TODO don't send to the revoked node itself
-        if(next->refs[AKES_NBR_PERMANENT]) {
+        if(next->permanent) {
             new_entry = memb_alloc(&traversal_memb);
             new_entry->parent = root_entry;
             new_entry->addr = *akes_nbr_get_addr(next);
@@ -211,7 +209,7 @@ on_revocation_revoke(uint8_t *payload)
         akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
     } else {
         //forward the message
-        LOG_INFO("revoke message is goint to be forwarded.\n");
+        LOG_INFO("revoke message is going to be forwarded.\n");
         akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, addr_route, payload);
     }
 
@@ -246,7 +244,7 @@ on_revocation_ack(uint8_t *payload)
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
     if (hop_index == hop_count) {
-        LOG_INFO("revocation ack is for myself.");
+        LOG_INFO("revocation ack is for myself.\n");
         if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) return CMD_BROKER_ERROR; //TODO addr_revoke_node will have changed if there is a second call!
         struct traversal_entry *entry = traversal_entry_from_addr(&addr_route[0]);
         if (!entry) return CMD_BROKER_ERROR;
@@ -258,7 +256,7 @@ on_revocation_ack(uint8_t *payload)
 
             new_entry = memb_alloc(&traversal_memb);
             new_entry->addr = nbr_addrs[i];
-            new_entry->parent = traversal_entry_from_addr(&addr_route[0]);
+            new_entry->parent = entry;
             list_add(traversal_list, new_entry);
 
             LOG_INFO("Going to send revocation message to ");
@@ -269,7 +267,7 @@ on_revocation_ack(uint8_t *payload)
         }
     } else {
         //forward the message
-        LOG_INFO("revocation ack is going to be forwarded.");
+        LOG_INFO("revocation ack is going to be forwarded.\n");
         akes_revocation_send_ack(addr_revoke, hop_index+1, hop_count, addr_route, forwarded_payload);
     }
 
@@ -288,11 +286,7 @@ on_revocation_ack(uint8_t *payload)
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data){
     //TODO remove debug output
     LOG_INFO("revokation_send_revoke\n");
-    LOG_INFO("Call Params: ");
-    LOG_INFO_LLADDR(addr_revoke);
-    LOG_INFO_(", %d, %d, ", hop_index, hop_count);
-    LOG_INFO_LLADDR(&addr_route[hop_index]);
-    LOG_INFO_("\n");
+
     uint8_t *payload;
     uint8_t payload_len;
 
@@ -305,13 +299,20 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     //the number of hops
     *payload = hop_count;
     payload++;
+    LOG_INFO("Call Params: ");
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_(", %d, %d\n", hop_index, hop_count);
+    LOG_INFO("Route: ");
 
     //the hop addresses
     //we have hop_count+1 addresses in the route
     for (uint8_t i = 0; i < hop_count+1; i++) {
         memcpy(payload, &addr_route[i], LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
+        LOG_INFO_LLADDR(&addr_route[i]);
+        LOG_INFO_(", ");
     }
+    LOG_INFO_("\n");
 
     if (data != NULL) {
         //copy data from previous payload
