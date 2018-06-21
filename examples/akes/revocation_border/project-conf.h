@@ -33,6 +33,8 @@
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
+#define CSMA_CONF_MAX_FRAME_RETRIES 0
+
 /* ON_MOTE might be set via the Makefile */
 #ifdef ON_MOTE
     /* configure RADIO layer */

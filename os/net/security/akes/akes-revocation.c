@@ -310,8 +310,8 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     payload++;
     LOG_INFO("Call Params: ");
     LOG_INFO_LLADDR(addr_revoke);
-    LOG_INFO_(", %d, %d\n", hop_index, hop_count);
-    LOG_INFO("Route: ");
+    LOG_INFO_(", %d, %d, ", hop_index, hop_count);
+    LOG_INFO_("Route: ");
 
     //the hop addresses
     //we have hop_count+1 addresses in the route
