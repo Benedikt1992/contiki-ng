@@ -170,13 +170,6 @@ prepare_update_command(uint8_t cmd_id,
   akes_mac_add_security_header(entry->refs[status]);
   anti_replay_suppress_counter();
 #endif /* ILOS_ENABLED */
-#if MAC_CONF_WITH_CSMA
-  if(status) {
-    /* avoids that csma.c confuses frames for tentative and permanent neighbors */
-    packetbuf_set_attr(PACKETBUF_ATTR_MAC_SEQNO,
-        0xff00 + packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO));
-  }
-#endif /* MAC_CONF_WITH_CSMA */
 #if ANTI_REPLAY_WITH_SUPPRESSION
   packetbuf_set_attr(PACKETBUF_ATTR_NEIGHBOR_INDEX, akes_nbr_index_of(entry->refs[status]));
 #endif /* ANTI_REPLAY_WITH_SUPPRESSION */

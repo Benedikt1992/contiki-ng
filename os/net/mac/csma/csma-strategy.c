@@ -79,7 +79,6 @@ static struct cmd_broker_subscription subscription;
 static void
 prepare_announce(void)
 {
-  uint16_t seqno;
   struct akes_nbr_entry *next;
   uint8_t announced_mics[NBR_TABLE_MAX_NEIGHBORS * AKES_MAC_BROADCAST_MIC_LEN];
   uint8_t *payload;
@@ -87,7 +86,6 @@ prepare_announce(void)
   uint8_t max_index;
   uint8_t local_index;
 
-  seqno = packetbuf_attr(PACKETBUF_ATTR_MAC_SEQNO);
   max_index = 0;
   next = akes_nbr_head();
   while(next) {
@@ -105,11 +103,6 @@ prepare_announce(void)
   }
 
   payload = akes_mac_prepare_command(ANNOUNCE_IDENTIFIER, &linkaddr_null);
-  /*
-   * Adding 0xff00 avoids that csma.c confuses sequence numbers of
-   * ANNOUNCES and corresponding broadcast frames
-   */
-  packetbuf_set_attr(PACKETBUF_ATTR_MAC_SEQNO, 0xff00 + seqno);
 
   /* write payload */
   /* TODO We currently assume that all MICs fit within a single ANNOUNCE command */
