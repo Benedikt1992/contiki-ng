@@ -225,6 +225,7 @@ on_revocation_revoke(uint8_t *payload)
 static enum cmd_broker_result
 on_revocation_ack(uint8_t *payload)
 {
+    //TODO: Does the answer of on revocation interrupt this message? And does it change the payload pointer content?
     LOG_INFO("received revocation ACK\n");
     LOG_INFO("Payload: %02x\n", payload[0] & 0xff); //TODO print complete payload
 
