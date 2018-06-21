@@ -183,8 +183,7 @@ akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
 static enum cmd_broker_result
 on_revocation_revoke(uint8_t *payload)
 {
-    LOG_INFO("received revocation Revoke\n");
-    LOG_INFO("Payload: %02x\n", payload[0] & 0xff); //TODO print complete payload
+    LOG_INFO("received revocation Revoke for ");
 
     uint8_t hop_index = *payload++;
     uint8_t hop_count = *payload++;
@@ -192,6 +191,9 @@ on_revocation_revoke(uint8_t *payload)
     payload += LINKADDR_SIZE * (hop_count+1);
 
     linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
+
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_("\n");
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
@@ -226,8 +228,7 @@ static enum cmd_broker_result
 on_revocation_ack(uint8_t *payload)
 {
     //TODO: Does the answer of on revocation interrupt this message? And does it change the payload pointer content?
-    LOG_INFO("received revocation ACK\n");
-    LOG_INFO("Payload: %02x\n", payload[0] & 0xff); //TODO print complete payload
+    LOG_INFO("received revocation ACK for ");
 
     uint8_t hop_index = *payload++;
     uint8_t hop_count = *payload++;
@@ -242,11 +243,18 @@ on_revocation_ack(uint8_t *payload)
     linkaddr_t *nbr_addrs = (linkaddr_t *)(void*)payload;
     payload += LINKADDR_SIZE * nbr_count;
 
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_("\n");
+
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
     if (hop_index == hop_count) {
         LOG_INFO("revocation ack is for myself.\n");
-        if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) return CMD_BROKER_ERROR; //TODO addr_revoke_node will have changed if there is a second call!
+        if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) {
+            //TODO addr_revoke_node will have changed if there is a second call!
+            LOG_INFO("INVALID addr_revoke. ack dropped.\n");
+            return CMD_BROKER_ERROR;
+        }
         struct traversal_entry *entry = traversal_entry_from_addr(&addr_route[0]);
         if (!entry) return CMD_BROKER_ERROR;
 
@@ -315,12 +323,14 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     }
     LOG_INFO_("\n");
 
-    if (data != NULL) {
+    if (data) {
         //copy data from previous payload
 
         //the address of the revoked node
         memcpy(payload, data, LINKADDR_SIZE);
         data += LINKADDR_SIZE;
+        payload += LINKADDR_SIZE;
+
     } else {
         /* TODO: encrypt the following information with the session key */
 
@@ -332,7 +342,6 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
     payload_len = payload - ((uint8_t *)packetbuf_hdrptr());
 
     packetbuf_set_datalen(payload_len);
-    LOG_INFO("I'm just about to send a revoke message\n");
     akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
@@ -368,7 +377,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
         payload += LINKADDR_SIZE;
     }
 
-    if (data != NULL) {
+    if (data) {
         //copy data from previous payload
 
         //the address of the revoked node
@@ -386,6 +395,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
         payload += LINKADDR_SIZE * nbr_count;
     }
     else {
+        LOG_INFO("build new ack message\n");
         // TODO: encrypt the following information with the session key
 
         //the address of the revoked node
@@ -419,7 +429,6 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
     payload_len = payload - ((uint8_t *)packetbuf_hdrptr());
 
     packetbuf_set_datalen(payload_len);
-    LOG_INFO("I'm just about to send an ack message\n");
     akes_mac_send_command_frame();
 }
 /*---------------------------------------------------------------------------*/
