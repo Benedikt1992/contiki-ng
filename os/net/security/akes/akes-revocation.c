@@ -157,7 +157,7 @@ akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     struct akes_nbr_entry *next;
     next = akes_nbr_head();
     while(next) {
-        //TODO don't send to the revoked node itself
+        //TODO don't send to the revoked node itself -> probably not possible since the node is alreade revoked locally
         if(next->permanent) {
             new_entry = memb_alloc(&traversal_memb);
             new_entry->parent = root_entry;
