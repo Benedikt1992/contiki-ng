@@ -54,7 +54,7 @@ PROCESS_THREAD(revocation_border_process, ev, data)
 
   PROCESS_BEGIN();
 
-  etimer_set(&periodic_timer, CLOCK_SECOND);
+  etimer_set(&periodic_timer, CLOCK_SECOND * 5);
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
