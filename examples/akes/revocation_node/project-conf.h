@@ -33,13 +33,21 @@
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
+/* full debug output for mac layer */
+//#define LOG_CONF_LEVEL_MAC LOG_LEVEL_DBG
+
 /* ON_MOTE might be set via the Makefile */
 #ifdef ON_MOTE
+    /* max number of packets scheduled for sending */
+//    #define QUEUEBUF_CONF_NUM 8
     /* configure RADIO layer */
     #include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
     /* configure MAC layer */
     #include "net/mac/csl/csl-autoconf.h"
 #else
+    /* max number of packets scheduled for sending */
+    #define CSMA_CONF_MAX_NEIGHBOR_QUEUES 8
+
     #include "net/mac/csma/csma-autoconf.h"
 #endif /* ON_MOTE */
 
