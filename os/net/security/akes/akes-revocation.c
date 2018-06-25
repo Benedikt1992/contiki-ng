@@ -238,7 +238,11 @@ on_revocation_ack(uint8_t *payload)
 
     uint8_t hop_index = *payload++;
     uint8_t hop_count = *payload++;
-    linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
+    linkaddr_t addr_route[hop_count +1];
+    linkaddr_t *addr_route_payload = (linkaddr_t *)(void*)payload;
+    for (int j = 0; j <= hop_count ; ++j) {
+      addr_route[j] = addr_route_payload[j];
+    }
     payload += LINKADDR_SIZE * (hop_count+1);
 
     uint8_t *forwarded_payload = payload;
