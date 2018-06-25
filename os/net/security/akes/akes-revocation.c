@@ -157,7 +157,13 @@ akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     struct akes_nbr_entry *next;
     next = akes_nbr_head();
     while(next) {
-        //TODO don't send to the revoked node itself -> probably not possible since the node is alreade revoked locally
+        if (linkaddr_cmp(addr_revoke, akes_nbr_get_addr(next))) {
+          LOG_INFO("Containing ");
+          LOG_INFO_LLADDR(addr_revoke);
+          LOG_INFO_(" as direct neighbor. Going to ignore.\n");
+          next = akes_nbr_next(next);
+          continue;
+        }
         if(next->permanent) {
             new_entry = memb_alloc(&traversal_memb);
             new_entry->parent = root_entry;
@@ -244,6 +250,8 @@ on_revocation_ack(uint8_t *payload)
     payload += LINKADDR_SIZE * nbr_count;
 
     LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_(" from ");
+    LOG_INFO_LLADDR(addr_route);
     LOG_INFO_("\n");
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
@@ -260,6 +268,14 @@ on_revocation_ack(uint8_t *payload)
 
         struct traversal_entry *new_entry;
         for (uint8_t i = 0; i < nbr_count; i++) {
+            if (linkaddr_cmp(addr_revoke, &nbr_addrs[i])) {
+              LOG_INFO("Received ");
+              LOG_INFO_LLADDR(addr_revoke);
+              LOG_INFO_(" as neighbor of ");
+              LOG_INFO_LLADDR(addr_route);
+              LOG_INFO_(". Going to ignore.\n");
+              continue;
+            }
             // Check whether we already processed this node
             if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
 
