@@ -34,6 +34,9 @@
 #include "sys/etimer.h"
 #include "net/security/akes/akes-nbr.h"
 #include "net/security/akes/akes-revocation.h"
+#include "sys/log.h"
+#define LOG_MODULE "REV_NODE"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
 #define DEBUG 1
 #if DEBUG
@@ -54,7 +57,7 @@ PROCESS_THREAD(revocation_node_process, ev, data)
   PROCESS_BEGIN();
 
   etimer_set(&periodic_timer, CLOCK_SECOND);
-  printf("Revocation enabled node started.\n");
+  LOG_INFO("Revocation enabled node started.\n");
 
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));

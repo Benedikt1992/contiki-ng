@@ -34,6 +34,10 @@
 #include "sys/etimer.h"
 #include "net/security/akes/akes-nbr.h"
 #include "net/security/akes/akes-revocation.h"
+#include "os/net/linkaddr.h"
+#include "sys/log.h"
+#define LOG_MODULE "REV_BORDER"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
 #define DEBUG 1
 #if DEBUG
@@ -49,7 +53,6 @@ AUTOSTART_PROCESSES(&revocation_border_process);
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(revocation_border_process, ev, data)
 {
-  struct akes_nbr_entry *entry;
   static struct etimer periodic_timer;
 
   PROCESS_BEGIN();
@@ -59,12 +62,26 @@ PROCESS_THREAD(revocation_border_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
 
+#if ON_MOTE
+    struct akes_nbr_entry *entry;
     entry = akes_nbr_head();
     if(entry && entry->permanent) {
-      printf("sending revocation\n");
+      LOG_INFO("sending revocation\n");
       akes_revocation_revoke_node(akes_nbr_get_addr(entry));
       break;
+#else
+    linkaddr_t mal_node;
+    for(unsigned int i = 0; i < LINKADDR_SIZE; i++) {
+      if(i == 0) {
+        mal_node.u8[i] = 0x02;
+      } else {
+        mal_node.u8[i] = 0x00;
+      }
     }
+    LOG_INFO("sending revocation\n");
+    akes_revocation_revoke_node(&mal_node);
+    break;
+#endif // ON_MOTE
   }
 
   PROCESS_END();
