@@ -132,62 +132,90 @@ akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
  * Setup a state object
  */
 struct akes_revocation_state
-//akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
-akes_revocation_setup_state(linkaddr_t *addr_revoke) {
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
   struct akes_revocation_state state;
 
   state.addr_revoke = addr_revoke;
+  state.amount_dst = amount_dst;
+  state.addr_dsts = addr_dsts;
+  state.new_keys = new_keys;
   return state;
 }
 /*---------------------------------------------------------------------------*/
 /*
  * public AKES API for revoking a node
  * addr_revoke - the address of the node that should be revoked
+ * TODO Add neighbors to state object
  */
-void
+int8_t
 akes_revocation_revoke_node(struct akes_revocation_state *state) {
-    struct traversal_entry *root_entry;
+  if (addr_revoke_node && !linkaddr_cmp(&addr_revoke_node, state->addr_revoke)) {
+    return AKES_REVOCATION_ALREADY_IN_PROGRESS;
+  }
+  if (!addr_revoke_node) {
+      addr_revoke_node = *state->addr_revoke;
+  }
 
-    LOG_INFO("revokation_send_revoke for node: ");
-    LOG_INFO_LLADDR(state->addr_revoke);
-    LOG_INFO_("\n");
+  for (int i = 0; i < state->amount_dst; ++i) {
+    if (linkaddr_cmp(&state->addr_dsts[i], &linkaddr_node_addr)) {
+      struct traversal_entry *root_entry;
 
-    traversal_index = 0;
-    addr_revoke_node = *state->addr_revoke;
-
-    //Revoke the node locally
-    akes_revocation_revoke_node_internal(&addr_revoke_node);
-    //Save us in the traversal List
-    root_entry = memb_alloc(&traversal_memb);
-    root_entry->addr = linkaddr_node_addr;
-    root_entry->parent = NULL;
-    list_add(traversal_list, root_entry);
-
-    struct traversal_entry *new_entry;
-    struct akes_nbr_entry *next;
-    next = akes_nbr_head();
-    while(next) {
-        if (linkaddr_cmp(state->addr_revoke, akes_nbr_get_addr(next))) {
-          LOG_INFO("Containing ");
-          LOG_INFO_LLADDR(state->addr_revoke);
-          LOG_INFO_(" as direct neighbor. Going to ignore.\n");
-          next = akes_nbr_next(next);
-          continue;
-        }
-        if(next->permanent) {
-            new_entry = memb_alloc(&traversal_memb);
-            new_entry->parent = root_entry;
-            new_entry->addr = *akes_nbr_get_addr(next);
-            list_add(traversal_list, new_entry);
-
-            LOG_INFO("Going to send revocation message to ");
-            LOG_INFO_LLADDR(&new_entry->addr);
-            LOG_INFO_("\n");
-
-            process_node(new_entry);
-        }
-        next = akes_nbr_next(next);
+      //Revoke the node locally
+      akes_revocation_revoke_node_internal(&addr_revoke_node);
+      //Save us in the traversal List
+      root_entry = memb_alloc(&traversal_memb);
+      root_entry->addr = linkaddr_node_addr;
+      root_entry->parent = NULL;
+      list_add(traversal_list, root_entry);
     }
+    else {
+      if (linkaddr_cmp(&state->addr_dsts[i], state->addr_revoke)) {
+        LOG_INFO("Containing ");
+        LOG_INFO_LLADDR(state->addr_revoke);
+        LOG_INFO_(" as destination in request. Going to ignore.\n");
+        continue;
+      }
+      LOG_INFO("Going to send revocation message to ");
+      LOG_INFO_LLADDR(&state->addr_dsts[i]);
+      LOG_INFO_("\n");
+
+      process_node(new_entry); //TODO
+    }
+  }
+
+//  struct traversal_entry *root_entry;
+//
+//    LOG_INFO("revokation_send_revoke for node: ");
+//    LOG_INFO_LLADDR(state->addr_revoke);
+//    LOG_INFO_("\n");
+//
+//    traversal_index = 0;
+//
+//    struct traversal_entry *new_entry;
+//    struct akes_nbr_entry *next;
+//    next = akes_nbr_head();
+//    while(next) {
+//        if (linkaddr_cmp(state->addr_revoke, akes_nbr_get_addr(next))) {
+//          LOG_INFO("Containing ");
+//          LOG_INFO_LLADDR(state->addr_revoke);
+//          LOG_INFO_(" as direct neighbor. Going to ignore.\n");
+//          next = akes_nbr_next(next);
+//          continue;
+//        }
+//        if(next->permanent) {
+//            new_entry = memb_alloc(&traversal_memb);
+//            new_entry->parent = root_entry;
+//            new_entry->addr = *akes_nbr_get_addr(next);
+//            list_add(traversal_list, new_entry);
+//
+//            LOG_INFO("Going to send revocation message to ");
+//            LOG_INFO_LLADDR(&new_entry->addr);
+//            LOG_INFO_("\n");
+//
+//            process_node(new_entry);
+//        }
+//        next = akes_nbr_next(next);
+//    }
 }
 /*---------------------------------------------------------------------------*/
 /*
