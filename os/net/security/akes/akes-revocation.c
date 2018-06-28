@@ -128,22 +128,32 @@ akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
     LOG_INFO_LLADDR(addr_revoke);
     LOG_INFO_("\n");
 }
+/*---------------------------------------------------------------------------
+ * Setup a state object
+ */
+struct akes_revocation_state
+//akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
+akes_revocation_setup_state(linkaddr_t *addr_revoke) {
+  struct akes_revocation_state state;
 
+  state.addr_revoke = addr_revoke;
+  return state;
+}
 /*---------------------------------------------------------------------------*/
 /*
  * public AKES API for revoking a node
  * addr_revoke - the address of the node that should be revoked
  */
 void
-akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
+akes_revocation_revoke_node(struct akes_revocation_state *state) {
     struct traversal_entry *root_entry;
 
     LOG_INFO("revokation_send_revoke for node: ");
-    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_LLADDR(state->addr_revoke);
     LOG_INFO_("\n");
 
     traversal_index = 0;
-    addr_revoke_node = *addr_revoke;
+    addr_revoke_node = *state->addr_revoke;
 
     //Revoke the node locally
     akes_revocation_revoke_node_internal(&addr_revoke_node);
@@ -157,9 +167,9 @@ akes_revocation_revoke_node(const linkaddr_t * addr_revoke) {
     struct akes_nbr_entry *next;
     next = akes_nbr_head();
     while(next) {
-        if (linkaddr_cmp(addr_revoke, akes_nbr_get_addr(next))) {
+        if (linkaddr_cmp(state->addr_revoke, akes_nbr_get_addr(next))) {
           LOG_INFO("Containing ");
-          LOG_INFO_LLADDR(addr_revoke);
+          LOG_INFO_LLADDR(state->addr_revoke);
           LOG_INFO_(" as direct neighbor. Going to ignore.\n");
           next = akes_nbr_next(next);
           continue;
