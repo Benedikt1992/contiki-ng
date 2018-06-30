@@ -62,6 +62,7 @@ MEMB(traversal_memb, struct traversal_entry, AKES_REVOCATION_MAX_QUEUE);
 LIST(traversal_list);
 static linkaddr_t addr_revoke_node;
 static uint8_t traversal_index;
+struct akes_revocation_request_state *request_state;
 
 static struct cmd_broker_subscription subscription;
 static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
@@ -149,10 +150,12 @@ akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkadd
  * addr_revoke - the address of the node that should be revoked
  */
 int8_t
-akes_revocation_revoke_node(struct akes_revocation_request_state *request_state) {
+akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
   struct traversal_entry * next;
   struct traversal_entry *new_entry;
   struct akes_nbr_entry *next_entry;
+
+  request_state = state;
 
   if (!linkaddr_cmp(&addr_revoke_node, &linkaddr_null) && !linkaddr_cmp(&addr_revoke_node, request_state->addr_revoke)) {
     LOG_WARN("Received request for revocation of ");
