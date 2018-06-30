@@ -49,6 +49,7 @@
 #define AKES_REVOCATION_SUCCESS 0
 #define AKES_REVOCATION_ERROR 255
 #define AKES_REVOCATION_ALREADY_IN_PROGRESS 1
+#define AKES_REVOCATION_ROUTE_NOT_FOUND 2
 
 struct akes_revocation_state {
     linkaddr_t *addr_revoke;
