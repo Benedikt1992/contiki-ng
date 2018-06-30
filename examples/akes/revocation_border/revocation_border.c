@@ -68,8 +68,22 @@ PROCESS_THREAD(revocation_border_process, ev, data)
     if(entry && entry->permanent) {
       LOG_INFO("sending revocation\n");
       akes_revocation_revoke_node(akes_nbr_get_addr(entry));
-      break;
+    }
+    break;
 #else
+    linkaddr_t nodes[5];
+    for (int j = 0; j < 5; ++j) {
+      for(unsigned int i = 0; i < LINKADDR_SIZE; i++) {
+        if(i == 0) {
+          nodes[j].u8[i] = 0x00 | (j+1);
+        } else {
+          nodes[j].u8[i] = 0x00;
+        }
+      }
+      LOG_INFO_LLADDR(&nodes[j]);
+      LOG_INFO_("\n");
+    }
+
     linkaddr_t mal_node;
     for(unsigned int i = 0; i < LINKADDR_SIZE; i++) {
       if(i == 0) {
@@ -78,9 +92,69 @@ PROCESS_THREAD(revocation_border_process, ev, data)
         mal_node.u8[i] = 0x00;
       }
     }
-    struct akes_revocation_request_state state = akes_revocation_setup_state(&mal_node, 1, &linkaddr_node_addr, NULL);
+
+    /* simulate the process */
+    struct akes_revocation_request_state state;
+    LOG_INFO("TEST ");
+    LOG_INFO_LLADDR(&mal_node);
+    LOG_INFO_("\n");
+    state = akes_revocation_setup_state(&mal_node, 1, &linkaddr_node_addr, NULL);
     LOG_INFO("sending revocation\n");
     akes_revocation_revoke_node(&state);
+
+    etimer_set(&periodic_timer, CLOCK_SECOND);
+    for (int k = 0; k < 5; ++k) {
+      if(state.amount_replies >= 1) {
+        break;
+      }
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+      etimer_reset(&periodic_timer);
+      LOG_DBG("WAIT\n");
+    }
+
+    linkaddr_t dst_list[2];
+
+    for(unsigned int i = 0; i < LINKADDR_SIZE; i++) {
+      if(i == 0) {
+        mal_node.u8[i] = 0x02;
+      } else {
+        mal_node.u8[i] = 0x00;
+      }
+    }
+    for (int j = 0; j < 5; ++j) {
+      for(unsigned int i = 0; i < LINKADDR_SIZE; i++) {
+        if(i == 0) {
+          nodes[j].u8[i] = 0x00 | (j+1);
+        } else {
+          nodes[j].u8[i] = 0x00;
+        }
+      }
+      LOG_INFO_LLADDR(&nodes[j]);
+      LOG_INFO_("\n");
+    }
+    dst_list[0] = nodes[2];
+    dst_list[1] = nodes[3];
+    LOG_INFO("TEST2 ");
+    LOG_INFO_LLADDR(&mal_node);
+    LOG_INFO_("\n");
+    state = akes_revocation_setup_state(&mal_node, 2, (linkaddr_t *)dst_list, NULL);
+    LOG_DBG("NEW initialized state with reply amount: %02x\n", state.amount_replies);
+
+    LOG_INFO("sending revocation\n");
+    akes_revocation_revoke_node(&state);
+
+    etimer_set(&periodic_timer, CLOCK_SECOND);
+    for (int k = 0; k < 5; ++k) {
+      if(state.amount_replies >= 2) {
+        break;
+      }
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+      etimer_reset(&periodic_timer);
+      LOG_DBG("WAIT\n");
+    }
+
+    //TODO WARUM ist das bitte nicht mehr 0??? Das wird nirgends angefasst.
+    LOG_DBG("FINISHED WAITING with replies: %02x\n", state.amount_replies);
     break;
 #endif // ON_MOTE
   }
