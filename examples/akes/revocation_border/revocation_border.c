@@ -78,7 +78,7 @@ PROCESS_THREAD(revocation_border_process, ev, data)
         mal_node.u8[i] = 0x00;
       }
     }
-    struct akes_revocation_state state = akes_revocation_setup_state(&mal_node, 1, &linkaddr_node_addr, NULL);
+    struct akes_revocation_request_state state = akes_revocation_setup_state(&mal_node, 1, &linkaddr_node_addr, NULL);
     LOG_INFO("sending revocation\n");
     akes_revocation_revoke_node(&state);
     break;

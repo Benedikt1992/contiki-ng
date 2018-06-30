@@ -51,17 +51,18 @@
 #define AKES_REVOCATION_ALREADY_IN_PROGRESS 1
 #define AKES_REVOCATION_ROUTE_NOT_FOUND 2
 
-struct akes_revocation_state {
+struct akes_revocation_request_state {
     linkaddr_t *addr_revoke;
     uint8_t amount_dst;
     linkaddr_t *addr_dsts;
     uint8_t *new_keys; //TODO This value needs to be adjusted to key type
-    uint8_t *revoke_replies;
+    uint8_t *revoke_reply_secrets;
+    uint8_t amount_replies;
     uint8_t amount_new_neighbors;
     linkaddr_t *new_neighbors;
 };
-struct akes_revocation_state akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys);
-int8_t akes_revocation_revoke_node(struct akes_revocation_state *state);
+struct akes_revocation_request_state akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys);
+int8_t akes_revocation_revoke_node(struct akes_revocation_request_state *request_state);
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_init(void);
