@@ -198,6 +198,7 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
         }
         next_entry = akes_nbr_next(next_entry);
       }
+      (request_state->amount_replies)++;
     }
     else {
       LOG_INFO("ELSE\n");
@@ -223,6 +224,7 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       process_node(next); //TODO adapt
     }
   }
+
   return AKES_REVOCATION_SUCCESS;
 }
 /*---------------------------------------------------------------------------*/
@@ -236,36 +238,37 @@ static enum cmd_broker_result
 on_revocation_revoke(uint8_t *payload)
 {
     LOG_INFO("received revocation Revoke for ");
-    //TODO BUG?????? (COOJA Absturz mit diesem code
-//    uint8_t hop_index = *payload++;
-//    uint8_t hop_count = *payload++;
-//    linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
-//    payload += LINKADDR_SIZE * (hop_count+1);
-//
-//    linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
-//
-//    LOG_INFO_LLADDR(addr_revoke);
-//    LOG_INFO_("\n");
-//
-//    if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
-//
-//    if (hop_index == hop_count) {
-//        LOG_INFO("revoke message is for myself.\n");
-//
-//        //revoke the addr_revoke node
-//        akes_revocation_revoke_node_internal(addr_revoke);
-//
-//        //reverse the route
-//        linkaddr_t temp_buffer[AKES_REVOCATION_MAX_ROUTE_LEN];
-//        for (uint8_t i = 0; i < hop_count+1; i++) {
-//            temp_buffer[i] = addr_route[hop_count-i];
-//        }
-//        akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
-//    } else {
-//        //forward the message
-//        LOG_INFO("revoke message is going to be forwarded.\n");
-//        akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, addr_route, payload);
-//    }
+    uint8_t hop_index = *payload++;
+    uint8_t hop_count = *payload++;
+    linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
+    payload += LINKADDR_SIZE * (hop_count+1);
+
+    linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
+
+    LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_("\n");
+
+
+    if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
+
+    if (hop_index == hop_count) {
+        LOG_INFO("revoke message is for myself.\n");
+
+        //revoke the addr_revoke node
+        akes_revocation_revoke_node_internal(addr_revoke);
+
+        //reverse the route
+        linkaddr_t temp_buffer[AKES_REVOCATION_MAX_ROUTE_LEN];
+        for (uint8_t i = 0; i < hop_count+1; i++) {
+            temp_buffer[i] = addr_route[hop_count-i];
+        }
+        temp_buffer[0] = temp_buffer[0];
+        akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
+    } else {
+        //forward the message
+        LOG_INFO("revoke message is going to be forwarded.\n");
+        akes_revocation_send_revoke(addr_revoke, hop_index+1, hop_count, addr_route, payload);
+    }
 
     return CMD_BROKER_CONSUMED;
 }
@@ -308,6 +311,11 @@ on_revocation_ack(uint8_t *payload)
 
     if (hop_index == hop_count) {
         LOG_INFO("revocation ack is for myself.\n");
+        LOG_INFO("Going to compare ");
+        LOG_INFO_LLADDR(addr_revoke);
+        LOG_INFO_(" and ");
+        LOG_INFO_LLADDR(&addr_revoke_node);
+        LOG_INFO_("\n");
         if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) {
             //TODO addr_revoke_node will have changed if there is a second call!
             LOG_INFO("INVALID addr_revoke. ack dropped.\n");
@@ -341,8 +349,9 @@ on_revocation_ack(uint8_t *payload)
 
             //TODO add address to request_state
         }
-
-        request_state->amount_replies++;
+      //TODO This increment of amount_replies leads to an crash - maybe connected to the timer bug
+      LOG_DBG("Memory of global reques state: %p\n", &request_state->amount_replies);
+      (request_state->amount_replies)++;
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
