@@ -16,6 +16,8 @@ else
 	MODULES += os/net/security/akes
 endif
 
+MODULES += os/net/app-layer/coap
+
 MAKE_NET = MAKE_NET_NULLNET
 
 include $(CONTIKI)/Makefile.include

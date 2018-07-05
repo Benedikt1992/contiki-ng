@@ -31,6 +31,10 @@
  */
 
 #include "contiki.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "coap-engine.h"
 #include "sys/etimer.h"
 #include "net/security/akes/akes-nbr.h"
 #include "net/security/akes/akes-revocation.h"
@@ -47,6 +51,8 @@
 #define PRINTF(...)
 #endif /* DEBUG */
 
+extern coap_resource_t res_akes_revocation;
+
 PROCESS(revocation_border_process, "revocation_border_process");
 AUTOSTART_PROCESSES(&revocation_border_process);
 
@@ -56,6 +62,10 @@ PROCESS_THREAD(revocation_border_process, ev, data)
   static struct etimer periodic_timer;
 
   PROCESS_BEGIN();
+
+  PROCESS_PAUSE();
+
+  coap_activate_resource(&res_akes_revocation, "akes/revoke");
 
   etimer_set(&periodic_timer, CLOCK_SECOND * 5);
   while(1) {
