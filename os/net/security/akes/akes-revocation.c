@@ -61,7 +61,7 @@ struct traversal_entry {
 MEMB(traversal_memb, struct traversal_entry, AKES_REVOCATION_MAX_QUEUE);
 LIST(traversal_list);
 static linkaddr_t addr_revoke_node;
-static uint8_t traversal_index;
+struct akes_revocation_request_state *request_state; //TODO this variable should be managed by the COAP Server
 
 static struct cmd_broker_subscription subscription;
 static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
@@ -105,7 +105,6 @@ process_node(struct traversal_entry *entry) {
     linkaddr_t route[AKES_REVOCATION_MAX_ROUTE_LEN];
     struct traversal_entry *next = entry;
 
-    traversal_index++;
 
     //build the route from receiver upwards in network topology
     while(next) {
@@ -131,12 +130,16 @@ akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
 /*---------------------------------------------------------------------------
  * Setup a state object
  */
-struct akes_revocation_state
-//akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
-akes_revocation_setup_state(linkaddr_t *addr_revoke) {
-  struct akes_revocation_state state;
+struct akes_revocation_request_state
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
+  struct akes_revocation_request_state state;
 
   state.addr_revoke = addr_revoke;
+  state.amount_dst = amount_dst;
+  state.addr_dsts = addr_dsts;
+  state.new_keys = new_keys;
+  state.amount_new_neighbors = 0;
+  state.amount_replies = 0;
   return state;
 }
 /*---------------------------------------------------------------------------*/
@@ -144,50 +147,84 @@ akes_revocation_setup_state(linkaddr_t *addr_revoke) {
  * public AKES API for revoking a node
  * addr_revoke - the address of the node that should be revoked
  */
-void
-akes_revocation_revoke_node(struct akes_revocation_state *state) {
-    struct traversal_entry *root_entry;
+int8_t
+akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
+  struct traversal_entry * next;
+  struct traversal_entry *new_entry;
+  struct akes_nbr_entry *next_entry;
 
-    LOG_INFO("revokation_send_revoke for node: ");
-    LOG_INFO_LLADDR(state->addr_revoke);
-    LOG_INFO_("\n");
+  request_state = state;
 
-    traversal_index = 0;
-    addr_revoke_node = *state->addr_revoke;
+  if (!linkaddr_cmp(&addr_revoke_node, &linkaddr_null) && !linkaddr_cmp(&addr_revoke_node, request_state->addr_revoke)) {
+    LOG_WARN("Received request for revocation of ");
+    LOG_WARN_LLADDR(request_state->addr_revoke);
+    LOG_WARN_(" but process is in progress for ");
+    LOG_WARN_LLADDR(&addr_revoke_node);
+    LOG_WARN_("\n");
+    return AKES_REVOCATION_ALREADY_IN_PROGRESS;
+  }
+  if (linkaddr_cmp(&addr_revoke_node, &linkaddr_null)) {
+      addr_revoke_node = *request_state->addr_revoke;
+  }
 
-    //Revoke the node locally
-    akes_revocation_revoke_node_internal(&addr_revoke_node);
-    //Save us in the traversal List
-    root_entry = memb_alloc(&traversal_memb);
-    root_entry->addr = linkaddr_node_addr;
-    root_entry->parent = NULL;
-    list_add(traversal_list, root_entry);
+  for (int i = 0; i < request_state->amount_dst; ++i) {
+    if (linkaddr_cmp(&request_state->addr_dsts[i], &linkaddr_node_addr)) {
+      // Containing self as dst. This is the start of the process.
+      struct traversal_entry *root_entry;
 
-    struct traversal_entry *new_entry;
-    struct akes_nbr_entry *next;
-    next = akes_nbr_head();
-    while(next) {
-        if (linkaddr_cmp(state->addr_revoke, akes_nbr_get_addr(next))) {
-          LOG_INFO("Containing ");
-          LOG_INFO_LLADDR(state->addr_revoke);
-          LOG_INFO_(" as direct neighbor. Going to ignore.\n");
-          next = akes_nbr_next(next);
-          continue;
+      //Revoke the node locally
+      akes_revocation_revoke_node_internal(&addr_revoke_node);
+      //Save us in the traversal List
+      root_entry = memb_alloc(&traversal_memb);
+      root_entry->addr = linkaddr_node_addr;
+      root_entry->parent = NULL;
+      list_add(traversal_list, root_entry);
+
+      next_entry = akes_nbr_head();
+      while(next_entry) {
+        if(next_entry->permanent) {
+          (request_state->amount_new_neighbors)++;
+          linkaddr_t *nbr_addr = akes_nbr_get_addr(next_entry);
+          LOG_INFO("Adding new neighbor ");
+          LOG_INFO_LLADDR(nbr_addr);
+          LOG_INFO_("\n");
+
+          // TODO add new neighbor to state object as well
+
+          new_entry = memb_alloc(&traversal_memb);
+          new_entry->parent = root_entry;
+          new_entry->addr = *akes_nbr_get_addr(next_entry);
+          list_add(traversal_list, new_entry);
         }
-        if(next->permanent) {
-            new_entry = memb_alloc(&traversal_memb);
-            new_entry->parent = root_entry;
-            new_entry->addr = *akes_nbr_get_addr(next);
-            list_add(traversal_list, new_entry);
+        next_entry = akes_nbr_next(next_entry);
+      }
+      (request_state->amount_replies)++;
+    } else {
+      // Process any other node in the network
+      if (linkaddr_cmp(&request_state->addr_dsts[i], request_state->addr_revoke)) {
+        LOG_INFO("Containing revocation goal ");
+        LOG_INFO_LLADDR(request_state->addr_revoke);
+        LOG_INFO_(" as destination in request. Going to ignore.\n");
+        continue;
+      }
 
-            LOG_INFO("Going to send revocation message to ");
-            LOG_INFO_LLADDR(&new_entry->addr);
-            LOG_INFO_("\n");
+      next = traversal_entry_from_addr(&request_state->addr_dsts[i]);
 
-            process_node(new_entry);
-        }
-        next = akes_nbr_next(next);
+      if (!next) {
+        LOG_ERR("No route found for ");
+        LOG_ERR_LLADDR(&request_state->addr_dsts[i]);
+        LOG_ERR_(". Going to abort.\n");
+        return AKES_REVOCATION_ROUTE_NOT_FOUND;
+      }
+
+      LOG_INFO("Going to send revocation message to ");
+      LOG_INFO_LLADDR(&request_state->addr_dsts[i]);
+      LOG_INFO_("\n");
+      process_node(next);
     }
+  }
+
+  return AKES_REVOCATION_SUCCESS;
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -200,7 +237,6 @@ static enum cmd_broker_result
 on_revocation_revoke(uint8_t *payload)
 {
     LOG_INFO("received revocation Revoke for ");
-
     uint8_t hop_index = *payload++;
     uint8_t hop_count = *payload++;
     linkaddr_t *addr_route = (linkaddr_t *)(void*)payload;
@@ -210,6 +246,7 @@ on_revocation_revoke(uint8_t *payload)
 
     LOG_INFO_LLADDR(addr_revoke);
     LOG_INFO_("\n");
+
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
@@ -224,6 +261,7 @@ on_revocation_revoke(uint8_t *payload)
         for (uint8_t i = 0; i < hop_count+1; i++) {
             temp_buffer[i] = addr_route[hop_count-i];
         }
+        temp_buffer[0] = temp_buffer[0];
         akes_revocation_send_ack(addr_revoke, 1, hop_count, temp_buffer, NULL);
     } else {
         //forward the message
@@ -237,7 +275,7 @@ on_revocation_revoke(uint8_t *payload)
 /*
  * Handler for received ack messages
  * payload - the payload of the received message
- *
+ * TODO: don't reprocess new neighbors, add them to the state, make state global, rename state into request_state
  * payload: | hop_index | hop_count | addr_sender,addr_hop1..addr_dest | addr_revoke | nbr_count | addr_nbr1..addr_nbr? |
  */
 static enum cmd_broker_result
@@ -282,28 +320,30 @@ on_revocation_ack(uint8_t *payload)
 
         struct traversal_entry *new_entry;
         for (uint8_t i = 0; i < nbr_count; i++) {
-            if (linkaddr_cmp(addr_revoke, &nbr_addrs[i])) {
+          // Check whether we already processed this node
+          if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
+
+          request_state->amount_new_neighbors++;
+
+          if (linkaddr_cmp(addr_revoke, &nbr_addrs[i])) {
               LOG_INFO("Received ");
               LOG_INFO_LLADDR(addr_revoke);
               LOG_INFO_(" as neighbor of ");
               LOG_INFO_LLADDR(addr_route);
               LOG_INFO_(". Going to ignore.\n");
+              //TODO add it to the request_state
               continue;
             }
-            // Check whether we already processed this node
-            if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
+
 
             new_entry = memb_alloc(&traversal_memb);
             new_entry->addr = nbr_addrs[i];
             new_entry->parent = entry;
             list_add(traversal_list, new_entry);
 
-            LOG_INFO("Going to send revocation message to ");
-            LOG_INFO_LLADDR(&new_entry->addr);
-            LOG_INFO_("\n");
-
-            process_node(new_entry);
+            //TODO add address to request_state
         }
+      request_state->amount_replies++;
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
@@ -363,7 +403,7 @@ void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t h
 
     } else {
         /* TODO: encrypt the following information with the session key */
-
+        LOG_DBG("NO DATA\n");
         //node address that should be revoked
         memcpy(payload, addr_revoke, LINKADDR_SIZE);
         payload += LINKADDR_SIZE;
