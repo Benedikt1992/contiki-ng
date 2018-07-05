@@ -199,9 +199,8 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
         next_entry = akes_nbr_next(next_entry);
       }
       (request_state->amount_replies)++;
-    }
-    else {
-      LOG_INFO("ELSE\n");
+    } else {
+      // Process any other node in the network
       if (linkaddr_cmp(&request_state->addr_dsts[i], request_state->addr_revoke)) {
         LOG_INFO("Containing revocation goal ");
         LOG_INFO_LLADDR(request_state->addr_revoke);
@@ -221,7 +220,7 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       LOG_INFO("Going to send revocation message to ");
       LOG_INFO_LLADDR(&request_state->addr_dsts[i]);
       LOG_INFO_("\n");
-      process_node(next); //TODO adapt
+      process_node(next);
     }
   }
 
@@ -311,11 +310,6 @@ on_revocation_ack(uint8_t *payload)
 
     if (hop_index == hop_count) {
         LOG_INFO("revocation ack is for myself.\n");
-        LOG_INFO("Going to compare ");
-        LOG_INFO_LLADDR(addr_revoke);
-        LOG_INFO_(" and ");
-        LOG_INFO_LLADDR(&addr_revoke_node);
-        LOG_INFO_("\n");
         if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) {
             //TODO addr_revoke_node will have changed if there is a second call!
             LOG_INFO("INVALID addr_revoke. ack dropped.\n");
@@ -349,9 +343,7 @@ on_revocation_ack(uint8_t *payload)
 
             //TODO add address to request_state
         }
-      //TODO This increment of amount_replies leads to an crash - maybe connected to the timer bug
-      LOG_DBG("Memory of global reques state: %p\n", &request_state->amount_replies);
-      (request_state->amount_replies)++;
+      request_state->amount_replies++;
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
