@@ -13,9 +13,14 @@ ifeq ($(ON_MOTE),1)
 	MAKE_MAC = MAKE_MAC_CSL
 else
 	MAKE_MAC = MAKE_MAC_CSMA
-	MODULES += os/net/security/akes
 endif
 
-MAKE_NET = MAKE_NET_NULLNET
+MODULES += os/net/security/akes
+MODULES += os/net/app-layer/coap
+
+# Include CoAP resources
+MODULES_REL += ./resources
+
+MAKE_NET = MAKE_NET_IPV6
 
 include $(CONTIKI)/Makefile.include

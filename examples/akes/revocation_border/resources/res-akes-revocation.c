@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, Hasso-Plattner-Institut.
+ * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,34 +27,49 @@
  * SUCH DAMAGE.
  *
  * This file is part of the Contiki operating system.
- *
  */
 
-#ifndef PROJECT_CONF_H_
-#define PROJECT_CONF_H_
+/**
+ * \file
+ *      Example resource
+ * \author
+ *      Matthias Kovatsch <kovatsch@inf.ethz.ch>
+ */
 
-/* For development only - increase if there are missing packets*/
-#define CSMA_CONF_MAX_FRAME_RETRIES 0
+#include <stdlib.h>
+#include <string.h>
+#include "coap-engine.h"
+#include "sys/log.h"
+#define LOG_MODULE "REV_COAP"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
-/* full debug output for mac layer */
-//#define LOG_CONF_LEVEL_MAC LOG_LEVEL_DBG
+static void
+akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  const uint8_t *payload;
+  uint8_t  payload_length;
+  payload_length = coap_get_payload(request, &payload);
+  uint8_t  rep_length = *payload - '0';
 
-/* full debug for COAP */
-//#define LOG_CONF_LEVEL_COAP LOG_LEVEL_DBG
+  if(payload_length > 1 || rep_length > 9) {
+    coap_set_header_content_format(response, TEXT_PLAIN);
+    coap_set_status_code(response, BAD_OPTION_4_02);
+    coap_set_payload(response, "Please enter a single number between 0-9", 40);
+    return;
+  }
 
-/* ON_MOTE might be set via the Makefile */
-#ifdef ON_MOTE
-    /* max number of packets scheduled for sending */
-    #define QUEUEBUF_CONF_NUM 20
-    /* configure RADIO layer */
-    #include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
-    /* configure MAC layer */
-    #include "net/mac/csl/csl-autoconf.h"
-#else
-    /* max number of packets scheduled for sending */
-    #define CSMA_CONF_MAX_NEIGHBOR_QUEUES 8
+  uint8_t *content = (uint8_t *)"AKES_REV!";
+  coap_set_header_content_format(response, APPLICATION_OCTET_STREAM);
+  coap_set_status_code(response, CONTENT_2_05);
+  coap_set_payload(response, content, rep_length);
+}
 
-    #include "net/mac/csma/csma-autoconf.h"
-#endif /* ON_MOTE */
 
-#endif /* PROJECT_CONF_H_ */
+/*---------------------------------------------------------------------------*/
+RESOURCE(res_akes_revocation,
+         "title=\"AKES_Revoke\"",
+         NULL,
+         akes_revocation_post_handler,
+         NULL,
+         NULL);
+/*---------------------------------------------------------------------------*/
