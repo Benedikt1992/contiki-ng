@@ -49,6 +49,10 @@
 #include "net/security/akes/akes.h"
 #include "net/security/akes/akes-mac.h"
 #include "net/security/akes/akes-revocation.h"
+#ifdef REVOCATION_BORDER
+  #include "coap-engine.h"
+  extern coap_resource_t res_akes_revocation;
+#endif
 
 struct traversal_entry {
     //for iterating through all visited nodes
@@ -511,4 +515,8 @@ akes_revocation_init(void) {
     list_init(traversal_list);
     subscription.on_command = on_command;
     cmd_broker_subscribe(&subscription);
+#ifdef REVOCATION_BORDER
+    LOG_DBG("activate resource of akes\n");
+    coap_activate_resource(&res_akes_revocation, "akes/revoke");
+#endif
 }

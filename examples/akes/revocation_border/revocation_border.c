@@ -34,11 +34,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "coap-engine.h"
 #include "sys/etimer.h"
 #include "net/security/akes/akes-nbr.h"
 #include "net/security/akes/akes-revocation.h"
 #include "os/net/linkaddr.h"
+#include "os/net/ipv6/uip.h"
 #include "sys/log.h"
 #define LOG_MODULE "REV_BORDER"
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -51,7 +51,22 @@
 #define PRINTF(...)
 #endif /* DEBUG */
 
-extern coap_resource_t res_akes_revocation;
+
+static void
+set_own_address(void)
+{
+//  uip_ipaddr_t addr;
+//
+//  uip_ip6addr(&addr, 0xfd00, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xaffe);
+//  uip_sethostaddr(&addr);
+//  uip_ipaddr_t hostaddr;
+//
+//  uip_gethostaddr(&hostaddr);
+//
+//  LOG_DBG("Hostaddress: ");
+//  LOG_DBG_6ADDR(hostaddr);
+//  LOG_DBG_("\n");
+}
 
 PROCESS(revocation_border_process, "revocation_border_process");
 AUTOSTART_PROCESSES(&revocation_border_process);
@@ -64,8 +79,7 @@ PROCESS_THREAD(revocation_border_process, ev, data)
   PROCESS_BEGIN();
 
 //  PROCESS_PAUSE();
-
-  coap_activate_resource(&res_akes_revocation, "akes/revoke");
+  set_own_address();
 
   etimer_set(&periodic_timer, CLOCK_SECOND * 5);
   while(1) {

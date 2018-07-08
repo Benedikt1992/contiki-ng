@@ -35,12 +35,13 @@
  * \author
  *      Matthias Kovatsch <kovatsch@inf.ethz.ch>
  */
+#ifdef REVOCATION_BORDER
 
 #include <stdlib.h>
 #include <string.h>
 #include "coap-engine.h"
 #include "sys/log.h"
-#define LOG_MODULE "REV_COAP"
+#define LOG_MODULE "AKES_REV_COAP"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
 static void
@@ -73,3 +74,5 @@ RESOURCE(res_akes_revocation,
          NULL,
          NULL);
 /*---------------------------------------------------------------------------*/
+
+#endif /* REVOCATION_BORDER */

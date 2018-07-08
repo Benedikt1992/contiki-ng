@@ -15,11 +15,12 @@ else
 	MAKE_MAC = MAKE_MAC_CSMA
 endif
 
-MODULES += os/net/security/akes
 MODULES += os/net/app-layer/coap
+MODULES += os/net/security/akes
+CFLAGS += -DREVOCATION_BORDER
 
-# Include CoAP resources
-MODULES_REL += ./resources
+# This enables to communicate between host and cooja simulation. Use 'make connect-router-cooja TARGET=cooja'
+MODULES += os/services/rpl-border-router
 
 MAKE_NET = MAKE_NET_IPV6
 

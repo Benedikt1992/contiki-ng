@@ -40,7 +40,7 @@
 //#define LOG_CONF_LEVEL_MAC LOG_LEVEL_DBG
 
 /* full debug for COAP */
-//#define LOG_CONF_LEVEL_COAP LOG_LEVEL_DBG
+#define LOG_CONF_LEVEL_COAP LOG_LEVEL_DBG
 
 /* ON_MOTE might be set via the Makefile */
 #ifdef ON_MOTE
