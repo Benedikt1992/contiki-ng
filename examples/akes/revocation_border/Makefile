@@ -21,6 +21,6 @@ MODULES += os/net/app-layer/coap
 # Include CoAP resources
 MODULES_REL += ./resources
 
-MAKE_NET = MAKE_NET_NULLNET
+MAKE_NET = MAKE_NET_IPV6
 
 include $(CONTIKI)/Makefile.include
