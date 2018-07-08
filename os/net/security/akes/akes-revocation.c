@@ -515,8 +515,11 @@ akes_revocation_init(void) {
     list_init(traversal_list);
     subscription.on_command = on_command;
     cmd_broker_subscribe(&subscription);
+}
+
+void akes_revocation_init_coap(void) {
 #ifdef REVOCATION_BORDER
-    LOG_DBG("activate resource of akes\n");
-    coap_activate_resource(&res_akes_revocation, "akes/revoke");
+  LOG_DBG("activate resource of akes\n");
+  coap_activate_resource(&res_akes_revocation, "akes/revoke");
 #endif
 }

@@ -78,8 +78,8 @@ PROCESS_THREAD(revocation_border_process, ev, data)
 
   PROCESS_BEGIN();
 
-//  PROCESS_PAUSE();
   set_own_address();
+  akes_revocation_init_coap();
 
   etimer_set(&periodic_timer, CLOCK_SECOND * 5);
   while(1) {
