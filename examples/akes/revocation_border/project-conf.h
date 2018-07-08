@@ -42,7 +42,7 @@
 /* ON_MOTE might be set via the Makefile */
 #ifdef ON_MOTE
     /* max number of packets scheduled for sending */
-//    #define QUEUEBUF_CONF_NUM 8
+    #define QUEUEBUF_CONF_NUM 20
     /* configure RADIO layer */
     #include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
     /* configure MAC layer */

@@ -39,18 +39,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include "coap-engine.h"
+#include "sys/log.h"
+#define LOG_MODULE "REV_COAP"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
-static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
+static void
+akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+  LOG_DBG("akes_revocation_post_handler\n");
+}
 
+
+/*---------------------------------------------------------------------------*/
 RESOURCE(res_akes_revocation,
          "title=\"AKES_Revoke\"",
          NULL,
-         res_post_handler,
+         akes_revocation_post_handler,
          NULL,
          NULL);
-
-static void
-res_post_put_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
-{
-  
-}
+/*---------------------------------------------------------------------------*/
