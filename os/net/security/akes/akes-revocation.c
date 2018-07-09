@@ -50,8 +50,9 @@
 #include "net/security/akes/akes-mac.h"
 #include "net/security/akes/akes-revocation.h"
 #ifdef REVOCATION_BORDER
+  #include "sys/ctimer.h"
   #include "coap-engine.h"
-  extern coap_resource_t res_akes_revocation;
+extern coap_resource_t res_akes_revocation;
 #endif
 
 struct traversal_entry {
@@ -505,6 +506,13 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
     packetbuf_set_datalen(payload_len);
     akes_mac_send_command_frame();
 }
+#ifdef REVOCATION_BORDER
+static void
+akes_revocation_init_coap(void *ptr) {
+  LOG_DBG("activate resource of akes\n");
+  coap_activate_resource(&res_akes_revocation, "akes/revoke");
+}
+#endif
 /*---------------------------------------------------------------------------*/
 /*
  * Initializer routine for the akes revocation
@@ -515,11 +523,8 @@ akes_revocation_init(void) {
     list_init(traversal_list);
     subscription.on_command = on_command;
     cmd_broker_subscribe(&subscription);
-}
-
-void akes_revocation_init_coap(void) {
 #ifdef REVOCATION_BORDER
-  LOG_DBG("activate resource of akes\n");
-  coap_activate_resource(&res_akes_revocation, "akes/revoke");
+    static struct ctimer timer;
+    ctimer_set(&timer, CLOCK_SECOND, akes_revocation_init_coap, NULL);
 #endif
 }

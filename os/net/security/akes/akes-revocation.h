@@ -66,6 +66,5 @@ int8_t akes_revocation_revoke_node(struct akes_revocation_request_state *request
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_init(void);
-void akes_revocation_init_coap(void);
 
 #endif /* AKES_REVOCATION_H_ */
