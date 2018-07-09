@@ -1,6 +1,6 @@
 import logging
 import json
-
+from coapthon.client.helperclient import HelperClient
 from config import CONFIG
 from base_station.logging import setup_logging
 
@@ -15,9 +15,11 @@ class BaseStation:
 
     def run(self):
         if not CONFIG['on_mote']:
-            logger.debug("Generate static json string.")
-            data = [1, 'hallo']
-            print(json.dumps(data))
+            client = HelperClient(server=(CONFIG['host'], CONFIG['port']))
+            response = client.post(CONFIG['path'], '4', timeout=None)
+
+            print( response.pretty_print())
+            client.stop()
 
 
 if __name__ == '__main__':
