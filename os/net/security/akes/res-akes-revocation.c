@@ -48,21 +48,24 @@ static void
 akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
   const uint8_t *payload;
-  uint8_t  payload_length;
-  payload_length = coap_get_payload(request, &payload);
-  uint8_t  rep_length = *payload - '0';
+//  uint8_t  payload_length;
+//  payload_length =
+  coap_get_payload(request, &payload);
+//  uint8_t  rep_length = *payload - '0';
 
-  if(payload_length > 1 || rep_length > 9) {
-    coap_set_header_content_format(response, TEXT_PLAIN);
-    coap_set_status_code(response, BAD_OPTION_4_02);
-    coap_set_payload(response, "Please enter a single number between 0-9", 40);
-    return;
-  }
+  LOG_DBG("Payload: %016x", *payload);
+
+//  if(payload_length > 1 || rep_length > 9) {
+//    coap_set_header_content_format(response, TEXT_PLAIN);
+//    coap_set_status_code(response, BAD_OPTION_4_02);
+//    coap_set_payload(response, "Please enter a single number between 0-9", 40);
+//    return;
+//  }
 
   uint8_t *content = (uint8_t *)"AKES_REV!";
   coap_set_header_content_format(response, APPLICATION_OCTET_STREAM);
   coap_set_status_code(response, CONTENT_2_05);
-  coap_set_payload(response, content, rep_length);
+  coap_set_payload(response, content, 4);
 }
 
 
