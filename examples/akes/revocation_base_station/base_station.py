@@ -12,7 +12,7 @@ control_byte_terminate = '\x02'
 
 revocation_list = []
 
-def MAC_to_bytearray(mac_addr):
+def MAC_to_payload(mac_addr):
     result = ''
     for group in mac_addr.split('.'):
         result += bytes.fromhex(group).decode('utf-8')
@@ -35,15 +35,16 @@ class BaseStation:
         if not CONFIG['on_mote']:
             client = HelperClient(server=(CONFIG['host'], CONFIG['port']))
 
-            payload = build_payload(control_byte_default,
-                                    MAC_to_bytearray('0200.0000.0000.0000'),
-                                    [MAC_to_bytearray('0100.0000.0000.0000')]
-                                   )
-            print(payload)
-            #payload.decode('ascii')
-            response = client.post(CONFIG['path'], payload, timeout=None)
+            # payload = build_payload(
+            #     control_byte_default,
+            #     MAC_to_payload('0200.0000.0000.0000'),
+            #     [MAC_to_payload('0100.0000.0000.0000')]
+            # )
 
-            print( response.pretty_print())
+            for i in range(2, 9):
+                payload = '\x00' + bytes([i]).decode('utf-8')
+                response = client.post(CONFIG['path'], payload, timeout=None)
+                print(response.pretty_print())
 
 
 if __name__ == '__main__':
