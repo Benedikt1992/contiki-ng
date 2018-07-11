@@ -50,9 +50,16 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
   const uint8_t *payload;
   uint8_t  payload_length;
   payload_length = coap_get_payload(request, &payload);
-  uint8_t  rep_length = *payload - '0';
+  uint8_t  rep_length = payload[1];
 
-  if(payload_length > 1 || rep_length > 9) {
+  LOG_DBG("Length: %d Payload: ", payload_length);
+  int i;
+  for(i = 0; i < payload_length; ++i) {
+    LOG_DBG_("%d", payload[i]);
+  }
+  LOG_DBG_("\n");
+
+  if(payload_length > 2 || rep_length > 9) {
     coap_set_header_content_format(response, TEXT_PLAIN);
     coap_set_status_code(response, BAD_OPTION_4_02);
     coap_set_payload(response, "Please enter a single number between 0-9", 40);
