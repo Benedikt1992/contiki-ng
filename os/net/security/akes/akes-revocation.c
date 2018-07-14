@@ -134,6 +134,25 @@ akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
 }
 /*---------------------------------------------------------------------------*/
 /*
+ * private AKES method for adding a new discovered neighbor to the state object
+ * nbr_addr - the address of the new neighbor
+ * TODO Check if neighbor store has free space. If not what should happen?
+ */
+static void
+akes_revocation_add_new_neighbor_to_state(const linkaddr_t *nbr_addr) {
+  for (int i = 0; i < request_state->amount_new_neighbors; ++i) {
+    if(linkaddr_cmp(&request_state->addr_dsts[i], nbr_addr)) {
+      return;
+    }
+  }
+  LOG_INFO("Adding ");
+  LOG_INFO_LLADDR(nbr_addr);
+  LOG_INFO_(" as new neighbor\n");
+  request_state->new_neighbors[request_state->amount_new_neighbors] = *nbr_addr;
+  (request_state->amount_new_neighbors)++;
+}
+/*---------------------------------------------------------------------------*/
+/*
  * public AKES API for revoking a node
  * addr_revoke - the address of the node that should be revoked
  */
@@ -185,13 +204,9 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       next_entry = akes_nbr_head();
       while(next_entry) {
         if(next_entry->permanent) {
-          (request_state->amount_new_neighbors)++;
           linkaddr_t *nbr_addr = akes_nbr_get_addr(next_entry);
-          LOG_INFO("Adding new neighbor ");
-          LOG_INFO_LLADDR(nbr_addr);
-          LOG_INFO_("\n");
 
-          // TODO add new neighbor to state object as well
+          akes_revocation_add_new_neighbor_to_state(nbr_addr);
 
           new_entry = memb_alloc(&traversal_memb);
           new_entry->parent = root_entry;
@@ -324,15 +339,13 @@ on_revocation_ack(uint8_t *payload)
           // Check whether we already processed this node
           if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
 
-          request_state->amount_new_neighbors++;
-
           if (linkaddr_cmp(addr_revoke, &nbr_addrs[i])) {
               LOG_INFO("Received ");
               LOG_INFO_LLADDR(addr_revoke);
               LOG_INFO_(" as neighbor of ");
               LOG_INFO_LLADDR(addr_route);
               LOG_INFO_(". Going to ignore.\n");
-              //TODO add it to the request_state
+              akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
               continue;
             }
 
@@ -342,7 +355,7 @@ on_revocation_ack(uint8_t *payload)
             new_entry->parent = entry;
             list_add(traversal_list, new_entry);
 
-            //TODO add address to request_state
+            akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
         }
       request_state->amount_replies++;
     } else {

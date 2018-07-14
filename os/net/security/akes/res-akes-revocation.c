@@ -54,7 +54,7 @@ struct akes_revocation_request_state state;
  * Setup a state object
  */
 struct akes_revocation_request_state
-akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys, coap_endpoint_t requestor) {
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys,linkaddr_t *new_neighbors,  coap_endpoint_t requestor) {
   struct akes_revocation_request_state state;
 
   state.addr_revoke = addr_revoke;
@@ -62,6 +62,7 @@ akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkadd
   state.addr_dsts = addr_dsts;
   state.new_keys = new_keys;
   state.amount_new_neighbors = 0;
+  state.new_neighbors = new_neighbors;
   state.amount_replies = 0;
   state.requestor = requestor;
   return state;
@@ -91,9 +92,9 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
 
   static linkaddr_t dsts[AKES_REVOCATION_MAX_DSTS];
   memcpy(dsts, payload, LINKADDR_SIZE * number_dsts);
-//  static linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
+  static linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
 
-  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, endpoint);
+  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, new_neighbors, endpoint);
   akes_revocation_revoke_node(&state);
 
   coap_set_header_content_format(response, TEXT_PLAIN);
