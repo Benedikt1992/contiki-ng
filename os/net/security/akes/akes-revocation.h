@@ -45,6 +45,8 @@
 
 #define AKES_REVOCATION_MAX_ROUTE_LEN 8 //define this value based on the depth of the network topology
 #define AKES_REVOCATION_MAX_QUEUE 16
+#define AKES_REVOCATION_MAX_NEW_NEIGHBORS 10
+#define AKES_REVOCATION_MAX_DSTS 5
 
 #define AKES_REVOCATION_SUCCESS 0
 #define AKES_REVOCATION_ERROR 255
