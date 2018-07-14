@@ -38,7 +38,7 @@ class BaseStation:
             payload = build_payload(
                 control_byte_default,
                 MAC_to_payload('0200.0000.0000.0000'),
-                [MAC_to_payload('0100.0000.0000.0000')]
+                [MAC_to_payload('0001.0001.0001.0001')]
             )
 
             response = client.post(CONFIG['path'], payload, timeout=None)

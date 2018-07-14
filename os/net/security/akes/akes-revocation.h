@@ -43,6 +43,11 @@
 #include "net/security/akes/akes.h"
 #include "net/security/akes/akes-nbr.h"
 
+#ifdef REVOCATION_BORDER
+  #include "coap-engine.h"
+#endif
+
+
 #define AKES_REVOCATION_MAX_ROUTE_LEN 8 //define this value based on the depth of the network topology
 #define AKES_REVOCATION_MAX_QUEUE 16
 #define AKES_REVOCATION_MAX_NEW_NEIGHBORS 10
@@ -62,8 +67,10 @@ struct akes_revocation_request_state {
     uint8_t amount_replies;
     uint8_t amount_new_neighbors;
     linkaddr_t *new_neighbors;
+#ifdef REVOCATION_BORDER
+    coap_endpoint_t requestor;
+#endif
 };
-struct akes_revocation_request_state akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys);
 int8_t akes_revocation_revoke_node(struct akes_revocation_request_state *request_state);
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);

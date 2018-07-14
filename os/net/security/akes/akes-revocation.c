@@ -132,21 +132,6 @@ akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
     LOG_INFO_LLADDR(addr_revoke);
     LOG_INFO_("\n");
 }
-/*---------------------------------------------------------------------------
- * Setup a state object
- */
-struct akes_revocation_request_state
-akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
-  struct akes_revocation_request_state state;
-
-  state.addr_revoke = addr_revoke;
-  state.amount_dst = amount_dst;
-  state.addr_dsts = addr_dsts;
-  state.new_keys = new_keys;
-  state.amount_new_neighbors = 0;
-  state.amount_replies = 0;
-  return state;
-}
 /*---------------------------------------------------------------------------*/
 /*
  * public AKES API for revoking a node
@@ -157,6 +142,15 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
   struct traversal_entry * next;
   struct traversal_entry *new_entry;
   struct akes_nbr_entry *next_entry;
+  LOG_DBG("revoke node with state addr_revoke: ");
+  LOG_DBG_LLADDR(state->addr_revoke);
+  LOG_DBG_(", amount_dst: %d, destinations: ", state->amount_dst);
+  for (int j = 0; j < state->amount_dst; ++j) {
+    LOG_DBG_LLADDR(&state->addr_dsts[j]);
+    LOG_DBG_(" ");
+  }
+  LOG_DBG_("\n");
+
 
   request_state = state;
 
@@ -176,6 +170,9 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
     if (linkaddr_cmp(&request_state->addr_dsts[i], &linkaddr_node_addr)) {
       // Containing self as dst. This is the start of the process.
       struct traversal_entry *root_entry;
+      LOG_INFO("Starting new revocation process for node ");
+      LOG_INFO_LLADDR(request_state->addr_revoke);
+      LOG_INFO_("\n");
 
       //Revoke the node locally
       akes_revocation_revoke_node_internal(&addr_revoke_node);
@@ -228,7 +225,6 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       process_node(next);
     }
   }
-
   return AKES_REVOCATION_SUCCESS;
 }
 /*---------------------------------------------------------------------------*/

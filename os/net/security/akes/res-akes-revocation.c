@@ -48,6 +48,24 @@
 #define LOG_MODULE "AKES_REV_COAP"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
+struct akes_revocation_request_state state;
+
+/*---------------------------------------------------------------------------
+ * Setup a state object
+ */
+struct akes_revocation_request_state
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys, coap_endpoint_t requestor) {
+  struct akes_revocation_request_state state;
+
+  state.addr_revoke = addr_revoke;
+  state.amount_dst = amount_dst;
+  state.addr_dsts = addr_dsts;
+  state.new_keys = new_keys;
+  state.amount_new_neighbors = 0;
+  state.amount_replies = 0;
+  state.requestor = requestor;
+  return state;
+}
 
 static void
 akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
@@ -59,40 +77,28 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
   static  uint8_t control_byte;
   static  linkaddr_t revoke_node;
   static  uint8_t number_dsts;
+  static coap_endpoint_t endpoint;
 
 
   control_byte = *payload++;
   if(control_byte == 2) {
     // ToDo reset revocation process
   }
-  revoke_node = *(linkaddr_t *)(void*)payload++;
+  revoke_node = *(linkaddr_t *)(void*)payload;
+  payload += LINKADDR_SIZE;
   number_dsts = *payload++;
+  endpoint = *coap_get_src_endpoint(request);
 
   static linkaddr_t dsts[AKES_REVOCATION_MAX_DSTS];
   memcpy(dsts, payload, LINKADDR_SIZE * number_dsts);
 //  static linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
 
-  static struct akes_revocation_request_state state;
-  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL);
+  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, endpoint);
   akes_revocation_revoke_node(&state);
-
-  static struct timer periodic_timer;
-  timer_set(&periodic_timer, CLOCK_SECOND);
-  static int k;
-  for (k = 0; k < 5; ++k) {
-    if(state.amount_replies >= number_dsts) {
-      break;
-    }
-    // TODO Does this block the processing of answers during the process?
-    while (!timer_expired(&periodic_timer)) {}
-    timer_restart(&periodic_timer);
-  }
 
   coap_set_header_content_format(response, TEXT_PLAIN);
   coap_set_status_code(response, CONTENT_2_05);
-  char buf[25];
-  sprintf(buf, "Got %d replies", state.amount_replies);
-  coap_set_payload(response, buf, 25);
+  coap_set_payload(response, "OK", 2);
   return;
 }
 
