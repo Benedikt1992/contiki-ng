@@ -40,7 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "coap-engine.h"
-#include "sys/etimer.h"
+#include "sys/timer.h"
 //#include "net/security/akes/akes.h"
 //#include "net/security/akes/akes-mac.h"
 #include "net/security/akes/akes-revocation.h"
@@ -48,7 +48,6 @@
 #define LOG_MODULE "AKES_REV_COAP"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
-PROCESS(revocation_process, "revocation_process");
 
 static void
 akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
@@ -75,48 +74,26 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
 
   static struct akes_revocation_request_state state;
   state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL);
-  LOG_DBG("Process starting....\n");
-  process_start(&revocation_process, &state);
+  akes_revocation_revoke_node(&state);
 
-//  static int k;
-//  for(k=0; k<100; ++k) {
-//    LOG_DBG("Process running....\n");
-//    process_run();
-//  }
-//  while (process_is_running(&revocation_process)) {
-//    LOG_DBG("Process running....\n");
-//    process_poll(&revocation_process);
-//    process_run();
-//  }
-  process p = PROCESS_CURRENT();
+  static struct timer periodic_timer;
+  timer_set(&periodic_timer, CLOCK_SECOND);
+  static int k;
+  for (k = 0; k < 5; ++k) {
+    if(state.amount_replies >= number_dsts) {
+      break;
+    }
+    // TODO Does this block the processing of answers during the process?
+    while (!timer_expired(&periodic_timer)) {}
+    timer_restart(&periodic_timer);
+  }
+
   coap_set_header_content_format(response, TEXT_PLAIN);
   coap_set_status_code(response, CONTENT_2_05);
   char buf[25];
   sprintf(buf, "Got %d replies", state.amount_replies);
   coap_set_payload(response, buf, 25);
   return;
-}
-
-PROCESS_THREAD(revocation_process, ev, data)
-{
-  PROCESS_BEGIN();
-
-  LOG_INFO("Starting revocation process\n");
-//  akes_revocation_revoke_node(&state);
-//
-  static struct etimer periodic_timer;
-  etimer_set(&periodic_timer, CLOCK_SECOND);
-  static int k;
-  for (k = 0; k < 5; ++k) {
-//    if(state.amount_replies >= number_dsts) {
-//      break;
-//    }
-    LOG_INFO("WAIT\n");
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    etimer_reset(&periodic_timer);
-  }
-//                LOG_DBG("%x%x%x", control_byte, revoke_node, number_dsts, payload_length, dsts, new_neighbors, state,k);
-  PROCESS_END();
 }
 
 /*---------------------------------------------------------------------------*/
