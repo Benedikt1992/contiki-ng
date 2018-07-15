@@ -1,3 +1,4 @@
+//#define REVOCATION_BORDER
 /*
  * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
  * All rights reserved.
@@ -41,8 +42,6 @@
 #include <string.h>
 #include "coap-engine.h"
 #include "sys/timer.h"
-//#include "net/security/akes/akes.h"
-//#include "net/security/akes/akes-mac.h"
 #include "net/security/akes/akes-revocation.h"
 #include "sys/log.h"
 #define LOG_MODULE "AKES_REV_COAP"
@@ -53,8 +52,23 @@ struct akes_revocation_request_state state;
 /*---------------------------------------------------------------------------
  * Setup a state object
  */
+/*---------------------------------------------------------------------------*/
+static int
+index_of(const char *data, int offset, int len, uint8_t c)
+{
+  if(offset < 0) {
+    return offset;
+  }
+  for(; offset < len; offset++) {
+    if(data[offset] == c) {
+      return offset;
+    }
+  }
+  return -1;
+}
+/*---------------------------------------------------------------------------*/
 struct akes_revocation_request_state
-akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys,linkaddr_t *new_neighbors,  coap_endpoint_t requestor) {
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys,linkaddr_t *new_neighbors,  const coap_endpoint_t *requestor) {
   struct akes_revocation_request_state state;
 
   state.addr_revoke = addr_revoke;
@@ -64,7 +78,15 @@ akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkadd
   state.amount_new_neighbors = 0;
   state.new_neighbors = new_neighbors;
   state.amount_replies = 0;
-  state.requestor = requestor;
+
+  uint8_t n = coap_endpoint_snprint(state.requestor, 48, requestor);
+  uint8_t start = index_of(state.requestor, 0, n, '[');
+  uint8_t end = index_of(state.requestor, start, n, ']');
+  for (int i = end +1; i < n; ++i) {
+    state.requestor[i] = 0;
+  }
+  state.len_requestor = end + 1;
+
   return state;
 }
 
@@ -78,7 +100,6 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
   static  uint8_t control_byte;
   static  linkaddr_t revoke_node;
   static  uint8_t number_dsts;
-  static coap_endpoint_t endpoint;
 
 
   control_byte = *payload++;
@@ -88,13 +109,12 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
   revoke_node = *(linkaddr_t *)(void*)payload;
   payload += LINKADDR_SIZE;
   number_dsts = *payload++;
-  endpoint = *coap_get_src_endpoint(request);
 
   static linkaddr_t dsts[AKES_REVOCATION_MAX_DSTS];
   memcpy(dsts, payload, LINKADDR_SIZE * number_dsts);
   static linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
 
-  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, new_neighbors, endpoint);
+  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, new_neighbors, coap_get_src_endpoint(request));
   akes_revocation_revoke_node(&state);
 
   coap_set_header_content_format(response, TEXT_PLAIN);

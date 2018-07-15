@@ -1,3 +1,4 @@
+//#define REVOCATION_BORDER
 /*
  * Copyright (c) 2015, Hasso-Plattner-Institut.
  * All rights reserved.
@@ -37,11 +38,6 @@
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-/* Log configuration */
-#include "sys/log.h"
-#define LOG_MODULE "AKES"
-#define LOG_LEVEL LOG_LEVEL_DBG
-
 #include "net/mac/cmd-broker.h"
 #include "net/packetbuf.h"
 #include "lib/memb.h"
@@ -52,9 +48,16 @@
 #ifdef REVOCATION_BORDER
   #include "sys/ctimer.h"
   #include "coap-engine.h"
+  #include "coap-blocking-api.h"
+  #include "coap-log.h"
   extern coap_resource_t res_akes_revocation;
   PROCESS(request_responder, "request_responder");
 #endif
+
+/* Log configuration */
+#include "sys/log.h"
+#define LOG_MODULE "AKES"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
 struct traversal_entry {
     //for iterating through all visited nodes
@@ -523,7 +526,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
 static void
 akes_revocation_init_coap(void *ptr) {
   LOG_DBG("activate resource of akes\n");
-  coap_activate_resource(&res_akes_revocation, "akes/revoke");
+  coap_activate_resource(&res_akes_revocation, AKES_REVOCATION_URI_PATH);
 }
 #endif
 /*---------------------------------------------------------------------------*/
@@ -543,10 +546,19 @@ akes_revocation_init(void) {
 }
 /*---------------------------------------------------------------------------*/
 #ifdef REVOCATION_BORDER
+void
+akes_coap_response_handler(coap_message_t *response)
+{
+  LOG_INFO("Received status code %d", response->code);
+}
+
 PROCESS_THREAD(request_responder, ev, data)
 {
+  static coap_endpoint_t server_ep;
   PROCESS_BEGIN();
     static struct etimer periodic_timer;
+    static coap_message_t response[1];
+    coap_endpoint_parse(request_state->requestor, request_state->len_requestor, &server_ep);
     etimer_set(&periodic_timer, CLOCK_SECOND);
     static int k;
     for (k = 0; k < AKES_REVOCATION_REQUEST_TIMEOUT; ++k) {
@@ -556,8 +568,22 @@ PROCESS_THREAD(request_responder, ev, data)
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
       etimer_reset(&periodic_timer);
     }
+//    LOG_DBG("The address is the first %d chars of: %s\n", request_state->len_requestor, request_state->requestor);
 
-    LOG_INFO("Going to send response\n");
+    LOG_INFO("Going to send response to ");
+    LOG_INFO_COAP_EP(&server_ep);
+    LOG_INFO_("\n");
+
+    coap_init_message(response, COAP_TYPE_CON, COAP_POST, 0);
+    coap_set_header_uri_path(response, AKES_REVOCATION_URI_PATH);
+
+    const char msg[] = "Proceeded!";
+
+    coap_set_payload(response, (uint8_t *)msg, sizeof(msg) - 1);
+
+    COAP_BLOCKING_REQUEST(&server_ep, response, akes_coap_response_handler);
+
+    LOG_DBG("DONE\n");
 
   PROCESS_END();
 }

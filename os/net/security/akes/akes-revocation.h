@@ -53,6 +53,7 @@
 #define AKES_REVOCATION_MAX_NEW_NEIGHBORS 10
 #define AKES_REVOCATION_MAX_DSTS 5
 #define AKES_REVOCATION_REQUEST_TIMEOUT 5 //seconds
+#define AKES_REVOCATION_URI_PATH "akes/revoke"
 
 #define AKES_REVOCATION_SUCCESS 0
 #define AKES_REVOCATION_ERROR 255
@@ -68,9 +69,8 @@ struct akes_revocation_request_state {
     uint8_t amount_replies;
     uint8_t amount_new_neighbors;
     linkaddr_t *new_neighbors;
-#ifdef REVOCATION_BORDER
-    coap_endpoint_t requestor;
-#endif
+    char requestor[48]; //maximum string "coap://[1111:1111:1111:1111:1111:1111:1111:1111]"
+    uint8_t len_requestor;
 };
 int8_t akes_revocation_revoke_node(struct akes_revocation_request_state *request_state);
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
