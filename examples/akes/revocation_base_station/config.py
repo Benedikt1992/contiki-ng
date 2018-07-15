@@ -9,5 +9,6 @@ CONFIG = {
     "log_level": logging.DEBUG,
     "host": "fd00::201:1:1:1",
     "port": 5683,
-    "path": "akes/revoke"
+    "path": "akes/revoke",
+    "listen": "fd00::1"
 }
