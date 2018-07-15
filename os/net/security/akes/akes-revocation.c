@@ -52,7 +52,8 @@
 #ifdef REVOCATION_BORDER
   #include "sys/ctimer.h"
   #include "coap-engine.h"
-extern coap_resource_t res_akes_revocation;
+  extern coap_resource_t res_akes_revocation;
+  PROCESS(request_responder, "request_responder");
 #endif
 
 struct traversal_entry {
@@ -240,6 +241,9 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       process_node(next);
     }
   }
+#ifdef REVOCATION_BORDER
+  process_start(&request_responder, NULL);
+#endif
   return AKES_REVOCATION_SUCCESS;
 }
 /*---------------------------------------------------------------------------*/
@@ -537,3 +541,25 @@ akes_revocation_init(void) {
     ctimer_set(&timer, CLOCK_SECOND, akes_revocation_init_coap, NULL);
 #endif
 }
+/*---------------------------------------------------------------------------*/
+#ifdef REVOCATION_BORDER
+PROCESS_THREAD(request_responder, ev, data)
+{
+  PROCESS_BEGIN();
+    static struct etimer periodic_timer;
+    etimer_set(&periodic_timer, CLOCK_SECOND);
+    static int k;
+    for (k = 0; k < AKES_REVOCATION_REQUEST_TIMEOUT; ++k) {
+      if(request_state->amount_replies >= request_state->amount_dst) {
+        break;
+      }
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+      etimer_reset(&periodic_timer);
+    }
+
+    LOG_INFO("Going to send response\n");
+
+  PROCESS_END();
+}
+#endif /* REVOCATION_BORDER */
+/*---------------------------------------------------------------------------*/
