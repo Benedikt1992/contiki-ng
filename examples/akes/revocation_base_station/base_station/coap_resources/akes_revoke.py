@@ -14,4 +14,6 @@ class AkesRevokeResource(resource.Resource):
 
     async def render_post(self, request):
         print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        print(request.remote.hostinfo)
+        print(repr(request.payload))
         return aiocoap.Message(payload=b'OK', code=aiocoap.CREATED)

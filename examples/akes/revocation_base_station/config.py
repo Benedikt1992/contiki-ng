@@ -8,7 +8,12 @@ CONFIG = {
     "cooja_malicious_node_id": 2,
     "log_level": logging.DEBUG,
     "host": "fd00::201:1:1:1",
-    "port": 5683,
     "path": "akes/revoke",
-    "listen": "fd00::1"
+    "initial_network": [
+        '0001.0001.0001.0001',
+        '0200.0000.0000.0000',
+        '0300.0000.0000.0000',
+        '0400.0000.0000.0000',
+        '0500.0000.0000.0000'
+    ]
 }
