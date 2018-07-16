@@ -68,7 +68,7 @@ index_of(const char *data, int offset, int len, uint8_t c)
 }
 /*---------------------------------------------------------------------------*/
 struct akes_revocation_request_state
-akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys,linkaddr_t *new_neighbors,  const coap_endpoint_t *requestor) {
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys, const coap_endpoint_t *requestor) {
   struct akes_revocation_request_state state;
 
   state.addr_revoke = addr_revoke;
@@ -76,7 +76,6 @@ akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkadd
   state.addr_dsts = addr_dsts;
   state.new_keys = new_keys;
   state.amount_new_neighbors = 0;
-  state.new_neighbors = new_neighbors;
   state.amount_replies = 0;
 
   uint8_t n = coap_endpoint_snprint(state.requestor, 48, requestor);
@@ -89,6 +88,12 @@ akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkadd
 
   return state;
 }
+
+/*---------------------------------------------------------------------
+ * This method handels a post request to control the revocation process
+ * Message format:
+ * | Control Byte | Address of node that should be deleted | number of destinations | List of destinations |
+ */
 
 static void
 akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
@@ -112,9 +117,8 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
 
   static linkaddr_t dsts[AKES_REVOCATION_MAX_DSTS];
   memcpy(dsts, payload, LINKADDR_SIZE * number_dsts);
-  static linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
 
-  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, new_neighbors, coap_get_src_endpoint(request));
+  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, coap_get_src_endpoint(request));
   akes_revocation_revoke_node(&state);
 
   coap_set_header_content_format(response, TEXT_PLAIN);

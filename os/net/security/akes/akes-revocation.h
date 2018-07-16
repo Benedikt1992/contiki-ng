@@ -54,6 +54,7 @@
 #define AKES_REVOCATION_MAX_DSTS 5
 #define AKES_REVOCATION_REQUEST_TIMEOUT 5 //seconds
 #define AKES_REVOCATION_URI_PATH "akes/revoke"
+#define AKES_REVOCATION_REPLY_BUF_SIZE (LINKADDR_SIZE * (1 + AKES_REVOCATION_MAX_DSTS + AKES_REVOCATION_MAX_NEW_NEIGHBORS) + 2)
 
 #define AKES_REVOCATION_SUCCESS 0
 #define AKES_REVOCATION_ERROR 255
@@ -65,10 +66,10 @@ struct akes_revocation_request_state {
     uint8_t amount_dst;
     linkaddr_t *addr_dsts;
     uint8_t *new_keys; //TODO This value needs to be adjusted to key type
-    uint8_t *revoke_reply_secrets;
+    linkaddr_t revoke_reply_secrets[AKES_REVOCATION_MAX_DSTS];
     uint8_t amount_replies;
     uint8_t amount_new_neighbors;
-    linkaddr_t *new_neighbors;
+    linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
     char requestor[48]; //maximum string "coap://[1111:1111:1111:1111:1111:1111:1111:1111]"
     uint8_t len_requestor;
 };

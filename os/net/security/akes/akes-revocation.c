@@ -157,6 +157,25 @@ akes_revocation_add_new_neighbor_to_state(const linkaddr_t *nbr_addr) {
 }
 /*---------------------------------------------------------------------------*/
 /*
+ * private AKES method for adding a new replies to the state object
+ * reply_addr - the address of the new neighbor
+ * TODO Check if reply store has free space. If not what should happen?
+ */
+static void
+akes_revocation_add_new_reply_to_state(const linkaddr_t *reply_addr) {
+  for (int i = 0; i < request_state->amount_replies; ++i) {
+    if(linkaddr_cmp(&request_state->revoke_reply_secrets[i], reply_addr)) {
+      return;
+    }
+  }
+  LOG_INFO("Adding ");
+  LOG_INFO_LLADDR(reply_addr);
+  LOG_INFO_(" as new reply\n");
+  request_state->revoke_reply_secrets[request_state->amount_replies] = *reply_addr;
+  (request_state->amount_replies)++;
+}
+/*---------------------------------------------------------------------------*/
+/*
  * public AKES API for revoking a node
  * addr_revoke - the address of the node that should be revoked
  */
@@ -219,7 +238,7 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
         }
         next_entry = akes_nbr_next(next_entry);
       }
-      (request_state->amount_replies)++;
+      akes_revocation_add_new_reply_to_state(&linkaddr_node_addr);
     } else {
       // Process any other node in the network
       if (linkaddr_cmp(&request_state->addr_dsts[i], request_state->addr_revoke)) {
@@ -364,7 +383,7 @@ on_revocation_ack(uint8_t *payload)
 
             akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
         }
-      request_state->amount_replies++;
+      akes_revocation_add_new_reply_to_state(addr_route);
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
@@ -552,6 +571,11 @@ akes_coap_response_handler(coap_message_t *response)
   LOG_INFO("Received status code %d", response->code);
 }
 
+/*---------------------------------------------------------------------------
+ * This process waits until one request is fulfilled and sends the result to the requestor
+ * Message format:
+ * |border router mac address | number of replies | reply addresses | number of new neighbors | addresses of neighbors |
+ */
 PROCESS_THREAD(request_responder, ev, data)
 {
   static coap_endpoint_t server_ep;
@@ -568,7 +592,6 @@ PROCESS_THREAD(request_responder, ev, data)
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
       etimer_reset(&periodic_timer);
     }
-//    LOG_DBG("The address is the first %d chars of: %s\n", request_state->len_requestor, request_state->requestor);
 
     LOG_INFO("Going to send response to ");
     LOG_INFO_COAP_EP(&server_ep);
@@ -577,13 +600,22 @@ PROCESS_THREAD(request_responder, ev, data)
     coap_init_message(response, COAP_TYPE_CON, COAP_POST, 0);
     coap_set_header_uri_path(response, AKES_REVOCATION_URI_PATH);
 
-    const char msg[] = "Proceeded!";
+    uint8_t msg[AKES_REVOCATION_REPLY_BUF_SIZE];
+    uint8_t *payload = msg;
 
-    coap_set_payload(response, (uint8_t *)msg, sizeof(msg) - 1);
+    *(linkaddr_t *)(void *)payload = linkaddr_node_addr;
+    payload += LINKADDR_SIZE;
+    *payload = request_state->amount_replies;
+    payload++;
+    memcpy(payload,request_state->revoke_reply_secrets,request_state->amount_replies * LINKADDR_SIZE);
+    payload += request_state->amount_replies * LINKADDR_SIZE;
+    *payload = request_state->amount_new_neighbors;
+    payload++;
+    memcpy(payload,request_state->new_neighbors,request_state->amount_new_neighbors * LINKADDR_SIZE);
+
+    coap_set_payload(response, msg, sizeof(msg) - 1);
 
     COAP_BLOCKING_REQUEST(&server_ep, response, akes_coap_response_handler);
-
-    LOG_DBG("DONE\n");
 
   PROCESS_END();
 }
