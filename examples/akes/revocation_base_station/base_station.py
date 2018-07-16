@@ -1,29 +1,33 @@
 import logging
-from coapthon.client.helperclient import HelperClient
+import signal
+
 from config import CONFIG
 from base_station.logging import setup_logging
 from base_station.coap_server import CoAPServer
 import threading
+import asyncio
+
+from aiocoap import *
 
 
 logger = logging.getLogger(name='base_station')
 
-control_byte_default = '\x00'
-control_byte_terminate = '\x02'
+control_byte_default = b'\x00'
+control_byte_terminate = b'\x02'
 
 revocation_list = []
 
 def MAC_to_payload(mac_addr):
-    result = ''
+    result = b''
     for group in mac_addr.split('.'):
-        result += bytes.fromhex(group).decode('utf-8')
+        result += bytes.fromhex(group)
     return result
 
 def build_payload(control_byte, revoke_node, dst_node_addrs):
-    payload = ''
+    payload = b''
     payload += control_byte
     payload += revoke_node
-    payload += bytes([len(dst_node_addrs)]).decode('utf-8')
+    payload += bytes([len(dst_node_addrs)])
     for addr in dst_node_addrs:
         payload += addr
     return payload
@@ -32,42 +36,42 @@ class BaseStation:
 
     def __init__(self):
         setup_logging()
+        self.aio_loop = asyncio.new_event_loop()
+        self._start_server()
+        signal.signal(signal.SIGINT, self._stop_server)
+        signal.signal(signal.SIGTERM, self._stop_server)
 
-    def run(self):
+    async def run(self):
         if not CONFIG['on_mote']:
-            t = threading.Thread(target=self._start_server, daemon=False, name="CoAP Server")
-            t.start()
-            #
-            # client = HelperClient(server=(CONFIG['host'], CONFIG['port']))
-            #
-            # payload = build_payload(
-            #     control_byte_default,
-            #     MAC_to_payload('0200.0000.0000.0000'),
-            #     [MAC_to_payload('0001.0001.0001.0001')]
-            # )
-            #
-            # response = client.post(CONFIG['path'], payload, timeout=None)
-            # print(response.pretty_print())
 
-            # payload = build_payload(
-            #     control_byte_default,
-            #     MAC_to_payload('0200.0000.0000.0000'),
-            #     [MAC_to_payload('0300.0000.0000.0000'), MAC_to_payload('0400.0000.0000.0000')]
-            # )
-            #
-            # response = client.post(CONFIG['path'], payload, timeout=None)
-            # print(response.pretty_print())
+            client = await Context.create_client_context()
+
+            payload = build_payload(
+                control_byte_default,
+                MAC_to_payload('0200.0000.0000.0000'),
+                [MAC_to_payload('0001.0001.0001.0001')]
+            )
+
+            request = Message(code=POST, payload=payload)
+            request.opt.uri_host = CONFIG['host']
+            request.opt.uri_path = tuple(filter(None, CONFIG['path'].split('/')))
+
+            try:
+                response = await client.request(request).response
+            except Exception as e:
+                print('Failed to fetch resource:')
+                print(e)
+            else:
+                print('Result: %s\n%r' % (response.code, response.payload))
 
     def _start_server(self):
-        server = CoAPServer(CONFIG['listen'], CONFIG['port'])
-        logger.info("Start server")
-        try:            server.listen(5)
-        except KeyboardInterrupt:
-            logger.info("Going to shutdown server.")
-            server.close()
-            logger.info("Server closed.")
+        t = threading.Thread(target=CoAPServer().run, args=(self.aio_loop,), daemon=False, name="CoAP Server")
+        t.start()
+
+    def _stop_server(self, *args, **kwargs):
+        print("Shutting down. Please wait...")
+        self.aio_loop.stop()
 
 
 if __name__ == '__main__':
-    BaseStation().run()
-
+    asyncio.get_event_loop().run_until_complete(BaseStation().run())

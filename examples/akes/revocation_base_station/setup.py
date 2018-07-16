@@ -58,7 +58,8 @@ setup(
 
     # dependencies
     install_requires=[
-        "coapthon3>=1.0.1"
+        "aiocoap",
+        "linkheader"
     ],
 
     # packages
