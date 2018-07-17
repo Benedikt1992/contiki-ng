@@ -1,3 +1,6 @@
+logging.conf
+base_station.log
+
 # PyCharm
 .idea/
 

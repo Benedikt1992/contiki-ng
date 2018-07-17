@@ -8,7 +8,16 @@ def setup_logging():
     and the logerator itself.
     '''
 
-    output_format = '[%(levelname)-8s] [%(name)-15s] %(message)s'
-
-    logging.basicConfig(format=output_format, level=CONFIG['log_level'])
-
+    output_format = '[%(asctime)s] [%(levelname)-8s] [%(name)-20s] %(message)s'
+    date_format = "%Y-%m-%d %H:%M:%S"
+    if CONFIG['log_to_file']:
+        logging.basicConfig(format=output_format,
+                            level=CONFIG['log_level'],
+                            datefmt=date_format,
+                            filename='base_station.log',
+                            filemode='w')
+    else:
+        logging.basicConfig(format=output_format,
+                            level=CONFIG['log_level'],
+                            datefmt=date_format
+                            )
