@@ -5,6 +5,7 @@ import logging
 
 CONFIG = {
     "on_mote": False,
+    "log_to_file": False,
     "cooja_malicious_node_id": 2,
     "log_level": logging.DEBUG,
     "host": "fd00::201:1:1:1",
@@ -15,5 +16,8 @@ CONFIG = {
         '0300.0000.0000.0000',
         '0400.0000.0000.0000',
         '0500.0000.0000.0000'
+    ],
+    "border_router": [
+        '0001.0001.0001.0001'
     ]
 }

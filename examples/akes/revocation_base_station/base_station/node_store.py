@@ -12,15 +12,22 @@ class NodeStore:
     def __init__(self):
         self._lock = RLock()
         self.network_nodes = []
+        self.border_router = []
         self._load_initial_network()
         self._iter_index = 0
 
     def get_node_with_id(self, i):
         return self.network_nodes[int(i) - 1]
 
+    def iter_border_router(self):
+        return iter(self.border_router)
+
     def _load_initial_network(self):
         for mac in CONFIG["initial_network"]:
             self.network_nodes.append(MAC_string_to_byte(mac))
+
+        for mac in CONFIG["border_router"]:
+            self.border_router.append(MAC_string_to_byte(mac))
 
     def __str__(self):
         string = ""
