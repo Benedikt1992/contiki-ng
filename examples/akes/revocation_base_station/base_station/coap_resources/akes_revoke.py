@@ -19,6 +19,15 @@ class AkesRevokeResource(resource.Resource):
         print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
         print(request.remote.hostinfo)
         print(repr(request.payload))
+        border_router = request.payload[0:8]
+        number_of_replies = request.payload[8:8+1]
+        replies = []
+        for i in range(number_of_replies):
+            start = (8+1)+i*8
+            end = (8+1)+(i+1)*8
+            replies.append(request.payload[start:end])
+        
+
         # TODO prepare payload
         t = threading.Thread(target=RevokeProcess().process_update, args=(5,), daemon=True, name="Name")
         t.start()
