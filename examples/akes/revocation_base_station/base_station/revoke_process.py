@@ -21,6 +21,10 @@ class RevokeProcess:
             self._lock = RLock()
             self._in_progress = False
             self.nodes = NodeStore()
+            self._revocation_id = None
+            self._pending = []
+            self._queue = []
+            self._revoked = []
 
         def in_progress(self):
             return self._in_progress
@@ -31,36 +35,55 @@ class RevokeProcess:
         async def start_revocation_of_id(self, selection):
             with self._lock, self.nodes:
                 self._in_progress = True
-                client = await Context.create_client_context()
+                self._revocation_id = selection
 
                 for border_router in self.nodes.iter_border_router():
-                    payload = self._build_payload(
+                    self._pending.append((border_router, border_router))
+                    await self._send_message(
                         self._control_byte_default,
-                        self.nodes.get_node_with_id(selection),
                         [border_router]
                     )
-                    request = Message(code=POST, payload=payload)
-                    request.opt.uri_host = CONFIG['host']
-                    request.opt.uri_path = tuple(filter(None, CONFIG['path'].split('/')))
-                    try:
-                        response = await client.request(request).response
-                    except Exception as e:
-                        print('Failed to fetch resource:')
-                        print(e)
-                    else:
-                        print('Result: %s\n%r' % (response.code, response.payload))
 
-        def process_update(self, *args, **kwargs):
+        def process_update(self, *args):
+            if not self.in_progress():
+                logger.info("Update function called without pending revocation process.")
+                return
             with self._lock:
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
-                loop.run_until_complete(self._process_update(*args, **kwargs))
+                loop.run_until_complete(self._process_update(*args))
                 loop.close()
 
-        async  def _process_update(self, *args, **kwargs):
-            # TODO process...
-            client = await Context.create_client_context()
-            print(args[0])
+        async def _process_update(self, border_router, replies, neighbors):
+            for reply in replies:
+                if not list(filter(lambda t: t == (border_router, reply), self._pending)):
+                    raise AttributeError("Reply is not pending.")
+
+                self._revoked.append(reply)
+                self._pending = list(filter(
+                    lambda t: t != (border_router, reply),
+                    self._pending
+                ))
+                self._queue = list(filter(
+                    lambda t: t[1] != reply,
+                    self._queue
+                ))
+
+            self._pending = list(filter(
+                lambda t: t[0] != border_router,
+                self._pending
+            ))
+
+            for neighbor in neighbors:
+                if neighbor == self.nodes.get_node_with_id(self._revocation_id):
+                    continue
+                self._queue.append((border_router, neighbor))
+
+            await self._process_queue()
+
+            self._update_progress()
+
+            self._check_for_termination()
 
         def _build_payload(self, control_byte, revoke_node, dst_node_addrs):
             payload = b''
@@ -70,6 +93,53 @@ class RevokeProcess:
             for addr in dst_node_addrs:
                 payload += addr
             return payload
+
+        async def _send_message(self, control_byte, destinations):
+            client = await Context.create_client_context()
+            payload = self._build_payload(
+                control_byte,
+                self.nodes.get_node_with_id(self._revocation_id),
+                destinations
+            )
+            request = Message(code=POST, payload=payload)
+            # TODO make this work with multiple border router (rest should already work fine
+            request.opt.uri_host = CONFIG['host']
+            request.opt.uri_path = tuple(filter(None, CONFIG['path'].split('/')))
+            #TODO give feedback about success
+            try:
+                response = await client.request(request).response
+            except Exception as e:
+                print('Failed to fetch resource:')
+                print(e)
+            else:
+                print('Result: %s\n%r' % (response.code, response.payload))
+
+        def _check_for_termination(self):
+            if self._pending or self._queue:
+                return
+
+            logger.info("Terminate revoke process")
+            # TODO
+            '''
+            Reset all fields
+            remove node from NodeStore
+            send termination to all border routers (that are left - maybe a border router got removed as well)
+            '''
+
+        def _update_progress(self):
+            print("IN PROGESS. please wait...")
+            # TODO
+
+        async def _process_queue(self):
+            for router, node in self._queue:
+                if list(filter(lambda t: t[1] == node, self._pending)):
+                    continue
+                 #TODO group messages by router
+                await self._send_message(self._control_byte_default,
+                                   [node]
+                                   )
+                self._pending.append((router, node))
+                self._queue.remove((router, node))
 
         def __enter__(self):
             self._lock.acquire()
