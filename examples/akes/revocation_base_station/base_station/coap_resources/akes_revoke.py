@@ -16,19 +16,39 @@ class AkesRevokeResource(resource.Resource):
         super().__init__()
 
     async def render_post(self, request):
-        print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        print(request.remote.hostinfo)
-        print(repr(request.payload))
-        border_router = request.payload[0:8]
-        number_of_replies = request.payload[8:8+1]
+        start = 0
+        end = 8
+        border_router = request.payload[start:end]
+
+        start = end
+        end += 1
+        number_of_replies = int.from_bytes(request.payload[start:end], byteorder='big')
         replies = []
         for i in range(number_of_replies):
-            start = (8+1)+i*8
-            end = (8+1)+(i+1)*8
+            start = end
+            end += 8
             replies.append(request.payload[start:end])
-        
+        start = end
+        end += 1
+        number_of_neighbors = int.from_bytes(request.payload[start: end], byteorder='big')
+        neighbors = []
+        for i in range(number_of_neighbors):
+            start = end
+            end += 8
+            neighbors.append(request.payload[start:end])
 
-        # TODO prepare payload
-        t = threading.Thread(target=RevokeProcess().process_update, args=(5,), daemon=True, name="Name")
+        logger.debug("Border Router: " + repr(border_router))
+        logger.debug("Number of replies: " + repr(number_of_replies))
+        for e in replies:
+            logger.debug(repr(e))
+        logger.debug("Number of neighbors: " + repr(number_of_neighbors))
+        for e in neighbors:
+            logger.debug(repr(e))
+
+        t = threading.Thread(
+            target=RevokeProcess().process_update,
+            args=(border_router, replies, neighbors),
+            daemon=True,
+            name="Name")
         t.start()
         return aiocoap.Message(payload=b'OK', code=aiocoap.CREATED)
