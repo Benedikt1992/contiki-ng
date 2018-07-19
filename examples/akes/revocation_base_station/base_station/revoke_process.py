@@ -87,22 +87,25 @@ class RevokeProcess:
 
             self._update_progress()
 
-            self._check_for_termination()
+            await self._check_for_termination()
 
-        def _build_payload(self, control_byte, revoke_node, dst_node_addrs):
+        def _build_payload(self, control_byte, revoke_node, dst_node_addrs=None):
             payload = b''
             payload += control_byte
             payload += revoke_node
-            payload += bytes([len(dst_node_addrs)])
-            for addr in dst_node_addrs:
-                payload += addr
+            if dst_node_addrs:
+                payload += bytes([len(dst_node_addrs)])
+                for addr in dst_node_addrs:
+                    payload += addr
             return payload
 
-        async def _send_message(self, border_router_ip, control_byte, destinations):
+        async def _send_message(self, border_router_ip, control_byte, destinations=None, revoke_node=None):
             client = await Context.create_client_context()
+            if not revoke_node:
+                revoke_node = self.nodes.get_node_with_id(self._revocation_id)
             payload = self._build_payload(
                 control_byte,
-                self.nodes.get_node_with_id(self._revocation_id),
+                revoke_node,
                 destinations
             )
             request = Message(code=POST, payload=payload)
@@ -117,17 +120,22 @@ class RevokeProcess:
             else:
                 print('Result: %s\n%r' % (response.code, response.payload))
 
-        def _check_for_termination(self):
+        async def _check_for_termination(self):
             if self._pending or self._queue:
                 return
 
             logger.info("Terminate revoke process")
-            # TODO
-            '''
-            Reset all fields
-            remove node from NodeStore
-            send termination to all border routers (that are left - maybe a border router got removed as well)
-            '''
+            revoked_node = self.nodes.get_node_with_id(self._revocation_id)
+            self.nodes.remove_node_id(self._revocation_id)
+
+            for router_mac, router_ip in self.nodes.iter_border_router():
+                await self._send_message(router_ip, self._control_byte_terminate, revoke_node=revoked_node)
+
+            self._revocation_id = None
+            self._pending = []
+            self._queue = []
+            self._revoked = []
+            self._in_progress = False
 
         def _update_progress(self):
             print("IN PROGESS. please wait...")

@@ -70,7 +70,7 @@ struct traversal_entry {
 MEMB(traversal_memb, struct traversal_entry, AKES_REVOCATION_MAX_QUEUE);
 LIST(traversal_list);
 static linkaddr_t addr_revoke_node;
-struct akes_revocation_request_state *request_state; //TODO this variable should be managed by the COAP Server
+struct akes_revocation_request_state *request_state;
 
 static struct cmd_broker_subscription subscription;
 static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
@@ -173,6 +173,19 @@ akes_revocation_add_new_reply_to_state(const linkaddr_t *reply_addr) {
   LOG_INFO_(" as new reply\n");
   request_state->revoke_reply_secrets[request_state->amount_replies] = *reply_addr;
   (request_state->amount_replies)++;
+}
+void
+akes_revocation_terminate(void)
+{
+  struct traversal_entry *n = list_chop(traversal_list);
+  while(n != NULL) {
+    memb_free(&traversal_memb, n);
+    n = list_chop(traversal_list);
+  }
+
+
+  addr_revoke_node = linkaddr_null;
+  LOG_INFO("Revocation process terminated.\n");
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -570,7 +583,7 @@ akes_revocation_init(void) {
 void
 akes_coap_response_handler(coap_message_t *response)
 {
-  LOG_INFO("Received status code %d", response->code);
+  LOG_INFO("Received status code %d\n", response->code);
 }
 
 /*---------------------------------------------------------------------------

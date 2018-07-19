@@ -25,6 +25,14 @@ class NodeStore:
     def get_router_ip(self, router_id):
         return list(filter(lambda t: t[0] == router_id, self.border_router))[0][1]
 
+    def remove_node_id(self, node_id):
+        node = self.get_node_with_id(node_id)
+        self.border_router = list(filter(
+            lambda t: t[0] != node,
+            self.border_router
+        ))
+        self.network_nodes.remove(node)
+
     def _load_initial_network(self):
         for mac in CONFIG["initial_network"]:
             self.network_nodes.append(MAC_string_to_byte(mac))

@@ -109,7 +109,11 @@ akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, 
 
   control_byte = *payload++;
   if(control_byte == 2) {
-    // ToDo reset revocation process
+    akes_revocation_terminate();
+    coap_set_header_content_format(response, TEXT_PLAIN);
+    coap_set_status_code(response, CONTENT_2_05);
+    coap_set_payload(response, "OK", 2);
+    return;
   }
   revoke_node = *(linkaddr_t *)(void*)payload;
   payload += LINKADDR_SIZE;
