@@ -8,7 +8,6 @@ CONFIG = {
     "log_to_file": False,
     "cooja_malicious_node_id": 2,
     "log_level": logging.DEBUG,
-    "host": "fd00::201:1:1:1",
     "path": "akes/revoke",
     "initial_network": [
         '0001.0001.0001.0001',
@@ -18,6 +17,6 @@ CONFIG = {
         '0500.0000.0000.0000'
     ],
     "border_router": [
-        '0001.0001.0001.0001'
+        ('0001.0001.0001.0001', "fd00::201:1:1:1")
     ]
 }

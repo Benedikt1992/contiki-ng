@@ -22,12 +22,15 @@ class NodeStore:
     def iter_border_router(self):
         return iter(self.border_router)
 
+    def get_router_ip(self, router_id):
+        return list(filter(lambda t: t[0] == router_id, self.border_router))[0][1]
+
     def _load_initial_network(self):
         for mac in CONFIG["initial_network"]:
             self.network_nodes.append(MAC_string_to_byte(mac))
 
-        for mac in CONFIG["border_router"]:
-            self.border_router.append(MAC_string_to_byte(mac))
+        for mac, ip in CONFIG["border_router"]:
+            self.border_router.append((MAC_string_to_byte(mac), ip))
 
     def __str__(self):
         string = ""

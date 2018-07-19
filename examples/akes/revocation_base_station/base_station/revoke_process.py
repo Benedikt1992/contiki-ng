@@ -36,12 +36,14 @@ class RevokeProcess:
             with self._lock, self.nodes:
                 self._in_progress = True
                 self._revocation_id = selection
-
-                for border_router in self.nodes.iter_border_router():
-                    self._pending.append((border_router, border_router))
+                # TODO check if it is the only left border router
+                # TODO only send to border routers that are not revoked if it is a border router
+                for border_router_id, border_router_ip in self.nodes.iter_border_router():
+                    self._pending.append((border_router_id, border_router_id))
                     await self._send_message(
+                        border_router_ip,
                         self._control_byte_default,
-                        [border_router]
+                        [border_router_id]
                     )
 
         def process_update(self, *args):
@@ -94,7 +96,7 @@ class RevokeProcess:
                 payload += addr
             return payload
 
-        async def _send_message(self, control_byte, destinations):
+        async def _send_message(self, border_router_ip, control_byte, destinations):
             client = await Context.create_client_context()
             payload = self._build_payload(
                 control_byte,
@@ -102,8 +104,7 @@ class RevokeProcess:
                 destinations
             )
             request = Message(code=POST, payload=payload)
-            # TODO make this work with multiple border router (rest should already work fine
-            request.opt.uri_host = CONFIG['host']
+            request.opt.uri_host = border_router_ip
             request.opt.uri_path = tuple(filter(None, CONFIG['path'].split('/')))
             #TODO give feedback about success
             try:
@@ -135,9 +136,10 @@ class RevokeProcess:
                 if list(filter(lambda t: t[1] == node, self._pending)):
                     continue
                  #TODO group messages by router
-                await self._send_message(self._control_byte_default,
-                                   [node]
-                                   )
+                await self._send_message(self.nodes.get_router_ip(router),
+                                         self._control_byte_default,
+                                         [node]
+                                         )
                 self._pending.append((router, node))
                 self._queue.remove((router, node))
 
