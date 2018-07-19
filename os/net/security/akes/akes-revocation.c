@@ -287,6 +287,8 @@ on_revocation_revoke(uint8_t *payload)
     linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
 
     LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_(" from address ");
+    LOG_INFO_LLADDR(addr_route);
     LOG_INFO_("\n");
 
 

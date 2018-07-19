@@ -1,7 +1,8 @@
 PREFIX ?= fd00::1/64
+PORT ?= 60001
 
 connect-router: $(TUNSLIP6)
-	sudo $(TUNSLIP6) $(PREFIX)
+	sudo $(TUNSLIP6) $(PREFIX) -p $(PORT)
 
 connect-router-cooja: $(TUNSLIP6)
-	sudo $(TUNSLIP6) -a 127.0.0.1 $(PREFIX)
+	sudo $(TUNSLIP6) -a 127.0.0.1 $(PREFIX) -p $(PORT)

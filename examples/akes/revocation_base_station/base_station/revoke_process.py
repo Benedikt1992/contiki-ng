@@ -6,6 +6,7 @@ from aiocoap import *
 
 from base_station.node_store import NodeStore
 from config import CONFIG
+from base_station.helper.mac_conversion import MAC_byte_to_string
 
 logger = logging.getLogger(name='base_station.revoke_process')
 
@@ -59,7 +60,7 @@ class RevokeProcess:
         async def _process_update(self, border_router, replies, neighbors):
             for reply in replies:
                 if not list(filter(lambda t: t == (border_router, reply), self._pending)):
-                    raise AttributeError("Reply is not pending.")
+                    raise AttributeError("Reply {} is not pending.".format(MAC_byte_to_string(reply)))
 
                 self._revoked.append(reply)
                 self._pending = list(filter(
@@ -79,7 +80,8 @@ class RevokeProcess:
             for neighbor in neighbors:
                 if neighbor == self.nodes.get_node_with_id(self._revocation_id):
                     continue
-                self._queue.append((border_router, neighbor))
+                if not list(filter(lambda node_id: node_id == neighbor, self._revoked)):
+                    self._queue.append((border_router, neighbor))
 
             await self._process_queue()
 
