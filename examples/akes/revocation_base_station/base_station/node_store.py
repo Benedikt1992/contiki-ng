@@ -33,6 +33,9 @@ class NodeStore:
         ))
         self.network_nodes.remove(node)
 
+    def network_size(self):
+        return len(self.network_nodes)
+
     def _load_initial_network(self):
         for mac in CONFIG["initial_network"]:
             self.network_nodes.append(MAC_string_to_byte(mac))

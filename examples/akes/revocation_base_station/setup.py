@@ -59,7 +59,8 @@ setup(
     # dependencies
     install_requires=[
         "aiocoap",
-        "linkheader"
+        "linkheader",
+        "tqdm"
     ],
 
     # packages

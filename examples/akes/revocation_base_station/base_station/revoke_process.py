@@ -3,6 +3,7 @@ from asyncio import sleep
 from threading import RLock, current_thread
 import asyncio
 from aiocoap import *
+from tqdm import tqdm
 
 from base_station.node_store import NodeStore
 from config import CONFIG
@@ -26,6 +27,7 @@ class RevokeProcess:
             self._pending = []
             self._queue = []
             self._revoked = []
+            self._progress = None
 
         def in_progress(self):
             return self._in_progress
@@ -37,6 +39,7 @@ class RevokeProcess:
             with self._lock, self.nodes:
                 self._in_progress = True
                 self._revocation_id = selection
+                self._progress = tqdm(total=self.nodes.network_size() - 1, ascii=True, unit="nodes", )
                 # TODO check if it is the only left border router
                 # TODO only send to border routers that are not revoked if it is a border router
                 for border_router_id, border_router_ip in self.nodes.iter_border_router():
@@ -85,7 +88,7 @@ class RevokeProcess:
 
             await self._process_queue()
 
-            self._update_progress()
+            self._update_progress(len(replies))
 
             await self._check_for_termination()
 
@@ -117,8 +120,6 @@ class RevokeProcess:
             except Exception as e:
                 print('Failed to fetch resource:')
                 print(e)
-            else:
-                print('Result: %s\n%r' % (response.code, response.payload))
 
         async def _check_for_termination(self):
             if self._pending or self._queue:
@@ -135,11 +136,13 @@ class RevokeProcess:
             self._pending = []
             self._queue = []
             self._revoked = []
+            self._progress.close()
+            self._progress = None
             self._in_progress = False
 
-        def _update_progress(self):
-            print("IN PROGESS. please wait...")
-            # TODO
+
+        def _update_progress(self, delta):
+            self._progress.update(delta)
 
         async def _process_queue(self):
             for router, node in self._queue:
