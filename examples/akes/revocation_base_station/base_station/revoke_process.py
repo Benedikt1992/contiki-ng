@@ -145,16 +145,24 @@ class RevokeProcess:
             self._progress.update(delta)
 
         async def _process_queue(self):
+
+            message_groups = {}
             for router, node in self._queue:
                 if list(filter(lambda t: t[1] == node, self._pending)):
                     continue
-                 #TODO group messages by router
-                await self._send_message(self.nodes.get_router_ip(router),
-                                         self._control_byte_default,
-                                         [node]
-                                         )
+                try:
+                    message_groups[router].append(node)
+                except KeyError:
+                    message_groups[router] = [node]
+
                 self._pending.append((router, node))
                 self._queue.remove((router, node))
+
+            for router in message_groups:
+                await self._send_message(self.nodes.get_router_ip(router),
+                                         self._control_byte_default,
+                                         message_groups[router]
+                                         )
 
         def __enter__(self):
             self._lock.acquire()
