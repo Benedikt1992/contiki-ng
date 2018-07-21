@@ -36,7 +36,7 @@ class AkesRevokeResource(resource.Resource):
             start = end
             end += 8
             neighbors.append(request.payload[start:end])
-
+        logger.debug("last start and end: {} and {}".format(start, end))
         logger.debug("Border Router: " + repr(border_router))
         logger.debug("Number of replies: " + repr(number_of_replies))
         for e in replies:

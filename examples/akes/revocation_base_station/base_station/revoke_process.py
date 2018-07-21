@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from base_station.node_store import NodeStore
 from config import CONFIG
-from base_station.helper.mac_conversion import MAC_byte_to_string
+from base_station.helper.mac_conversion import MAC_byte_to_string, MAC_bytearray_to_stringarray
 
 logger = logging.getLogger(name='base_station.revoke_process')
 
@@ -106,6 +106,9 @@ class RevokeProcess:
             client = await Context.create_client_context()
             if not revoke_node:
                 revoke_node = self.nodes.get_node_with_id(self._revocation_id)
+            logger.debug(destinations)
+            logger.debug("Sending revocation message over {} to {}".format(border_router_ip, ", ".join(
+                MAC_bytearray_to_stringarray(destinations))))
             payload = self._build_payload(
                 control_byte,
                 revoke_node,
