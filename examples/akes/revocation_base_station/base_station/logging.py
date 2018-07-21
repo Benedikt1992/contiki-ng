@@ -12,12 +12,13 @@ def setup_logging():
     date_format = "%Y-%m-%d %H:%M:%S"
     if CONFIG['log_to_file']:
         logging.basicConfig(format=output_format,
-                            level=CONFIG['log_level'],
+                            level=logging.ERROR,
                             datefmt=date_format,
                             filename='base_station.log',
                             filemode='w')
     else:
         logging.basicConfig(format=output_format,
-                            level=CONFIG['log_level'],
+                            level=logging.ERROR,
                             datefmt=date_format
                             )
+    logging.getLogger('base_station').setLevel(CONFIG['log_level'])
