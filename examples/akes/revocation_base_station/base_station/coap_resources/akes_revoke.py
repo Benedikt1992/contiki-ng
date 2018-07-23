@@ -4,6 +4,7 @@ import logging
 import threading
 
 from base_station.revoke_process import RevokeProcess
+from base_station.helper.mac_conversion import MAC_byte_to_string
 
 logger = logging.getLogger(name='base_station.post_handler')
 
@@ -37,13 +38,13 @@ class AkesRevokeResource(resource.Resource):
             end += 8
             neighbors.append(request.payload[start:end])
         logger.debug("last start and end: {} and {}".format(start, end))
-        logger.debug("Border Router: " + repr(border_router))
+        logger.debug("Border Router: " + MAC_byte_to_string(border_router))
         logger.debug("Number of replies: " + repr(number_of_replies))
         for e in replies:
-            logger.debug(repr(e))
+            logger.debug(MAC_byte_to_string(e))
         logger.debug("Number of neighbors: " + repr(number_of_neighbors))
         for e in neighbors:
-            logger.debug(repr(e))
+            logger.debug(MAC_byte_to_string(e))
 
         t = threading.Thread(
             target=RevokeProcess().process_update,

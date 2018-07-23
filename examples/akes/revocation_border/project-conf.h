@@ -34,7 +34,7 @@
 #define PROJECT_CONF_H_
 
 /* For development only - increase if there are missing packets*/
-#define CSMA_CONF_MAX_FRAME_RETRIES 0
+#define CSMA_CONF_MAX_FRAME_RETRIES 2
 
 /* full debug output for mac layer */
 //#define LOG_CONF_LEVEL_MAC LOG_LEVEL_DBG
@@ -53,7 +53,7 @@
 #else
     /* max number of packets scheduled for sending */
     #define CSMA_CONF_MAX_NEIGHBOR_QUEUES 8
-    #define PACKETBUF_CONF_SIZE 1024
+    #define PACKETBUF_CONF_SIZE 2048
 
     #include "net/mac/csma/csma-autoconf.h"
 #endif /* ON_MOTE */

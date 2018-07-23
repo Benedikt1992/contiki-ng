@@ -174,6 +174,23 @@ akes_revocation_add_new_reply_to_state(const linkaddr_t *reply_addr) {
   request_state->revoke_reply_secrets[request_state->amount_replies] = *reply_addr;
   (request_state->amount_replies)++;
 }
+/*---------------------------------------------------------------------------*/
+/*
+ * private AKES method for checking if a mac address is in an array of addresses
+ * node - the address to be checked
+ * list - the array of addresses
+ * n - number of elements in the list
+ */
+static int
+node_in_list(linkaddr_t *node, linkaddr_t *list, uint8_t n)
+{
+  for (int i = 0; i < n; ++i) {
+    if(linkaddr_cmp(node, &list[i])) {
+      return 1;
+    }
+  }
+  return 0;
+}
 void
 akes_revocation_terminate(void)
 {
@@ -336,7 +353,6 @@ on_revocation_revoke(uint8_t *payload)
 /*
  * Handler for received ack messages
  * payload - the payload of the received message
- * TODO: don't reprocess new neighbors, add them to the state, make state global, rename state into request_state
  * payload: | hop_index | hop_count | addr_sender,addr_hop1..addr_dest | addr_revoke | nbr_count | addr_nbr1..addr_nbr? |
  */
 static enum cmd_broker_result
@@ -378,6 +394,13 @@ on_revocation_ack(uint8_t *payload)
         struct traversal_entry *entry = traversal_entry_from_addr(&addr_route[0]);
         if (!entry) return CMD_BROKER_ERROR;
 
+        if(!node_in_list(&addr_route[0], request_state->addr_dsts, request_state->amount_dst)) {
+          LOG_INFO("Received reply from ");
+          LOG_INFO_LLADDR(&addr_route[0]);
+          LOG_INFO_(" is not part of the current destinations\n");
+          return CMD_BROKER_ERROR;
+        }
+
 
         struct traversal_entry *new_entry;
         for (uint8_t i = 0; i < nbr_count; i++) {
@@ -403,7 +426,6 @@ on_revocation_ack(uint8_t *payload)
             akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
         }
       akes_revocation_add_new_reply_to_state(addr_route);
-        // TODO ignore reply if it is not part of the destinations! (It might be a old one)
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
@@ -604,6 +626,7 @@ PROCESS_THREAD(request_responder, ev, data)
     static coap_message_t response[1];
     coap_endpoint_parse(request_state->requestor, request_state->len_requestor, &server_ep);
     etimer_set(&periodic_timer, CLOCK_SECOND);
+#if ON_MOTE
     static int k;
     for (k = 0; k < AKES_REVOCATION_REQUEST_TIMEOUT; ++k) {
       if(request_state->amount_replies >= request_state->amount_dst) {
@@ -613,6 +636,13 @@ PROCESS_THREAD(request_responder, ev, data)
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
       etimer_reset(&periodic_timer);
     }
+#else // Don't timeout in simulation
+    while(request_state->amount_replies < request_state->amount_dst) {
+      LOG_DBG("Still waiting \n");
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+      etimer_reset(&periodic_timer);
+    }
+#endif /* ON_MOTE */
     LOG_INFO("Going to send response to ");
     LOG_INFO_COAP_EP(&server_ep);
     LOG_INFO_("\n");

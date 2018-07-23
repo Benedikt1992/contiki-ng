@@ -106,7 +106,6 @@ class RevokeProcess:
             client = await Context.create_client_context()
             if not revoke_node:
                 revoke_node = self.nodes.get_node_with_id(self._revocation_id)
-            logger.debug(destinations)
             logger.debug("Sending revocation message over {} to {}".format(border_router_ip, ", ".join(
                 MAC_bytearray_to_stringarray(destinations))))
             payload = self._build_payload(
