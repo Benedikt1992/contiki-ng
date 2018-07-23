@@ -47,6 +47,7 @@
 #else
     /* max number of packets scheduled for sending */
     #define CSMA_CONF_MAX_NEIGHBOR_QUEUES 8
+    #define PACKETBUF_CONF_SIZE 1024
 
     #include "net/mac/csma/csma-autoconf.h"
 #endif /* ON_MOTE */
