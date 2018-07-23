@@ -277,6 +277,10 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
     }
   }
 #ifdef REVOCATION_BORDER
+  if(process_is_running(&request_responder)) {
+    LOG_INFO("Responder process is in progress. Going to exit...\n");
+    process_exit(&request_responder);
+  }
   process_start(&request_responder, NULL);
 #endif
   return AKES_REVOCATION_SUCCESS;
@@ -368,12 +372,12 @@ on_revocation_ack(uint8_t *payload)
     if (hop_index == hop_count) {
         LOG_INFO("revocation ack is for myself.\n");
         if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) {
-            //TODO addr_revoke_node will have changed if there is a second call!
             LOG_INFO("INVALID addr_revoke. ack dropped.\n");
             return CMD_BROKER_ERROR;
         }
         struct traversal_entry *entry = traversal_entry_from_addr(&addr_route[0]);
         if (!entry) return CMD_BROKER_ERROR;
+
 
         struct traversal_entry *new_entry;
         for (uint8_t i = 0; i < nbr_count; i++) {
@@ -399,6 +403,7 @@ on_revocation_ack(uint8_t *payload)
             akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
         }
       akes_revocation_add_new_reply_to_state(addr_route);
+        // TODO ignore reply if it is not part of the destinations! (It might be a old one)
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
@@ -604,13 +609,27 @@ PROCESS_THREAD(request_responder, ev, data)
       if(request_state->amount_replies >= request_state->amount_dst) {
         break;
       }
+      LOG_DBG("Still waiting for replies. Received %d/%d\n", request_state->amount_replies, request_state->amount_dst);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
       etimer_reset(&periodic_timer);
     }
-
     LOG_INFO("Going to send response to ");
     LOG_INFO_COAP_EP(&server_ep);
     LOG_INFO_("\n");
+
+    if( request_state->amount_replies < request_state->amount_dst ) {
+      LOG_INFO("Didn't receive all replies. Expected replies: ");
+      for (int j = 0; j < request_state->amount_dst; ++j) {
+        LOG_INFO_LLADDR(&request_state->addr_dsts[j]);
+        LOG_INFO_(", ");
+      }
+      LOG_INFO_(" only received the following replies: ");
+      for (int i = 0; i < request_state->amount_replies; ++i) {
+        LOG_INFO_LLADDR(&request_state->revoke_reply_secrets[i]);
+        LOG_INFO_(", ");
+      }
+      LOG_INFO_("\n");
+    }
 
     coap_init_message(response, COAP_TYPE_CON, COAP_POST, 0);
     coap_set_header_uri_path(response, AKES_REVOCATION_URI_PATH);
