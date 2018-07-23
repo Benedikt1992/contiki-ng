@@ -129,8 +129,14 @@ class RevokeProcess:
                 return
 
             logger.info("Terminate revoke process")
+
             revoked_node = self.nodes.get_node_with_id(self._revocation_id)
             self.nodes.remove_node_id(self._revocation_id)
+            missing_nodes = []
+            if len(self._revoked) < self.nodes.network_size():
+                for node in self.nodes:
+                    if node not in self._revoked:
+                        missing_nodes.append(node)
 
             for router_mac, router_ip in self.nodes.iter_border_router():
                 await self._send_message(router_ip, self._control_byte_terminate, revoke_node=revoked_node)
@@ -142,6 +148,11 @@ class RevokeProcess:
             self._progress.close()
             self._progress = None
             self._in_progress = False
+            sleep(0.5)   # Make sure that the progressbar is fully printed
+            if missing_nodes:
+                print("Nodes were missed! This are the missed nodes: {}\n".format(", ".join(
+                        MAC_bytearray_to_stringarray(missing_nodes)
+                )))
 
 
         def _update_progress(self, delta):
@@ -154,7 +165,10 @@ class RevokeProcess:
                 if list(filter(lambda t: t[1] == node, self._pending)):
                     continue
                 try:
-                    message_groups[router].append(node)
+                    if len(message_groups[router]) < CONFIG["max_destinations"]:
+                        message_groups[router].append(node)
+                    else:
+                        continue
                 except KeyError:
                     message_groups[router] = [node]
 

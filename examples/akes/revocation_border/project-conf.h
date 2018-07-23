@@ -57,4 +57,9 @@
     #include "net/mac/csma/csma-autoconf.h"
 #endif /* ON_MOTE */
 
+#ifdef COAP_MAX_CHUNK_SIZE
+#undef COAP_MAX_CHUNK_SIZE
+#endif
+#define COAP_MAX_CHUNK_SIZE 100
+
 #endif /* PROJECT_CONF_H_ */

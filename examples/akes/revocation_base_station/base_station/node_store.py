@@ -43,6 +43,9 @@ class NodeStore:
         for mac, ip in CONFIG["border_router"]:
             self.border_router.append((MAC_string_to_byte(mac), ip))
 
+    def __contains__(self, item):
+        return item in self.network_nodes
+
     def __str__(self):
         string = ""
         for node, i in zip(self.network_nodes, range(1, len(self.network_nodes) + 1)):

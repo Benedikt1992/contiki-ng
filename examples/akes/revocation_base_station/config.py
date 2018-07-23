@@ -5,10 +5,11 @@ import logging
 
 CONFIG = {
     "on_mote": False,
-    "log_to_file": False,
+    "log_to_file": True,
     "cooja_malicious_node_id": 2,
     "log_level": logging.DEBUG,
     "path": "akes/revoke",
+    "max_destinations": 2,
     "initial_network": [
         '0001.0001.0001.0001',
         '0200.0000.0000.0000',
