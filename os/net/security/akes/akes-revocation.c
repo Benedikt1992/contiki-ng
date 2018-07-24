@@ -123,6 +123,9 @@ process_node(struct traversal_entry *entry) {
     }
 
     uint8_t hop_count = route_length-1;
+    LOG_DBG("Will reach ");
+    LOG_DBG_LLADDR(&entry->addr);
+    LOG_DBG_(" in %d hops\n", hop_count);
     akes_revocation_send_revoke(&addr_revoke_node, 1, hop_count, &route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length], NULL);
 }
 /*---------------------------------------------------------------------------*/
