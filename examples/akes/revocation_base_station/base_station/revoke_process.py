@@ -86,7 +86,7 @@ class RevokeProcess:
                 if not list(filter(lambda node_id: node_id == neighbor, self._revoked)):
                     self._queue.append((border_router, neighbor))
 
-            await self._process_queue()
+            await self._process_queue(border_router)
 
             self._update_progress(len(replies))
 
@@ -153,16 +153,18 @@ class RevokeProcess:
                         MAC_bytearray_to_stringarray(missing_nodes)
                 )))
 
-
         def _update_progress(self, delta):
             self._progress.update(delta)
 
-        async def _process_queue(self):
+        async def _process_queue(self, border_router):
 
             message_groups = {}
             for router, node in self._queue:
                 if list(filter(lambda t: t[1] == node, self._pending)):
                     continue
+                if router != border_router:
+                    continue
+
                 try:
                     if len(message_groups[router]) < CONFIG["max_destinations"]:
                         message_groups[router].append(node)
