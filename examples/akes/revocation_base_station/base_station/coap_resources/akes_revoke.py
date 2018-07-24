@@ -5,6 +5,7 @@ import threading
 
 from base_station.revoke_process import RevokeProcess
 from base_station.helper.mac_conversion import MAC_byte_to_string
+from config import CONFIG
 
 logger = logging.getLogger(name='base_station.post_handler')
 
@@ -18,7 +19,7 @@ class AkesRevokeResource(resource.Resource):
 
     async def render_post(self, request):
         start = 0
-        end = 8
+        end = CONFIG["ll_address_size"]
         border_router = request.payload[start:end]
 
         start = end
@@ -27,7 +28,7 @@ class AkesRevokeResource(resource.Resource):
         replies = []
         for i in range(number_of_replies):
             start = end
-            end += 8
+            end += CONFIG["ll_address_size"]
             replies.append(request.payload[start:end])
         start = end
         end += 1
@@ -35,7 +36,7 @@ class AkesRevokeResource(resource.Resource):
         neighbors = []
         for i in range(number_of_neighbors):
             start = end
-            end += 8
+            end += CONFIG["ll_address_size"]
             neighbors.append(request.payload[start:end])
         logger.debug("last start and end: {} and {}".format(start, end))
         logger.debug("Border Router: " + MAC_byte_to_string(border_router))

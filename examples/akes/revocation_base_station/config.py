@@ -9,6 +9,7 @@ CONFIG = {
     "log_level": logging.DEBUG,
     "path": "akes/revoke",
     "max_destinations": 2,
+    "ll_address_size": 8,
     "initial_network": [
         '0001.0001.0001.0001',
         '0200.0000.0000.0000',
