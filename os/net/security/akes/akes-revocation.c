@@ -1,3 +1,4 @@
+//#define REVOCATION_BORDER
 /*
  * Copyright (c) 2015, Hasso-Plattner-Institut.
  * All rights reserved.
@@ -37,11 +38,6 @@
  *         Konrad Krentz <konrad.krentz@gmail.com>
  */
 
-/* Log configuration */
-#include "sys/log.h"
-#define LOG_MODULE "AKES"
-#define LOG_LEVEL LOG_LEVEL_DBG
-
 #include "net/mac/cmd-broker.h"
 #include "net/packetbuf.h"
 #include "lib/memb.h"
@@ -52,8 +48,16 @@
 #ifdef REVOCATION_BORDER
   #include "sys/ctimer.h"
   #include "coap-engine.h"
-extern coap_resource_t res_akes_revocation;
+  #include "coap-blocking-api.h"
+  #include "coap-log.h"
+  extern coap_resource_t res_akes_revocation;
+  PROCESS(request_responder, "request_responder");
 #endif
+
+/* Log configuration */
+#include "sys/log.h"
+#define LOG_MODULE "AKES"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
 struct traversal_entry {
     //for iterating through all visited nodes
@@ -66,7 +70,7 @@ struct traversal_entry {
 MEMB(traversal_memb, struct traversal_entry, AKES_REVOCATION_MAX_QUEUE);
 LIST(traversal_list);
 static linkaddr_t addr_revoke_node;
-struct akes_revocation_request_state *request_state; //TODO this variable should be managed by the COAP Server
+struct akes_revocation_request_state *request_state;
 
 static struct cmd_broker_subscription subscription;
 static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
@@ -119,6 +123,9 @@ process_node(struct traversal_entry *entry) {
     }
 
     uint8_t hop_count = route_length-1;
+    LOG_DBG("Will reach ");
+    LOG_DBG_LLADDR(&entry->addr);
+    LOG_DBG_(" in %d hops\n", hop_count);
     akes_revocation_send_revoke(&addr_revoke_node, 1, hop_count, &route[AKES_REVOCATION_MAX_ROUTE_LEN - route_length], NULL);
 }
 /*---------------------------------------------------------------------------*/
@@ -132,20 +139,73 @@ akes_revocation_revoke_node_internal(const linkaddr_t * addr_revoke) {
     LOG_INFO_LLADDR(addr_revoke);
     LOG_INFO_("\n");
 }
-/*---------------------------------------------------------------------------
- * Setup a state object
+/*---------------------------------------------------------------------------*/
+/*
+ * private AKES method for adding a new discovered neighbor to the state object
+ * nbr_addr - the address of the new neighbor
+ * TODO Check if neighbor store has free space. If not what should happen?
  */
-struct akes_revocation_request_state
-akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys) {
-  struct akes_revocation_request_state state;
+static void
+akes_revocation_add_new_neighbor_to_state(const linkaddr_t *nbr_addr) {
+  for (int i = 0; i < request_state->amount_new_neighbors; ++i) {
+    if(linkaddr_cmp(&request_state->addr_dsts[i], nbr_addr)) {
+      return;
+    }
+  }
+  LOG_INFO("Adding ");
+  LOG_INFO_LLADDR(nbr_addr);
+  LOG_INFO_(" as new neighbor\n");
+  request_state->new_neighbors[request_state->amount_new_neighbors] = *nbr_addr;
+  (request_state->amount_new_neighbors)++;
+}
+/*---------------------------------------------------------------------------*/
+/*
+ * private AKES method for adding a new replies to the state object
+ * reply_addr - the address of the new neighbor
+ * TODO Check if reply store has free space. If not what should happen?
+ */
+static void
+akes_revocation_add_new_reply_to_state(const linkaddr_t *reply_addr) {
+  for (int i = 0; i < request_state->amount_replies; ++i) {
+    if(linkaddr_cmp(&request_state->revoke_reply_secrets[i], reply_addr)) {
+      return;
+    }
+  }
+  LOG_INFO("Adding ");
+  LOG_INFO_LLADDR(reply_addr);
+  LOG_INFO_(" as new reply\n");
+  request_state->revoke_reply_secrets[request_state->amount_replies] = *reply_addr;
+  (request_state->amount_replies)++;
+}
+/*---------------------------------------------------------------------------*/
+/*
+ * private AKES method for checking if a mac address is in an array of addresses
+ * node - the address to be checked
+ * list - the array of addresses
+ * n - number of elements in the list
+ */
+static int
+node_in_list(linkaddr_t *node, linkaddr_t *list, uint8_t n)
+{
+  for (int i = 0; i < n; ++i) {
+    if(linkaddr_cmp(node, &list[i])) {
+      return 1;
+    }
+  }
+  return 0;
+}
+void
+akes_revocation_terminate(void)
+{
+  struct traversal_entry *n = list_chop(traversal_list);
+  while(n != NULL) {
+    memb_free(&traversal_memb, n);
+    n = list_chop(traversal_list);
+  }
 
-  state.addr_revoke = addr_revoke;
-  state.amount_dst = amount_dst;
-  state.addr_dsts = addr_dsts;
-  state.new_keys = new_keys;
-  state.amount_new_neighbors = 0;
-  state.amount_replies = 0;
-  return state;
+
+  addr_revoke_node = linkaddr_null;
+  LOG_INFO("Revocation process terminated.\n");
 }
 /*---------------------------------------------------------------------------*/
 /*
@@ -157,6 +217,15 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
   struct traversal_entry * next;
   struct traversal_entry *new_entry;
   struct akes_nbr_entry *next_entry;
+  LOG_DBG("revoke node with state addr_revoke: ");
+  LOG_DBG_LLADDR(state->addr_revoke);
+  LOG_DBG_(", amount_dst: %d, destinations: ", state->amount_dst);
+  for (int j = 0; j < state->amount_dst; ++j) {
+    LOG_DBG_LLADDR(&state->addr_dsts[j]);
+    LOG_DBG_(" ");
+  }
+  LOG_DBG_("\n");
+
 
   request_state = state;
 
@@ -176,6 +245,9 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
     if (linkaddr_cmp(&request_state->addr_dsts[i], &linkaddr_node_addr)) {
       // Containing self as dst. This is the start of the process.
       struct traversal_entry *root_entry;
+      LOG_INFO("Starting new revocation process for node ");
+      LOG_INFO_LLADDR(request_state->addr_revoke);
+      LOG_INFO_("\n");
 
       //Revoke the node locally
       akes_revocation_revoke_node_internal(&addr_revoke_node);
@@ -188,13 +260,9 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       next_entry = akes_nbr_head();
       while(next_entry) {
         if(next_entry->permanent) {
-          (request_state->amount_new_neighbors)++;
           linkaddr_t *nbr_addr = akes_nbr_get_addr(next_entry);
-          LOG_INFO("Adding new neighbor ");
-          LOG_INFO_LLADDR(nbr_addr);
-          LOG_INFO_("\n");
 
-          // TODO add new neighbor to state object as well
+          akes_revocation_add_new_neighbor_to_state(nbr_addr);
 
           new_entry = memb_alloc(&traversal_memb);
           new_entry->parent = root_entry;
@@ -203,7 +271,7 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
         }
         next_entry = akes_nbr_next(next_entry);
       }
-      (request_state->amount_replies)++;
+      akes_revocation_add_new_reply_to_state(&linkaddr_node_addr);
     } else {
       // Process any other node in the network
       if (linkaddr_cmp(&request_state->addr_dsts[i], request_state->addr_revoke)) {
@@ -228,7 +296,13 @@ akes_revocation_revoke_node(struct akes_revocation_request_state *state) {
       process_node(next);
     }
   }
-
+#ifdef REVOCATION_BORDER
+  if(process_is_running(&request_responder)) {
+    LOG_INFO("Responder process is in progress. Going to exit...\n");
+    process_exit(&request_responder);
+  }
+  process_start(&request_responder, NULL);
+#endif
   return AKES_REVOCATION_SUCCESS;
 }
 /*---------------------------------------------------------------------------*/
@@ -250,6 +324,8 @@ on_revocation_revoke(uint8_t *payload)
     linkaddr_t *addr_revoke = (linkaddr_t *)(void*)payload;
 
     LOG_INFO_LLADDR(addr_revoke);
+    LOG_INFO_(" from address ");
+    LOG_INFO_LLADDR(addr_route);
     LOG_INFO_("\n");
 
 
@@ -280,7 +356,6 @@ on_revocation_revoke(uint8_t *payload)
 /*
  * Handler for received ack messages
  * payload - the payload of the received message
- * TODO: don't reprocess new neighbors, add them to the state, make state global, rename state into request_state
  * payload: | hop_index | hop_count | addr_sender,addr_hop1..addr_dest | addr_revoke | nbr_count | addr_nbr1..addr_nbr? |
  */
 static enum cmd_broker_result
@@ -316,19 +391,24 @@ on_revocation_ack(uint8_t *payload)
     if (hop_index == hop_count) {
         LOG_INFO("revocation ack is for myself.\n");
         if (!linkaddr_cmp(addr_revoke,&addr_revoke_node)) {
-            //TODO addr_revoke_node will have changed if there is a second call!
             LOG_INFO("INVALID addr_revoke. ack dropped.\n");
             return CMD_BROKER_ERROR;
         }
         struct traversal_entry *entry = traversal_entry_from_addr(&addr_route[0]);
         if (!entry) return CMD_BROKER_ERROR;
 
+        if(!node_in_list(&addr_route[0], request_state->addr_dsts, request_state->amount_dst)) {
+          LOG_INFO("Received reply from ");
+          LOG_INFO_LLADDR(&addr_route[0]);
+          LOG_INFO_(" is not part of the current destinations\n");
+          return CMD_BROKER_ERROR;
+        }
+
+
         struct traversal_entry *new_entry;
         for (uint8_t i = 0; i < nbr_count; i++) {
           // Check whether we already processed this node
           if (traversal_entry_from_addr(&nbr_addrs[i])) continue;
-
-          request_state->amount_new_neighbors++;
 
           if (linkaddr_cmp(addr_revoke, &nbr_addrs[i])) {
               LOG_INFO("Received ");
@@ -336,7 +416,7 @@ on_revocation_ack(uint8_t *payload)
               LOG_INFO_(" as neighbor of ");
               LOG_INFO_LLADDR(addr_route);
               LOG_INFO_(". Going to ignore.\n");
-              //TODO add it to the request_state
+              akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
               continue;
             }
 
@@ -346,9 +426,9 @@ on_revocation_ack(uint8_t *payload)
             new_entry->parent = entry;
             list_add(traversal_list, new_entry);
 
-            //TODO add address to request_state
+            akes_revocation_add_new_neighbor_to_state(&nbr_addrs[i]);
         }
-      request_state->amount_replies++;
+      akes_revocation_add_new_reply_to_state(addr_route);
     } else {
         //forward the message
         LOG_INFO("revocation ack is going to be forwarded.\n");
@@ -510,7 +590,7 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
 static void
 akes_revocation_init_coap(void *ptr) {
   LOG_DBG("activate resource of akes\n");
-  coap_activate_resource(&res_akes_revocation, "akes/revoke");
+  coap_activate_resource(&res_akes_revocation, AKES_REVOCATION_URI_PATH);
 }
 #endif
 /*---------------------------------------------------------------------------*/
@@ -528,3 +608,83 @@ akes_revocation_init(void) {
     ctimer_set(&timer, CLOCK_SECOND, akes_revocation_init_coap, NULL);
 #endif
 }
+/*---------------------------------------------------------------------------*/
+#ifdef REVOCATION_BORDER
+void
+akes_coap_response_handler(coap_message_t *response)
+{
+  LOG_INFO("Received status code %d\n", response->code);
+}
+
+/*---------------------------------------------------------------------------
+ * This process waits until one request is fulfilled and sends the result to the requestor
+ * Message format:
+ * |border router mac address | number of replies | reply addresses | number of new neighbors | addresses of neighbors |
+ */
+PROCESS_THREAD(request_responder, ev, data)
+{
+  static coap_endpoint_t server_ep;
+  PROCESS_BEGIN();
+    static struct etimer periodic_timer;
+    static coap_message_t response[1];
+    coap_endpoint_parse(request_state->requestor, request_state->len_requestor, &server_ep);
+    etimer_set(&periodic_timer, CLOCK_SECOND);
+#if ON_MOTE
+    static int k;
+    for (k = 0; k < AKES_REVOCATION_REQUEST_TIMEOUT; ++k) {
+      if(request_state->amount_replies >= request_state->amount_dst) {
+        break;
+      }
+      LOG_DBG("Still waiting for replies. Received %d/%d\n", request_state->amount_replies, request_state->amount_dst);
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+      etimer_reset(&periodic_timer);
+    }
+#else // Don't timeout in simulation
+    while(request_state->amount_replies < request_state->amount_dst) {
+      LOG_DBG("Still waiting \n");
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+      etimer_reset(&periodic_timer);
+    }
+#endif /* ON_MOTE */
+    LOG_INFO("Going to send response to ");
+    LOG_INFO_COAP_EP(&server_ep);
+    LOG_INFO_("\n");
+
+    if( request_state->amount_replies < request_state->amount_dst ) {
+      LOG_INFO("Didn't receive all replies. Expected replies: ");
+      for (int j = 0; j < request_state->amount_dst; ++j) {
+        LOG_INFO_LLADDR(&request_state->addr_dsts[j]);
+        LOG_INFO_(", ");
+      }
+      LOG_INFO_(" only received the following replies: ");
+      for (int i = 0; i < request_state->amount_replies; ++i) {
+        LOG_INFO_LLADDR(&request_state->revoke_reply_secrets[i]);
+        LOG_INFO_(", ");
+      }
+      LOG_INFO_("\n");
+    }
+
+    coap_init_message(response, COAP_TYPE_CON, COAP_POST, 0);
+    coap_set_header_uri_path(response, AKES_REVOCATION_URI_PATH);
+
+    uint8_t msg[AKES_REVOCATION_REPLY_BUF_SIZE];
+    uint8_t *payload = msg;
+
+    *(linkaddr_t *)(void *)payload = linkaddr_node_addr;
+    payload += LINKADDR_SIZE;
+    *payload = request_state->amount_replies;
+    payload++;
+    memcpy(payload,request_state->revoke_reply_secrets,request_state->amount_replies * LINKADDR_SIZE);
+    payload += request_state->amount_replies * LINKADDR_SIZE;
+    *payload = request_state->amount_new_neighbors;
+    payload++;
+    memcpy(payload,request_state->new_neighbors,request_state->amount_new_neighbors * LINKADDR_SIZE);
+
+    coap_set_payload(response, msg, sizeof(msg) - 1);
+
+    COAP_BLOCKING_REQUEST(&server_ep, response, akes_coap_response_handler);
+
+  PROCESS_END();
+}
+#endif /* REVOCATION_BORDER */
+/*---------------------------------------------------------------------------*/

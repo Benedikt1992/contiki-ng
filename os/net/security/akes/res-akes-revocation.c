@@ -1,3 +1,4 @@
+//#define REVOCATION_BORDER
 /*
  * Copyright (c) 2013, Institute for Pervasive Computing, ETH Zurich
  * All rights reserved.
@@ -40,38 +41,95 @@
 #include <stdlib.h>
 #include <string.h>
 #include "coap-engine.h"
+#include "sys/timer.h"
+#include "net/security/akes/akes-revocation.h"
 #include "sys/log.h"
 #define LOG_MODULE "AKES_REV_COAP"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
-static void
-akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+struct akes_revocation_request_state state;
+
+/*---------------------------------------------------------------------------
+ * Setup a state object
+ */
+/*---------------------------------------------------------------------------*/
+static int
+index_of(const char *data, int offset, int len, uint8_t c)
 {
-  const uint8_t *payload;
-  uint8_t  payload_length;
-  payload_length = coap_get_payload(request, &payload);
-  uint8_t  rep_length = payload[1];
-
-  LOG_DBG("Length: %d Payload: ", payload_length);
-  int i;
-  for(i = 0; i < payload_length; ++i) {
-    LOG_DBG_("%d", payload[i]);
+  if(offset < 0) {
+    return offset;
   }
-  LOG_DBG_("\n");
-
-  if(payload_length > 2 || rep_length > 9) {
-    coap_set_header_content_format(response, TEXT_PLAIN);
-    coap_set_status_code(response, BAD_OPTION_4_02);
-    coap_set_payload(response, "Please enter a single number between 0-9", 40);
-    return;
+  for(; offset < len; offset++) {
+    if(data[offset] == c) {
+      return offset;
+    }
   }
+  return -1;
+}
+/*---------------------------------------------------------------------------*/
+struct akes_revocation_request_state
+akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys, const coap_endpoint_t *requestor) {
+  struct akes_revocation_request_state state;
 
-  uint8_t *content = (uint8_t *)"AKES_REV!";
-  coap_set_header_content_format(response, APPLICATION_OCTET_STREAM);
-  coap_set_status_code(response, CONTENT_2_05);
-  coap_set_payload(response, content, rep_length);
+  state.addr_revoke = addr_revoke;
+  state.amount_dst = amount_dst;
+  state.addr_dsts = addr_dsts;
+  state.new_keys = new_keys;
+  state.amount_new_neighbors = 0;
+  state.amount_replies = 0;
+
+  uint8_t n = coap_endpoint_snprint(state.requestor, 48, requestor);
+  uint8_t start = index_of(state.requestor, 0, n, '[');
+  uint8_t end = index_of(state.requestor, start, n, ']');
+  for (int i = end +1; i < n; ++i) {
+    state.requestor[i] = 0;
+  }
+  state.len_requestor = end + 1;
+
+  return state;
 }
 
+/*---------------------------------------------------------------------
+ * This method handels a post request to control the revocation process
+ * Message format:
+ * | Control Byte | Address of node that should be deleted | number of destinations | List of destinations |
+ */
+
+static void
+akes_revocation_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{ //TODO Add Description
+  // TODO Make it failsafe
+  static const uint8_t *payload;
+  coap_get_payload(request, &payload);
+
+  static  uint8_t control_byte;
+  static  linkaddr_t revoke_node;
+  static  uint8_t number_dsts;
+
+
+  control_byte = *payload++;
+  if(control_byte == 2) {
+    akes_revocation_terminate();
+    coap_set_header_content_format(response, TEXT_PLAIN);
+    coap_set_status_code(response, CONTENT_2_05);
+    coap_set_payload(response, "OK", 2);
+    return;
+  }
+  revoke_node = *(linkaddr_t *)(void*)payload;
+  payload += LINKADDR_SIZE;
+  number_dsts = *payload++;
+
+  static linkaddr_t dsts[AKES_REVOCATION_MAX_DSTS];
+  memcpy(dsts, payload, LINKADDR_SIZE * number_dsts);
+
+  state = akes_revocation_setup_state(&revoke_node, number_dsts, dsts, NULL, coap_get_src_endpoint(request));
+  akes_revocation_revoke_node(&state);
+
+  coap_set_header_content_format(response, TEXT_PLAIN);
+  coap_set_status_code(response, CONTENT_2_05);
+  coap_set_payload(response, "OK", 2);
+  return;
+}
 
 /*---------------------------------------------------------------------------*/
 RESOURCE(res_akes_revocation,

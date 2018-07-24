@@ -43,8 +43,18 @@
 #include "net/security/akes/akes.h"
 #include "net/security/akes/akes-nbr.h"
 
-#define AKES_REVOCATION_MAX_ROUTE_LEN 8 //define this value based on the depth of the network topology
-#define AKES_REVOCATION_MAX_QUEUE 16
+#ifdef REVOCATION_BORDER
+  #include "coap-engine.h"
+#endif
+
+
+#define AKES_REVOCATION_MAX_ROUTE_LEN 100 //define this value based on the depth of the network topology
+#define AKES_REVOCATION_MAX_QUEUE 128 //120
+#define AKES_REVOCATION_MAX_NEW_NEIGHBORS 60
+#define AKES_REVOCATION_MAX_DSTS 100
+#define AKES_REVOCATION_REQUEST_TIMEOUT 10 //seconds
+#define AKES_REVOCATION_URI_PATH "akes/revoke"
+#define AKES_REVOCATION_REPLY_BUF_SIZE (LINKADDR_SIZE * (1 + AKES_REVOCATION_MAX_DSTS + AKES_REVOCATION_MAX_NEW_NEIGHBORS) + 2)
 
 #define AKES_REVOCATION_SUCCESS 0
 #define AKES_REVOCATION_ERROR 255
@@ -56,15 +66,17 @@ struct akes_revocation_request_state {
     uint8_t amount_dst;
     linkaddr_t *addr_dsts;
     uint8_t *new_keys; //TODO This value needs to be adjusted to key type
-    uint8_t *revoke_reply_secrets;
+    linkaddr_t revoke_reply_secrets[AKES_REVOCATION_MAX_DSTS];
     uint8_t amount_replies;
     uint8_t amount_new_neighbors;
-    linkaddr_t *new_neighbors;
+    linkaddr_t new_neighbors[AKES_REVOCATION_MAX_NEW_NEIGHBORS];
+    char requestor[48]; //maximum string "coap://[1111:1111:1111:1111:1111:1111:1111:1111]"
+    uint8_t len_requestor;
 };
-struct akes_revocation_request_state akes_revocation_setup_state(linkaddr_t *addr_revoke, uint8_t amount_dst, linkaddr_t *addr_dsts, uint8_t *new_keys);
 int8_t akes_revocation_revoke_node(struct akes_revocation_request_state *request_state);
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data);
 void akes_revocation_init(void);
+void akes_revocation_terminate(void);
 
 #endif /* AKES_REVOCATION_H_ */

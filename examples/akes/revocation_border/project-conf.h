@@ -34,13 +34,13 @@
 #define PROJECT_CONF_H_
 
 /* For development only - increase if there are missing packets*/
-#define CSMA_CONF_MAX_FRAME_RETRIES 0
+#define CSMA_CONF_MAX_FRAME_RETRIES 2
 
 /* full debug output for mac layer */
 //#define LOG_CONF_LEVEL_MAC LOG_LEVEL_DBG
 
 /* full debug for COAP */
-#define LOG_CONF_LEVEL_COAP LOG_LEVEL_DBG
+//#define LOG_CONF_LEVEL_COAP LOG_LEVEL_DBG
 
 /* ON_MOTE might be set via the Makefile */
 #ifdef ON_MOTE
@@ -53,8 +53,14 @@
 #else
     /* max number of packets scheduled for sending */
     #define CSMA_CONF_MAX_NEIGHBOR_QUEUES 8
+    #define PACKETBUF_CONF_SIZE 2048
 
     #include "net/mac/csma/csma-autoconf.h"
 #endif /* ON_MOTE */
+
+#ifdef COAP_MAX_CHUNK_SIZE
+#undef COAP_MAX_CHUNK_SIZE
+#endif
+#define COAP_MAX_CHUNK_SIZE 100
 
 #endif /* PROJECT_CONF_H_ */
