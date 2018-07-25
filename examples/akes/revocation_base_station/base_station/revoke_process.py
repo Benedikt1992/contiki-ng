@@ -1,4 +1,5 @@
 import logging
+import time
 from asyncio import sleep
 from threading import RLock, current_thread
 import asyncio
@@ -28,6 +29,7 @@ class RevokeProcess:
             self._queue = []
             self._revoked = []
             self._progress = None
+            self._start_time = 0
 
         def in_progress(self):
             return self._in_progress
@@ -37,6 +39,7 @@ class RevokeProcess:
 
         async def start_revocation_of_id(self, selection):
             with self._lock, self.nodes:
+                self._start_time = time.time()
                 self._in_progress = True
                 self._revocation_id = selection
                 self._progress = tqdm(total=self.nodes.network_size() - 1, ascii=True, unit="nodes", )
@@ -152,6 +155,7 @@ class RevokeProcess:
                 print("Nodes were missed! This are the missed nodes: {}\n".format(", ".join(
                         MAC_bytearray_to_stringarray(missing_nodes)
                 )))
+            print("\n--- Revocation took %s seconds ---\n" % (time.time() - self._start_time))
 
         def _update_progress(self, delta):
             self._progress.update(delta)
