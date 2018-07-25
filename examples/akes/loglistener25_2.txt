@@ -1,0 +1,1281 @@
+00:00.035	ID:44	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.035	ID:44	[INFO: Main      ] - Routing: nullrouting
+00:00.035	ID:44	[INFO: Main      ] - Net: nullnet
+00:00.035	ID:44	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.035	ID:44	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.035	ID:44	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.035	ID:44	[INFO: Main      ] Node ID: 0
+00:00.035	ID:44	[INFO: Main      ] Link-layer address: 2c00.0000.0000.0000
+00:00.035	ID:44	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.073	ID:13	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.073	ID:13	[INFO: Main      ] - Routing: nullrouting
+00:00.073	ID:13	[INFO: Main      ] - Net: nullnet
+00:00.073	ID:13	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.073	ID:13	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.073	ID:13	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.073	ID:13	[INFO: Main      ] Node ID: 0
+00:00.073	ID:13	[INFO: Main      ] Link-layer address: 0d00.0000.0000.0000
+00:00.073	ID:13	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.190	ID:16	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.190	ID:16	[INFO: Main      ] - Routing: nullrouting
+00:00.190	ID:16	[INFO: Main      ] - Net: nullnet
+00:00.190	ID:16	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.190	ID:16	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.190	ID:16	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.190	ID:16	[INFO: Main      ] Node ID: 0
+00:00.190	ID:16	[INFO: Main      ] Link-layer address: 1000.0000.0000.0000
+00:00.190	ID:16	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.236	ID:2	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.236	ID:2	[INFO: Main      ] - Routing: nullrouting
+00:00.236	ID:2	[INFO: Main      ] - Net: nullnet
+00:00.236	ID:2	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.236	ID:2	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.236	ID:2	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.236	ID:2	[INFO: Main      ] Node ID: 0
+00:00.236	ID:2	[INFO: Main      ] Link-layer address: 0200.0000.0000.0000
+00:00.236	ID:2	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.250	ID:6	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.250	ID:6	[INFO: Main      ] - Routing: nullrouting
+00:00.250	ID:6	[INFO: Main      ] - Net: nullnet
+00:00.250	ID:6	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.250	ID:6	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.250	ID:6	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.250	ID:6	[INFO: Main      ] Node ID: 0
+00:00.250	ID:6	[INFO: Main      ] Link-layer address: 0600.0000.0000.0000
+00:00.250	ID:6	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.326	ID:33	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.326	ID:33	[INFO: Main      ] - Routing: nullrouting
+00:00.326	ID:33	[INFO: Main      ] - Net: nullnet
+00:00.326	ID:33	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.326	ID:33	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.326	ID:33	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.326	ID:33	[INFO: Main      ] Node ID: 0
+00:00.326	ID:33	[INFO: Main      ] Link-layer address: 2100.0000.0000.0000
+00:00.326	ID:33	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.348	ID:4	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.348	ID:4	[INFO: Main      ] - Routing: nullrouting
+00:00.348	ID:4	[INFO: Main      ] - Net: nullnet
+00:00.348	ID:4	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.348	ID:4	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.348	ID:4	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.348	ID:4	[INFO: Main      ] Node ID: 0
+00:00.348	ID:4	[INFO: Main      ] Link-layer address: 0400.0000.0000.0000
+00:00.348	ID:4	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.382	ID:1	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.382	ID:1	[INFO: Main      ] - Routing: RPL Lite
+00:00.382	ID:1	[INFO: Main      ] - Net: sicslowpan
+00:00.382	ID:1	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.382	ID:1	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.382	ID:1	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.382	ID:1	[INFO: Main      ] Node ID: 1
+00:00.382	ID:1	[INFO: Main      ] Link-layer address: 0001.0001.0001.0001
+00:00.382	ID:1	[INFO: Main      ] Tentative link-local IPv6 address: fe80::201:1:1:1
+00:00.382	ID:1	[INFO: BR        ] RPL-Border router started
+00:00.385	ID:102	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.385	ID:102	[INFO: Main      ] - Routing: RPL Lite
+00:00.385	ID:102	[INFO: Main      ] - Net: sicslowpan
+00:00.385	ID:102	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.385	ID:102	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.385	ID:102	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.385	ID:102	[INFO: Main      ] Node ID: 102
+00:00.385	ID:102	[INFO: Main      ] Link-layer address: 0066.0066.0066.0066
+00:00.385	ID:102	[INFO: Main      ] Tentative link-local IPv6 address: fe80::266:66:66:66
+00:00.385	ID:102	[INFO: BR        ] RPL-Border router started
+00:00.402	ID:12	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.402	ID:12	[INFO: Main      ] - Routing: nullrouting
+00:00.402	ID:12	[INFO: Main      ] - Net: nullnet
+00:00.402	ID:12	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.402	ID:12	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.402	ID:12	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.402	ID:12	[INFO: Main      ] Node ID: 0
+00:00.402	ID:12	[INFO: Main      ] Link-layer address: 0c00.0000.0000.0000
+00:00.402	ID:12	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.450	ID:24	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.450	ID:24	[INFO: Main      ] - Routing: nullrouting
+00:00.450	ID:24	[INFO: Main      ] - Net: nullnet
+00:00.450	ID:24	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.450	ID:24	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.450	ID:24	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.450	ID:24	[INFO: Main      ] Node ID: 0
+00:00.450	ID:24	[INFO: Main      ] Link-layer address: 1800.0000.0000.0000
+00:00.450	ID:24	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.462	ID:25	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.462	ID:25	[INFO: Main      ] - Routing: nullrouting
+00:00.462	ID:25	[INFO: Main      ] - Net: nullnet
+00:00.462	ID:25	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.462	ID:25	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.462	ID:25	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.462	ID:25	[INFO: Main      ] Node ID: 0
+00:00.462	ID:25	[INFO: Main      ] Link-layer address: 1900.0000.0000.0000
+00:00.462	ID:25	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.467	ID:45	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.467	ID:45	[INFO: Main      ] - Routing: nullrouting
+00:00.467	ID:45	[INFO: Main      ] - Net: nullnet
+00:00.467	ID:45	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.467	ID:45	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.467	ID:45	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.467	ID:45	[INFO: Main      ] Node ID: 0
+00:00.467	ID:45	[INFO: Main      ] Link-layer address: 2d00.0000.0000.0000
+00:00.467	ID:45	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.472	ID:35	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.472	ID:35	[INFO: Main      ] - Routing: nullrouting
+00:00.472	ID:35	[INFO: Main      ] - Net: nullnet
+00:00.472	ID:35	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.472	ID:35	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.472	ID:35	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.472	ID:35	[INFO: Main      ] Node ID: 0
+00:00.472	ID:35	[INFO: Main      ] Link-layer address: 2300.0000.0000.0000
+00:00.472	ID:35	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.473	ID:26	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.473	ID:26	[INFO: Main      ] - Routing: nullrouting
+00:00.473	ID:26	[INFO: Main      ] - Net: nullnet
+00:00.473	ID:26	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.473	ID:26	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.473	ID:26	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.473	ID:26	[INFO: Main      ] Node ID: 0
+00:00.473	ID:26	[INFO: Main      ] Link-layer address: 1a00.0000.0000.0000
+00:00.473	ID:26	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.556	ID:15	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.556	ID:15	[INFO: Main      ] - Routing: nullrouting
+00:00.556	ID:15	[INFO: Main      ] - Net: nullnet
+00:00.556	ID:15	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.556	ID:15	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.556	ID:15	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.556	ID:15	[INFO: Main      ] Node ID: 0
+00:00.556	ID:15	[INFO: Main      ] Link-layer address: 0f00.0000.0000.0000
+00:00.556	ID:15	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.594	ID:22	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.594	ID:22	[INFO: Main      ] - Routing: nullrouting
+00:00.594	ID:22	[INFO: Main      ] - Net: nullnet
+00:00.594	ID:22	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.594	ID:22	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.594	ID:22	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.594	ID:22	[INFO: Main      ] Node ID: 0
+00:00.594	ID:22	[INFO: Main      ] Link-layer address: 1600.0000.0000.0000
+00:00.594	ID:22	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.663	ID:42	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.663	ID:42	[INFO: Main      ] - Routing: nullrouting
+00:00.663	ID:42	[INFO: Main      ] - Net: nullnet
+00:00.663	ID:42	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.663	ID:42	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.663	ID:42	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.663	ID:42	[INFO: Main      ] Node ID: 0
+00:00.663	ID:42	[INFO: Main      ] Link-layer address: 2a00.0000.0000.0000
+00:00.663	ID:42	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.690	ID:46	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.690	ID:46	[INFO: Main      ] - Routing: nullrouting
+00:00.690	ID:46	[INFO: Main      ] - Net: nullnet
+00:00.690	ID:46	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.690	ID:46	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.690	ID:46	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.690	ID:46	[INFO: Main      ] Node ID: 0
+00:00.690	ID:46	[INFO: Main      ] Link-layer address: 2e00.0000.0000.0000
+00:00.690	ID:46	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.708	ID:14	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.708	ID:14	[INFO: Main      ] - Routing: nullrouting
+00:00.708	ID:14	[INFO: Main      ] - Net: nullnet
+00:00.708	ID:14	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.708	ID:14	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.708	ID:14	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.708	ID:14	[INFO: Main      ] Node ID: 0
+00:00.708	ID:14	[INFO: Main      ] Link-layer address: 0e00.0000.0000.0000
+00:00.708	ID:14	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.715	ID:5	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.715	ID:5	[INFO: Main      ] - Routing: nullrouting
+00:00.715	ID:5	[INFO: Main      ] - Net: nullnet
+00:00.715	ID:5	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.715	ID:5	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.715	ID:5	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.715	ID:5	[INFO: Main      ] Node ID: 0
+00:00.715	ID:5	[INFO: Main      ] Link-layer address: 0500.0000.0000.0000
+00:00.715	ID:5	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.719	ID:34	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.719	ID:34	[INFO: Main      ] - Routing: nullrouting
+00:00.719	ID:34	[INFO: Main      ] - Net: nullnet
+00:00.719	ID:34	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.719	ID:34	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.719	ID:34	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.719	ID:34	[INFO: Main      ] Node ID: 0
+00:00.719	ID:34	[INFO: Main      ] Link-layer address: 2200.0000.0000.0000
+00:00.719	ID:34	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.809	ID:32	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.809	ID:32	[INFO: Main      ] - Routing: nullrouting
+00:00.809	ID:32	[INFO: Main      ] - Net: nullnet
+00:00.809	ID:32	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.809	ID:32	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.809	ID:32	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.809	ID:32	[INFO: Main      ] Node ID: 0
+00:00.809	ID:32	[INFO: Main      ] Link-layer address: 2000.0000.0000.0000
+00:00.809	ID:32	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.884	ID:23	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.884	ID:23	[INFO: Main      ] - Routing: nullrouting
+00:00.884	ID:23	[INFO: Main      ] - Net: nullnet
+00:00.884	ID:23	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.884	ID:23	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.884	ID:23	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.884	ID:23	[INFO: Main      ] Node ID: 0
+00:00.884	ID:23	[INFO: Main      ] Link-layer address: 1700.0000.0000.0000
+00:00.884	ID:23	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.899	ID:3	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.899	ID:3	[INFO: Main      ] - Routing: nullrouting
+00:00.899	ID:3	[INFO: Main      ] - Net: nullnet
+00:00.899	ID:3	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.899	ID:3	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.899	ID:3	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.899	ID:3	[INFO: Main      ] Node ID: 0
+00:00.899	ID:3	[INFO: Main      ] Link-layer address: 0300.0000.0000.0000
+00:00.899	ID:3	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.906	ID:36	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.906	ID:36	[INFO: Main      ] - Routing: nullrouting
+00:00.906	ID:36	[INFO: Main      ] - Net: nullnet
+00:00.906	ID:36	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.906	ID:36	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.906	ID:36	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.906	ID:36	[INFO: Main      ] Node ID: 0
+00:00.906	ID:36	[INFO: Main      ] Link-layer address: 2400.0000.0000.0000
+00:00.906	ID:36	[INFO: REV_NODE  ] Revocation enabled node started.
+00:00.945	ID:43	[INFO: Main      ] Starting Contiki-NG-e18ce33-dirty
+00:00.945	ID:43	[INFO: Main      ] - Routing: nullrouting
+00:00.945	ID:43	[INFO: Main      ] - Net: nullnet
+00:00.945	ID:43	[INFO: Main      ] - MAC: AKES/CSMA
+00:00.945	ID:43	[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+00:00.945	ID:43	[INFO: Main      ] - 802.15.4 Default channel: 26
+00:00.945	ID:43	[INFO: Main      ] Node ID: 0
+00:00.945	ID:43	[INFO: Main      ] Link-layer address: 2b00.0000.0000.0000
+00:00.945	ID:43	[INFO: REV_NODE  ] Revocation enabled node started.
+00:01.382	ID:1	?P[INFO: BR        ] Waiting for prefix
+00:01.382	ID:1	[INFO: BR        ] Server IPv6 addresses:
+00:01.382	ID:1	[INFO: BR        ]   fd00::201:1:1:1
+00:01.382	ID:1	[INFO: BR        ]   fe80::201:1:1:1
+00:01.382	ID:1	[DBG : AKES      ] activate resource of akes
+00:01.385	ID:102	?P[INFO: BR        ] Waiting for prefix
+00:01.385	ID:102	[INFO: BR        ] Server IPv6 addresses:
+00:01.385	ID:102	[INFO: BR        ]   fd01::266:66:66:66
+00:01.385	ID:102	[INFO: BR        ]   fe80::266:66:66:66
+00:01.385	ID:102	[DBG : AKES      ] activate resource of akes
+19:42.108	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 1, destinations: 0001.0001.0001.0001 
+19:42.108	ID:1	[INFO: AKES      ] Starting new revocation process for node 1700.0000.0000.0000
+19:42.108	ID:1	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:42.108	ID:1	[INFO: AKES      ] Adding 0400.0000.0000.0000 as new neighbor
+19:42.108	ID:1	[INFO: AKES      ] Adding 0300.0000.0000.0000 as new neighbor
+19:42.108	ID:1	[INFO: AKES      ] Adding 0001.0001.0001.0001 as new reply
+19:42.108	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:42.220	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 1, destinations: 0066.0066.0066.0066 
+19:42.220	ID:102	[INFO: AKES      ] Starting new revocation process for node 1700.0000.0000.0000
+19:42.220	ID:102	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:42.220	ID:102	[INFO: AKES      ] Adding 2c00.0000.0000.0000 as new neighbor
+19:42.220	ID:102	[INFO: AKES      ] Adding 2d00.0000.0000.0000 as new neighbor
+19:42.220	ID:102	[INFO: AKES      ] Adding 0066.0066.0066.0066 as new reply
+19:42.220	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:42.247	ID:1	`}@33}d@akesrevoke*^	^ +^0Z*^]`@3XEdEPDOK[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 1, destinations: 0400.0000.0000.0000 
+19:42.247	ID:1	[INFO: AKES      ] Going to send revocation message to 0400.0000.0000.0000
+19:42.247	ID:1	[DBG : AKES      ] Will reach 0400.0000.0000.0000 in 1 hops
+19:42.247	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:42.247	ID:1	[DBG : AKES      ] package count sent_revokes: 1
+19:42.247	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 1, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 
+19:42.247	ID:1	[DBG : AKES      ] NO DATA
+19:42.247	ID:1	[INFO: AKES      ] Responder process is in progress. Going to exit...
+19:42.247	ID:1	[DBG : AKES      ] Still waiting 
+19:42.256	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:42.256	ID:4	[DBG : AKES      ] package count received_revokes: 1
+19:42.256	ID:4	[INFO: AKES      ] revoke message is for myself.
+19:42.256	ID:4	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:42.256	ID:4	[INFO: AKES      ] revokation_send_ack
+19:42.256	ID:4	[DBG : AKES      ] package count sent_acks: 1
+19:42.256	ID:4	[INFO: AKES      ] build new ack message
+19:42.256	ID:4	[INFO: AKES      ] nbr entry: 0001.0001.0001.0001
+19:42.256	ID:4	[INFO: AKES      ] nbr entry: 0500.0000.0000.0000
+19:42.256	ID:4	[INFO: AKES      ] nbr entry: 0e00.0000.0000.0000
+19:42.256	ID:4	[INFO: AKES      ] nbr entry: 0300.0000.0000.0000
+19:42.256	ID:102	`}@ffff33}W@akesrevokeffffffff,-*^	^+^0Z*^]`@ffff3)dEA OK[INFO: AKES      ] Received status code 65
+19:42.293	ID:1	`@3IasdEhOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0400.0000.0000.0000
+19:42.293	ID:1	[DBG : AKES      ] package count received_acks: 1
+19:42.293	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:42.293	ID:1	[INFO: AKES      ] Adding 0500.0000.0000.0000 as new neighbor
+19:42.293	ID:1	[INFO: AKES      ] Adding 0e00.0000.0000.0000 as new neighbor
+19:42.293	ID:1	[INFO: AKES      ] Adding 0400.0000.0000.0000 as new reply
+19:42.293	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 1, destinations: 2c00.0000.0000.0000 
+19:42.293	ID:102	[INFO: AKES      ] Going to send revocation message to 2c00.0000.0000.0000
+19:42.293	ID:102	[DBG : AKES      ] Will reach 2c00.0000.0000.0000 in 1 hops
+19:42.293	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:42.293	ID:102	[DBG : AKES      ] package count sent_revokes: 1
+19:42.293	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 1, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 
+19:42.293	ID:102	[DBG : AKES      ] NO DATA
+19:42.293	ID:102	[DBG : AKES      ] Still waiting 
+19:42.321	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:42.321	ID:44	[DBG : AKES      ] package count received_revokes: 1
+19:42.321	ID:44	[INFO: AKES      ] revoke message is for myself.
+19:42.321	ID:44	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:42.321	ID:44	[INFO: AKES      ] revokation_send_ack
+19:42.321	ID:44	[DBG : AKES      ] package count sent_acks: 1
+19:42.321	ID:44	[INFO: AKES      ] build new ack message
+19:42.321	ID:44	[INFO: AKES      ] nbr entry: 0066.0066.0066.0066
+19:42.321	ID:44	[INFO: AKES      ] nbr entry: 2d00.0000.0000.0000
+19:42.321	ID:44	[INFO: AKES      ] nbr entry: 2200.0000.0000.0000
+19:42.321	ID:44	[INFO: AKES      ] nbr entry: 2b00.0000.0000.0000
+19:42.335	ID:102	`@ffff3SR/dEOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2c00.0000.0000.0000
+19:42.335	ID:102	[DBG : AKES      ] package count received_acks: 1
+19:42.335	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:42.335	ID:102	[INFO: AKES      ] Adding 2200.0000.0000.0000 as new neighbor
+19:42.335	ID:102	[INFO: AKES      ] Adding 2b00.0000.0000.0000 as new neighbor
+19:42.335	ID:102	[INFO: AKES      ] Adding 2c00.0000.0000.0000 as new reply
+19:43.247	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:43.287	ID:1	`}@33}l@akesrevoke*^h-^*^p&X[INFO: AKES      ] Received status code 65
+19:43.293	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:43.309	ID:102	`}@ffff33}@akesrevokeffff,"+;)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:43.312	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 0300.0000.0000.0000 0500.0000.0000.0000 
+19:43.312	ID:1	[INFO: AKES      ] Going to send revocation message to 0300.0000.0000.0000
+19:43.312	ID:1	[DBG : AKES      ] Will reach 0300.0000.0000.0000 in 1 hops
+19:43.312	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:43.312	ID:1	[DBG : AKES      ] package count sent_revokes: 2
+19:43.312	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 1, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 
+19:43.312	ID:1	[DBG : AKES      ] NO DATA
+19:43.312	ID:1	[INFO: AKES      ] Going to send revocation message to 0500.0000.0000.0000
+19:43.312	ID:1	[DBG : AKES      ] Will reach 0500.0000.0000.0000 in 2 hops
+19:43.312	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:43.312	ID:1	[DBG : AKES      ] package count sent_revokes: 3
+19:43.312	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 
+19:43.312	ID:1	[DBG : AKES      ] NO DATA
+19:43.312	ID:1	[DBG : AKES      ] Still waiting 
+19:43.321	ID:3	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:43.321	ID:3	[DBG : AKES      ] package count received_revokes: 1
+19:43.321	ID:3	[INFO: AKES      ] revoke message is for myself.
+19:43.321	ID:3	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:43.321	ID:3	[INFO: AKES      ] revokation_send_ack
+19:43.321	ID:3	[DBG : AKES      ] package count sent_acks: 1
+19:43.321	ID:3	[INFO: AKES      ] build new ack message
+19:43.321	ID:3	[INFO: AKES      ] nbr entry: 0200.0000.0000.0000
+19:43.321	ID:3	[INFO: AKES      ] nbr entry: 0400.0000.0000.0000
+19:43.321	ID:3	[INFO: AKES      ] nbr entry: 0001.0001.0001.0001
+19:43.321	ID:3	[INFO: AKES      ] nbr entry: 0d00.0000.0000.0000
+19:43.327	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:43.327	ID:4	[DBG : AKES      ] package count received_revokes: 2
+19:43.327	ID:4	[INFO: AKES      ] revoke message is going to be forwarded.
+19:43.327	ID:4	[INFO: AKES      ] revokation_send_revoke
+19:43.327	ID:4	[DBG : AKES      ] package count sent_revokes: 1
+19:43.327	ID:4	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 
+19:43.336	ID:5	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:43.336	ID:5	[DBG : AKES      ] package count received_revokes: 1
+19:43.336	ID:5	[INFO: AKES      ] revoke message is for myself.
+19:43.336	ID:5	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:43.336	ID:5	[INFO: AKES      ] revokation_send_ack
+19:43.336	ID:5	[DBG : AKES      ] package count sent_acks: 1
+19:43.336	ID:5	[INFO: AKES      ] build new ack message
+19:43.336	ID:5	[INFO: AKES      ] nbr entry: 0f00.0000.0000.0000
+19:43.336	ID:5	[INFO: AKES      ] nbr entry: 0600.0000.0000.0000
+19:43.336	ID:5	[INFO: AKES      ] nbr entry: 0400.0000.0000.0000
+19:43.349	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0500.0000.0000.0000
+19:43.349	ID:4	[DBG : AKES      ] package count received_acks: 1
+19:43.349	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:43.349	ID:4	[INFO: AKES      ] revokation_send_ack
+19:43.349	ID:4	[DBG : AKES      ] package count sent_acks: 2
+19:43.363	ID:1	`@3:>dEjOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0300.0000.0000.0000
+19:43.363	ID:1	[DBG : AKES      ] package count received_acks: 2
+19:43.363	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:43.363	ID:1	[INFO: AKES      ] Adding 0200.0000.0000.0000 as new neighbor
+19:43.363	ID:1	[INFO: AKES      ] Adding 0d00.0000.0000.0000 as new neighbor
+19:43.363	ID:1	[INFO: AKES      ] Adding 0300.0000.0000.0000 as new reply
+19:43.363	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 2d00.0000.0000.0000 2200.0000.0000.0000 
+19:43.363	ID:102	[INFO: AKES      ] Going to send revocation message to 2d00.0000.0000.0000
+19:43.363	ID:102	[DBG : AKES      ] Will reach 2d00.0000.0000.0000 in 1 hops
+19:43.363	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:43.363	ID:102	[DBG : AKES      ] package count sent_revokes: 2
+19:43.363	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 1, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 
+19:43.363	ID:102	[DBG : AKES      ] NO DATA
+19:43.363	ID:102	[INFO: AKES      ] Going to send revocation message to 2200.0000.0000.0000
+19:43.363	ID:102	[DBG : AKES      ] Will reach 2200.0000.0000.0000 in 2 hops
+19:43.363	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:43.363	ID:102	[DBG : AKES      ] package count sent_revokes: 3
+19:43.363	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 
+19:43.363	ID:102	[DBG : AKES      ] NO DATA
+19:43.363	ID:102	[DBG : AKES      ] Still waiting 
+19:43.381	ID:45	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:43.381	ID:45	[DBG : AKES      ] package count received_revokes: 1
+19:43.381	ID:45	[INFO: AKES      ] revoke message is for myself.
+19:43.381	ID:45	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:43.381	ID:45	[INFO: AKES      ] revokation_send_ack
+19:43.381	ID:45	[DBG : AKES      ] package count sent_acks: 1
+19:43.381	ID:45	[INFO: AKES      ] build new ack message
+19:43.381	ID:45	[INFO: AKES      ] nbr entry: 0066.0066.0066.0066
+19:43.381	ID:45	[INFO: AKES      ] nbr entry: 2300.0000.0000.0000
+19:43.381	ID:45	[INFO: AKES      ] nbr entry: 2e00.0000.0000.0000
+19:43.381	ID:45	[INFO: AKES      ] nbr entry: 2c00.0000.0000.0000
+19:43.394	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0500.0000.0000.0000
+19:43.394	ID:1	[DBG : AKES      ] package count received_acks: 3
+19:43.394	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:43.394	ID:1	[INFO: AKES      ] Adding 0f00.0000.0000.0000 as new neighbor
+19:43.394	ID:1	[INFO: AKES      ] Adding 0600.0000.0000.0000 as new neighbor
+19:43.394	ID:1	[INFO: AKES      ] Adding 0500.0000.0000.0000 as new reply
+19:43.396	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:43.396	ID:44	[DBG : AKES      ] package count received_revokes: 2
+19:43.396	ID:44	[INFO: AKES      ] revoke message is going to be forwarded.
+19:43.396	ID:44	[INFO: AKES      ] revokation_send_revoke
+19:43.396	ID:44	[DBG : AKES      ] package count sent_revokes: 1
+19:43.396	ID:44	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 
+19:43.402	ID:34	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:43.402	ID:34	[DBG : AKES      ] package count received_revokes: 1
+19:43.402	ID:34	[INFO: AKES      ] revoke message is for myself.
+19:43.402	ID:34	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:43.402	ID:34	[INFO: AKES      ] revokation_send_ack
+19:43.402	ID:34	[DBG : AKES      ] package count sent_acks: 1
+19:43.402	ID:34	[INFO: AKES      ] build new ack message
+19:43.402	ID:34	[INFO: AKES      ] nbr entry: 2100.0000.0000.0000
+19:43.402	ID:34	[INFO: AKES      ] nbr entry: 2c00.0000.0000.0000
+19:43.402	ID:34	[INFO: AKES      ] nbr entry: 1800.0000.0000.0000
+19:43.402	ID:34	[INFO: AKES      ] nbr entry: 2300.0000.0000.0000
+19:43.439	ID:44	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2200.0000.0000.0000
+19:43.439	ID:44	[DBG : AKES      ] package count received_acks: 1
+19:43.439	ID:44	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:43.439	ID:44	[INFO: AKES      ] revokation_send_ack
+19:43.439	ID:44	[DBG : AKES      ] package count sent_acks: 2
+19:43.458	ID:102	`@ffff3FdE&f%OK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2d00.0000.0000.0000
+19:43.458	ID:102	[DBG : AKES      ] package count received_acks: 2
+19:43.458	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:43.458	ID:102	[INFO: AKES      ] Adding 2300.0000.0000.0000 as new neighbor
+19:43.458	ID:102	[INFO: AKES      ] Adding 2e00.0000.0000.0000 as new neighbor
+19:43.458	ID:102	[INFO: AKES      ] Adding 2d00.0000.0000.0000 as new reply
+19:43.485	ID:102	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2200.0000.0000.0000
+19:43.485	ID:102	[DBG : AKES      ] package count received_acks: 3
+19:43.485	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:43.485	ID:102	[INFO: AKES      ] Adding 2100.0000.0000.0000 as new neighbor
+19:43.485	ID:102	[INFO: AKES      ] Adding 1800.0000.0000.0000 as new neighbor
+19:43.485	ID:102	[INFO: AKES      ] Adding 2200.0000.0000.0000 as new reply
+19:44.312	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:44.341	ID:1	`}@33}@akesrevoke-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:44.353	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 0e00.0000.0000.0000 0200.0000.0000.0000 
+19:44.353	ID:1	[INFO: AKES      ] Going to send revocation message to 0e00.0000.0000.0000
+19:44.353	ID:1	[DBG : AKES      ] Will reach 0e00.0000.0000.0000 in 2 hops
+19:44.353	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:44.353	ID:1	[DBG : AKES      ] package count sent_revokes: 4
+19:44.353	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0e00.0000.0000.0000, 
+19:44.353	ID:1	[DBG : AKES      ] NO DATA
+19:44.353	ID:1	[INFO: AKES      ] Going to send revocation message to 0200.0000.0000.0000
+19:44.353	ID:1	[DBG : AKES      ] Will reach 0200.0000.0000.0000 in 2 hops
+19:44.353	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:44.353	ID:1	[DBG : AKES      ] package count sent_revokes: 5
+19:44.353	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 
+19:44.353	ID:1	[DBG : AKES      ] NO DATA
+19:44.353	ID:1	[DBG : AKES      ] Still waiting 
+19:44.363	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:44.373	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:44.373	ID:4	[DBG : AKES      ] package count received_revokes: 3
+19:44.373	ID:4	[INFO: AKES      ] revoke message is going to be forwarded.
+19:44.373	ID:4	[INFO: AKES      ] revokation_send_revoke
+19:44.373	ID:4	[DBG : AKES      ] package count sent_revokes: 2
+19:44.373	ID:4	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0e00.0000.0000.0000, 
+19:44.391	ID:3	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:44.391	ID:3	[DBG : AKES      ] package count received_revokes: 2
+19:44.391	ID:3	[INFO: AKES      ] revoke message is going to be forwarded.
+19:44.391	ID:3	[INFO: AKES      ] revokation_send_revoke
+19:44.391	ID:3	[DBG : AKES      ] package count sent_revokes: 1
+19:44.391	ID:3	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 
+19:44.403	ID:14	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:44.403	ID:14	[DBG : AKES      ] package count received_revokes: 1
+19:44.403	ID:14	[INFO: AKES      ] revoke message is for myself.
+19:44.403	ID:14	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:44.403	ID:14	[INFO: AKES      ] revokation_send_ack
+19:44.403	ID:14	[DBG : AKES      ] package count sent_acks: 1
+19:44.403	ID:14	[INFO: AKES      ] build new ack message
+19:44.403	ID:14	[INFO: AKES      ] nbr entry: 0d00.0000.0000.0000
+19:44.403	ID:14	[INFO: AKES      ] nbr entry: 1800.0000.0000.0000
+19:44.403	ID:14	[INFO: AKES      ] nbr entry: 0400.0000.0000.0000
+19:44.403	ID:14	[INFO: AKES      ] nbr entry: 0f00.0000.0000.0000
+19:44.413	ID:102	`}@ffff33}@akesrevokeffff-"#.!-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:44.416	ID:2	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:44.416	ID:2	[DBG : AKES      ] package count received_revokes: 1
+19:44.416	ID:2	[INFO: AKES      ] revoke message is for myself.
+19:44.416	ID:2	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:44.416	ID:2	[INFO: AKES      ] revokation_send_ack
+19:44.416	ID:2	[DBG : AKES      ] package count sent_acks: 1
+19:44.416	ID:2	[INFO: AKES      ] build new ack message
+19:44.416	ID:2	[INFO: AKES      ] nbr entry: 0c00.0000.0000.0000
+19:44.416	ID:2	[INFO: AKES      ] nbr entry: 0300.0000.0000.0000
+19:44.440	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 2b00.0000.0000.0000 2300.0000.0000.0000 
+19:44.440	ID:102	[INFO: AKES      ] Going to send revocation message to 2b00.0000.0000.0000
+19:44.440	ID:102	[DBG : AKES      ] Will reach 2b00.0000.0000.0000 in 2 hops
+19:44.440	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:44.440	ID:102	[DBG : AKES      ] package count sent_revokes: 4
+19:44.440	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2b00.0000.0000.0000, 
+19:44.440	ID:102	[DBG : AKES      ] NO DATA
+19:44.440	ID:102	[INFO: AKES      ] Going to send revocation message to 2300.0000.0000.0000
+19:44.440	ID:102	[DBG : AKES      ] Will reach 2300.0000.0000.0000 in 2 hops
+19:44.440	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:44.440	ID:102	[DBG : AKES      ] package count sent_revokes: 5
+19:44.440	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 
+19:44.440	ID:102	[DBG : AKES      ] NO DATA
+19:44.440	ID:102	[DBG : AKES      ] Still waiting 
+19:44.441	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0e00.0000.0000.0000
+19:44.441	ID:4	[DBG : AKES      ] package count received_acks: 2
+19:44.441	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:44.441	ID:4	[INFO: AKES      ] revokation_send_ack
+19:44.441	ID:4	[DBG : AKES      ] package count sent_acks: 3
+19:44.451	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:44.451	ID:44	[DBG : AKES      ] package count received_revokes: 3
+19:44.451	ID:44	[INFO: AKES      ] revoke message is going to be forwarded.
+19:44.451	ID:44	[INFO: AKES      ] revokation_send_revoke
+19:44.451	ID:44	[DBG : AKES      ] package count sent_revokes: 2
+19:44.451	ID:44	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2b00.0000.0000.0000, 
+19:44.468	ID:45	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:44.468	ID:45	[DBG : AKES      ] package count received_revokes: 2
+19:44.468	ID:45	[INFO: AKES      ] revoke message is going to be forwarded.
+19:44.468	ID:45	[INFO: AKES      ] revokation_send_revoke
+19:44.468	ID:45	[DBG : AKES      ] package count sent_revokes: 1
+19:44.468	ID:45	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 
+19:44.468	ID:1	`@3-dEynOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0e00.0000.0000.0000
+19:44.468	ID:1	[DBG : AKES      ] package count received_acks: 4
+19:44.468	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:44.468	ID:1	[INFO: AKES      ] Adding 1800.0000.0000.0000 as new neighbor
+19:44.468	ID:1	[INFO: AKES      ] Adding 0e00.0000.0000.0000 as new reply
+19:44.475	ID:3	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0200.0000.0000.0000
+19:44.475	ID:3	[DBG : AKES      ] package count received_acks: 1
+19:44.475	ID:3	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:44.475	ID:3	[INFO: AKES      ] revokation_send_ack
+19:44.475	ID:3	[DBG : AKES      ] package count sent_acks: 2
+19:44.490	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0200.0000.0000.0000
+19:44.490	ID:1	[DBG : AKES      ] package count received_acks: 5
+19:44.490	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:44.490	ID:1	[INFO: AKES      ] Adding 0c00.0000.0000.0000 as new neighbor
+19:44.490	ID:1	[INFO: AKES      ] Adding 0200.0000.0000.0000 as new reply
+19:44.490	ID:43	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:44.490	ID:43	[DBG : AKES      ] package count received_revokes: 1
+19:44.490	ID:43	[INFO: AKES      ] revoke message is for myself.
+19:44.490	ID:43	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:44.490	ID:43	[INFO: AKES      ] revokation_send_ack
+19:44.490	ID:43	[DBG : AKES      ] package count sent_acks: 1
+19:44.490	ID:43	[INFO: AKES      ] build new ack message
+19:44.490	ID:43	[INFO: AKES      ] nbr entry: 2a00.0000.0000.0000
+19:44.490	ID:43	[INFO: AKES      ] nbr entry: 2100.0000.0000.0000
+19:44.490	ID:43	[INFO: AKES      ] nbr entry: 2c00.0000.0000.0000
+19:44.499	ID:35	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:44.499	ID:35	[DBG : AKES      ] package count received_revokes: 1
+19:44.499	ID:35	[INFO: AKES      ] revoke message is for myself.
+19:44.499	ID:35	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:44.499	ID:35	[INFO: AKES      ] revokation_send_ack
+19:44.499	ID:35	[DBG : AKES      ] package count sent_acks: 1
+19:44.499	ID:35	[INFO: AKES      ] build new ack message
+19:44.499	ID:35	[INFO: AKES      ] nbr entry: 1900.0000.0000.0000
+19:44.499	ID:35	[INFO: AKES      ] nbr entry: 2d00.0000.0000.0000
+19:44.499	ID:35	[INFO: AKES      ] nbr entry: 2200.0000.0000.0000
+19:44.499	ID:35	[INFO: AKES      ] nbr entry: 2400.0000.0000.0000
+19:44.504	ID:44	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2b00.0000.0000.0000
+19:44.504	ID:44	[DBG : AKES      ] package count received_acks: 2
+19:44.504	ID:44	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:44.504	ID:44	[INFO: AKES      ] revokation_send_ack
+19:44.504	ID:44	[DBG : AKES      ] package count sent_acks: 3
+19:44.532	ID:45	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2300.0000.0000.0000
+19:44.532	ID:45	[DBG : AKES      ] package count received_acks: 1
+19:44.532	ID:45	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:44.532	ID:45	[INFO: AKES      ] revokation_send_ack
+19:44.532	ID:45	[DBG : AKES      ] package count sent_acks: 2
+19:44.538	ID:102	`@ffff3dEMOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2300.0000.0000.0000
+19:44.538	ID:102	[DBG : AKES      ] package count received_acks: 4
+19:44.538	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:44.538	ID:102	[INFO: AKES      ] Adding 1900.0000.0000.0000 as new neighbor
+19:44.538	ID:102	[INFO: AKES      ] Adding 2400.0000.0000.0000 as new neighbor
+19:44.538	ID:102	[INFO: AKES      ] Adding 2300.0000.0000.0000 as new reply
+19:44.576	ID:102	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2b00.0000.0000.0000
+19:44.576	ID:102	[DBG : AKES      ] package count received_acks: 5
+19:44.576	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:44.576	ID:102	[INFO: AKES      ] Adding 2a00.0000.0000.0000 as new neighbor
+19:44.576	ID:102	[INFO: AKES      ] Adding 2b00.0000.0000.0000 as new reply
+19:45.353	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:45.394	ID:1	`}@33}@akesrevoke)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:45.394	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 0d00.0000.0000.0000 0600.0000.0000.0000 
+19:45.394	ID:1	[INFO: AKES      ] Going to send revocation message to 0d00.0000.0000.0000
+19:45.394	ID:1	[DBG : AKES      ] Will reach 0d00.0000.0000.0000 in 2 hops
+19:45.394	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:45.394	ID:1	[DBG : AKES      ] package count sent_revokes: 6
+19:45.394	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0d00.0000.0000.0000, 
+19:45.394	ID:1	[DBG : AKES      ] NO DATA
+19:45.394	ID:1	[INFO: AKES      ] Going to send revocation message to 0600.0000.0000.0000
+19:45.394	ID:1	[DBG : AKES      ] Will reach 0600.0000.0000.0000 in 3 hops
+19:45.394	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:45.394	ID:1	[DBG : AKES      ] package count sent_revokes: 7
+19:45.394	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 
+19:45.394	ID:1	[DBG : AKES      ] NO DATA
+19:45.394	ID:1	[DBG : AKES      ] Still waiting 
+19:45.414	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:45.414	ID:4	[DBG : AKES      ] package count received_revokes: 4
+19:45.414	ID:4	[INFO: AKES      ] revoke message is going to be forwarded.
+19:45.414	ID:4	[INFO: AKES      ] revokation_send_revoke
+19:45.414	ID:4	[DBG : AKES      ] package count sent_revokes: 3
+19:45.414	ID:4	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 
+19:45.420	ID:3	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:45.420	ID:3	[DBG : AKES      ] package count received_revokes: 3
+19:45.420	ID:3	[INFO: AKES      ] revoke message is going to be forwarded.
+19:45.420	ID:3	[INFO: AKES      ] revokation_send_revoke
+19:45.420	ID:3	[DBG : AKES      ] package count sent_revokes: 2
+19:45.420	ID:3	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0d00.0000.0000.0000, 
+19:45.440	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:45.444	ID:5	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:45.444	ID:5	[DBG : AKES      ] package count received_revokes: 2
+19:45.444	ID:5	[INFO: AKES      ] revoke message is going to be forwarded.
+19:45.444	ID:5	[INFO: AKES      ] revokation_send_revoke
+19:45.444	ID:5	[DBG : AKES      ] package count sent_revokes: 1
+19:45.444	ID:5	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 
+19:45.458	ID:13	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:45.458	ID:13	[DBG : AKES      ] package count received_revokes: 1
+19:45.458	ID:13	[INFO: AKES      ] revoke message is for myself.
+19:45.458	ID:13	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:45.458	ID:13	[INFO: AKES      ] revokation_send_ack
+19:45.458	ID:13	[DBG : AKES      ] package count sent_acks: 1
+19:45.458	ID:13	[INFO: AKES      ] build new ack message
+19:45.458	ID:13	[INFO: AKES      ] nbr entry: 0c00.0000.0000.0000
+19:45.458	ID:13	[INFO: AKES      ] nbr entry: 0e00.0000.0000.0000
+19:45.458	ID:13	[INFO: AKES      ] nbr entry: 1700.0000.0000.0000
+19:45.458	ID:13	[INFO: AKES      ] nbr entry: 0300.0000.0000.0000
+19:45.468	ID:102	`}@ffff33}@akesrevokeffff#+$**^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:45.471	ID:6	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:45.471	ID:6	[DBG : AKES      ] package count received_revokes: 1
+19:45.471	ID:6	[INFO: AKES      ] revoke message is for myself.
+19:45.471	ID:6	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:45.471	ID:6	[INFO: AKES      ] revokation_send_ack
+19:45.471	ID:6	[DBG : AKES      ] package count sent_acks: 1
+19:45.471	ID:6	[INFO: AKES      ] build new ack message
+19:45.471	ID:6	[INFO: AKES      ] nbr entry: 1000.0000.0000.0000
+19:45.471	ID:6	[INFO: AKES      ] nbr entry: 0500.0000.0000.0000
+19:45.481	ID:3	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0d00.0000.0000.0000
+19:45.481	ID:3	[DBG : AKES      ] package count received_acks: 2
+19:45.481	ID:3	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:45.481	ID:3	[INFO: AKES      ] revokation_send_ack
+19:45.481	ID:3	[DBG : AKES      ] package count sent_acks: 3
+19:45.489	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 2e00.0000.0000.0000 1800.0000.0000.0000 
+19:45.489	ID:102	[INFO: AKES      ] Going to send revocation message to 2e00.0000.0000.0000
+19:45.489	ID:102	[DBG : AKES      ] Will reach 2e00.0000.0000.0000 in 2 hops
+19:45.489	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:45.489	ID:102	[DBG : AKES      ] package count sent_revokes: 6
+19:45.489	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 2, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2e00.0000.0000.0000, 
+19:45.489	ID:102	[DBG : AKES      ] NO DATA
+19:45.489	ID:102	[INFO: AKES      ] Going to send revocation message to 1800.0000.0000.0000
+19:45.489	ID:102	[DBG : AKES      ] Will reach 1800.0000.0000.0000 in 3 hops
+19:45.489	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:45.489	ID:102	[DBG : AKES      ] package count sent_revokes: 7
+19:45.489	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 1800.0000.0000.0000, 
+19:45.489	ID:102	[DBG : AKES      ] NO DATA
+19:45.489	ID:102	[DBG : AKES      ] Still waiting 
+19:45.500	ID:5	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0600.0000.0000.0000
+19:45.500	ID:5	[DBG : AKES      ] package count received_acks: 1
+19:45.500	ID:5	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:45.500	ID:5	[INFO: AKES      ] revokation_send_ack
+19:45.500	ID:5	[DBG : AKES      ] package count sent_acks: 2
+19:45.502	ID:45	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:45.502	ID:45	[DBG : AKES      ] package count received_revokes: 3
+19:45.502	ID:45	[INFO: AKES      ] revoke message is going to be forwarded.
+19:45.502	ID:45	[INFO: AKES      ] revokation_send_revoke
+19:45.502	ID:45	[DBG : AKES      ] package count sent_revokes: 2
+19:45.502	ID:45	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 2, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2e00.0000.0000.0000, 
+19:45.519	ID:1	`@3+dEtFOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0d00.0000.0000.0000
+19:45.519	ID:1	[DBG : AKES      ] package count received_acks: 6
+19:45.519	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:45.519	ID:1	[INFO: AKES      ] Received 1700.0000.0000.0000 as neighbor of 0d00.0000.0000.0000. Going to ignore.
+19:45.519	ID:1	[INFO: AKES      ] Adding 1700.0000.0000.0000 as new neighbor
+19:45.519	ID:1	[INFO: AKES      ] Adding 0d00.0000.0000.0000 as new reply
+19:45.525	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0600.0000.0000.0000
+19:45.525	ID:4	[DBG : AKES      ] package count received_acks: 3
+19:45.525	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:45.525	ID:4	[INFO: AKES      ] revokation_send_ack
+19:45.525	ID:4	[DBG : AKES      ] package count sent_acks: 4
+19:45.527	ID:46	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:45.527	ID:46	[DBG : AKES      ] package count received_revokes: 1
+19:45.527	ID:46	[INFO: AKES      ] revoke message is for myself.
+19:45.527	ID:46	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:45.527	ID:46	[INFO: AKES      ] revokation_send_ack
+19:45.527	ID:46	[DBG : AKES      ] package count sent_acks: 1
+19:45.527	ID:46	[INFO: AKES      ] build new ack message
+19:45.527	ID:46	[INFO: AKES      ] nbr entry: 2400.0000.0000.0000
+19:45.527	ID:46	[INFO: AKES      ] nbr entry: 2d00.0000.0000.0000
+19:45.555	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0600.0000.0000.0000
+19:45.555	ID:1	[DBG : AKES      ] package count received_acks: 7
+19:45.555	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:45.555	ID:1	[INFO: AKES      ] Adding 1000.0000.0000.0000 as new neighbor
+19:45.555	ID:1	[INFO: AKES      ] Adding 0600.0000.0000.0000 as new reply
+19:45.572	ID:45	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2e00.0000.0000.0000
+19:45.572	ID:45	[DBG : AKES      ] package count received_acks: 2
+19:45.572	ID:45	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:45.572	ID:45	[INFO: AKES      ] revokation_send_ack
+19:45.572	ID:45	[DBG : AKES      ] package count sent_acks: 3
+19:45.595	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:45.595	ID:44	[DBG : AKES      ] package count received_revokes: 4
+19:45.595	ID:44	[INFO: AKES      ] revoke message is going to be forwarded.
+19:45.595	ID:44	[INFO: AKES      ] revokation_send_revoke
+19:45.595	ID:44	[DBG : AKES      ] package count sent_revokes: 3
+19:45.595	ID:44	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 1800.0000.0000.0000, 
+19:45.618	ID:102	`@ffff3qdE6GOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2e00.0000.0000.0000
+19:45.618	ID:102	[DBG : AKES      ] package count received_acks: 6
+19:45.618	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:45.618	ID:102	[INFO: AKES      ] Adding 2e00.0000.0000.0000 as new reply
+19:45.638	ID:34	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:45.638	ID:34	[DBG : AKES      ] package count received_revokes: 2
+19:45.638	ID:34	[INFO: AKES      ] revoke message is going to be forwarded.
+19:45.638	ID:34	[INFO: AKES      ] revokation_send_revoke
+19:45.638	ID:34	[DBG : AKES      ] package count sent_revokes: 1
+19:45.638	ID:34	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 1800.0000.0000.0000, 
+19:45.672	ID:24	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:45.672	ID:24	[DBG : AKES      ] package count received_revokes: 1
+19:45.672	ID:24	[INFO: AKES      ] revoke message is for myself.
+19:45.672	ID:24	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:45.672	ID:24	[INFO: AKES      ] revokation_send_ack
+19:45.672	ID:24	[DBG : AKES      ] package count sent_acks: 1
+19:45.672	ID:24	[INFO: AKES      ] build new ack message
+19:45.672	ID:24	[INFO: AKES      ] nbr entry: 1900.0000.0000.0000
+19:45.672	ID:24	[INFO: AKES      ] nbr entry: 2200.0000.0000.0000
+19:45.672	ID:24	[INFO: AKES      ] nbr entry: 0e00.0000.0000.0000
+19:45.672	ID:24	[INFO: AKES      ] nbr entry: 1700.0000.0000.0000
+19:45.678	ID:34	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1800.0000.0000.0000
+19:45.678	ID:34	[DBG : AKES      ] package count received_acks: 1
+19:45.678	ID:34	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:45.678	ID:34	[INFO: AKES      ] revokation_send_ack
+19:45.678	ID:34	[DBG : AKES      ] package count sent_acks: 2
+19:45.718	ID:44	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1800.0000.0000.0000
+19:45.718	ID:44	[DBG : AKES      ] package count received_acks: 3
+19:45.718	ID:44	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:45.718	ID:44	[INFO: AKES      ] revokation_send_ack
+19:45.718	ID:44	[DBG : AKES      ] package count sent_acks: 4
+19:45.746	ID:102	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1800.0000.0000.0000
+19:45.746	ID:102	[DBG : AKES      ] package count received_acks: 7
+19:45.746	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:45.746	ID:102	[INFO: AKES      ] Adding 0e00.0000.0000.0000 as new neighbor
+19:45.746	ID:102	[INFO: AKES      ] Received 1700.0000.0000.0000 as neighbor of 1800.0000.0000.0000. Going to ignore.
+19:45.746	ID:102	[INFO: AKES      ] Adding 1700.0000.0000.0000 as new neighbor
+19:45.746	ID:102	[INFO: AKES      ] Adding 1800.0000.0000.0000 as new reply
+19:46.394	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:46.432	ID:1	`}@33}@akesrevoke)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:46.456	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 0f00.0000.0000.0000 0c00.0000.0000.0000 
+19:46.456	ID:1	[INFO: AKES      ] Going to send revocation message to 0f00.0000.0000.0000
+19:46.456	ID:1	[DBG : AKES      ] Will reach 0f00.0000.0000.0000 in 3 hops
+19:46.456	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:46.456	ID:1	[DBG : AKES      ] package count sent_revokes: 8
+19:46.456	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 
+19:46.456	ID:1	[DBG : AKES      ] NO DATA
+19:46.456	ID:1	[INFO: AKES      ] Going to send revocation message to 0c00.0000.0000.0000
+19:46.456	ID:1	[DBG : AKES      ] Will reach 0c00.0000.0000.0000 in 3 hops
+19:46.456	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:46.456	ID:1	[DBG : AKES      ] package count sent_revokes: 9
+19:46.456	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 
+19:46.456	ID:1	[DBG : AKES      ] NO DATA
+19:46.456	ID:1	[DBG : AKES      ] Still waiting 
+19:46.489	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:46.493	ID:3	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:46.493	ID:3	[DBG : AKES      ] package count received_revokes: 4
+19:46.493	ID:3	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.493	ID:3	[INFO: AKES      ] revokation_send_revoke
+19:46.493	ID:3	[DBG : AKES      ] package count sent_revokes: 3
+19:46.493	ID:3	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 
+19:46.502	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:46.502	ID:4	[DBG : AKES      ] package count received_revokes: 5
+19:46.502	ID:4	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.502	ID:4	[INFO: AKES      ] revokation_send_revoke
+19:46.502	ID:4	[DBG : AKES      ] package count sent_revokes: 4
+19:46.502	ID:4	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 
+19:46.522	ID:2	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:46.522	ID:2	[DBG : AKES      ] package count received_revokes: 2
+19:46.522	ID:2	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.522	ID:2	[INFO: AKES      ] revokation_send_revoke
+19:46.522	ID:2	[DBG : AKES      ] package count sent_revokes: 1
+19:46.522	ID:2	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 
+19:46.537	ID:102	`}@ffff33}a{@akesrevokeffff.*^*^ X*^A	^[INFO: AKES      ] Received status code 65
+19:46.538	ID:5	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:46.538	ID:5	[DBG : AKES      ] package count received_revokes: 3
+19:46.538	ID:5	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.538	ID:5	[INFO: AKES      ] revokation_send_revoke
+19:46.538	ID:5	[DBG : AKES      ] package count sent_revokes: 2
+19:46.538	ID:5	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 
+19:46.554	ID:12	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:46.554	ID:12	[DBG : AKES      ] package count received_revokes: 1
+19:46.554	ID:12	[INFO: AKES      ] revoke message is for myself.
+19:46.554	ID:12	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:46.554	ID:12	[INFO: AKES      ] revokation_send_ack
+19:46.554	ID:12	[DBG : AKES      ] package count sent_acks: 1
+19:46.554	ID:12	[INFO: AKES      ] build new ack message
+19:46.554	ID:12	[INFO: AKES      ] nbr entry: 0200.0000.0000.0000
+19:46.554	ID:12	[INFO: AKES      ] nbr entry: 1600.0000.0000.0000
+19:46.554	ID:12	[INFO: AKES      ] nbr entry: 0d00.0000.0000.0000
+19:46.566	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 2100.0000.0000.0000 2400.0000.0000.0000 
+19:46.566	ID:102	[INFO: AKES      ] Going to send revocation message to 2100.0000.0000.0000
+19:46.566	ID:102	[DBG : AKES      ] Will reach 2100.0000.0000.0000 in 3 hops
+19:46.566	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:46.566	ID:102	[DBG : AKES      ] package count sent_revokes: 8
+19:46.566	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 
+19:46.566	ID:102	[DBG : AKES      ] NO DATA
+19:46.566	ID:102	[INFO: AKES      ] Going to send revocation message to 2400.0000.0000.0000
+19:46.566	ID:102	[DBG : AKES      ] Will reach 2400.0000.0000.0000 in 3 hops
+19:46.566	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:46.566	ID:102	[DBG : AKES      ] package count sent_revokes: 9
+19:46.566	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 
+19:46.566	ID:102	[DBG : AKES      ] NO DATA
+19:46.566	ID:102	[DBG : AKES      ] Still waiting 
+19:46.573	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:46.573	ID:44	[DBG : AKES      ] package count received_revokes: 5
+19:46.573	ID:44	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.573	ID:44	[INFO: AKES      ] revokation_send_revoke
+19:46.573	ID:44	[DBG : AKES      ] package count sent_revokes: 4
+19:46.573	ID:44	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 
+19:46.576	ID:2	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0c00.0000.0000.0000
+19:46.576	ID:2	[DBG : AKES      ] package count received_acks: 1
+19:46.576	ID:2	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.576	ID:2	[INFO: AKES      ] revokation_send_ack
+19:46.576	ID:2	[DBG : AKES      ] package count sent_acks: 2
+19:46.579	ID:45	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:46.579	ID:45	[DBG : AKES      ] package count received_revokes: 4
+19:46.579	ID:45	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.579	ID:45	[INFO: AKES      ] revokation_send_revoke
+19:46.579	ID:45	[DBG : AKES      ] package count sent_revokes: 3
+19:46.579	ID:45	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 
+19:46.580	ID:15	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:46.580	ID:15	[DBG : AKES      ] package count received_revokes: 1
+19:46.580	ID:15	[INFO: AKES      ] revoke message is for myself.
+19:46.580	ID:15	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:46.580	ID:15	[INFO: AKES      ] revokation_send_ack
+19:46.580	ID:15	[DBG : AKES      ] package count sent_acks: 1
+19:46.580	ID:15	[INFO: AKES      ] build new ack message
+19:46.580	ID:15	[INFO: AKES      ] nbr entry: 1900.0000.0000.0000
+19:46.580	ID:15	[INFO: AKES      ] nbr entry: 1000.0000.0000.0000
+19:46.580	ID:15	[INFO: AKES      ] nbr entry: 0500.0000.0000.0000
+19:46.580	ID:15	[INFO: AKES      ] nbr entry: 0e00.0000.0000.0000
+19:46.584	ID:3	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0c00.0000.0000.0000
+19:46.584	ID:3	[DBG : AKES      ] package count received_acks: 3
+19:46.584	ID:3	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.584	ID:3	[INFO: AKES      ] revokation_send_ack
+19:46.584	ID:3	[DBG : AKES      ] package count sent_acks: 4
+19:46.607	ID:5	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0f00.0000.0000.0000
+19:46.607	ID:5	[DBG : AKES      ] package count received_acks: 2
+19:46.607	ID:5	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.607	ID:5	[INFO: AKES      ] revokation_send_ack
+19:46.607	ID:5	[DBG : AKES      ] package count sent_acks: 3
+19:46.612	ID:35	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:46.612	ID:35	[DBG : AKES      ] package count received_revokes: 2
+19:46.612	ID:35	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.612	ID:35	[INFO: AKES      ] revokation_send_revoke
+19:46.612	ID:35	[DBG : AKES      ] package count sent_revokes: 1
+19:46.612	ID:35	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 
+19:46.619	ID:1	`@3CdEOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0c00.0000.0000.0000
+19:46.619	ID:1	[DBG : AKES      ] package count received_acks: 8
+19:46.619	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:46.619	ID:1	[INFO: AKES      ] Adding 1600.0000.0000.0000 as new neighbor
+19:46.619	ID:1	[INFO: AKES      ] Adding 0c00.0000.0000.0000 as new reply
+19:46.620	ID:36	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:46.620	ID:36	[DBG : AKES      ] package count received_revokes: 1
+19:46.620	ID:36	[INFO: AKES      ] revoke message is for myself.
+19:46.620	ID:36	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:46.620	ID:36	[INFO: AKES      ] revokation_send_ack
+19:46.620	ID:36	[DBG : AKES      ] package count sent_acks: 1
+19:46.620	ID:36	[INFO: AKES      ] build new ack message
+19:46.620	ID:36	[INFO: AKES      ] nbr entry: 1a00.0000.0000.0000
+19:46.620	ID:36	[INFO: AKES      ] nbr entry: 2e00.0000.0000.0000
+19:46.620	ID:36	[INFO: AKES      ] nbr entry: 2300.0000.0000.0000
+19:46.626	ID:34	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:46.626	ID:34	[DBG : AKES      ] package count received_revokes: 3
+19:46.626	ID:34	[INFO: AKES      ] revoke message is going to be forwarded.
+19:46.626	ID:34	[INFO: AKES      ] revokation_send_revoke
+19:46.626	ID:34	[DBG : AKES      ] package count sent_revokes: 2
+19:46.626	ID:34	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 
+19:46.646	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0f00.0000.0000.0000
+19:46.646	ID:4	[DBG : AKES      ] package count received_acks: 4
+19:46.646	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.646	ID:4	[INFO: AKES      ] revokation_send_ack
+19:46.646	ID:4	[DBG : AKES      ] package count sent_acks: 5
+19:46.647	ID:35	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2400.0000.0000.0000
+19:46.647	ID:35	[DBG : AKES      ] package count received_acks: 1
+19:46.647	ID:35	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.647	ID:35	[INFO: AKES      ] revokation_send_ack
+19:46.647	ID:35	[DBG : AKES      ] package count sent_acks: 2
+19:46.652	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 0f00.0000.0000.0000
+19:46.652	ID:1	[DBG : AKES      ] package count received_acks: 9
+19:46.652	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:46.652	ID:1	[INFO: AKES      ] Adding 1900.0000.0000.0000 as new neighbor
+19:46.652	ID:1	[INFO: AKES      ] Adding 0f00.0000.0000.0000 as new reply
+19:46.663	ID:33	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:46.663	ID:33	[DBG : AKES      ] package count received_revokes: 1
+19:46.663	ID:33	[INFO: AKES      ] revoke message is for myself.
+19:46.663	ID:33	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:46.663	ID:33	[INFO: AKES      ] revokation_send_ack
+19:46.663	ID:33	[DBG : AKES      ] package count sent_acks: 1
+19:46.663	ID:33	[INFO: AKES      ] build new ack message
+19:46.663	ID:33	[INFO: AKES      ] nbr entry: 2200.0000.0000.0000
+19:46.663	ID:33	[INFO: AKES      ] nbr entry: 2000.0000.0000.0000
+19:46.663	ID:33	[INFO: AKES      ] nbr entry: 1700.0000.0000.0000
+19:46.663	ID:33	[INFO: AKES      ] nbr entry: 2b00.0000.0000.0000
+19:46.670	ID:34	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2100.0000.0000.0000
+19:46.670	ID:34	[DBG : AKES      ] package count received_acks: 2
+19:46.670	ID:34	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.670	ID:34	[INFO: AKES      ] revokation_send_ack
+19:46.670	ID:34	[DBG : AKES      ] package count sent_acks: 3
+19:46.691	ID:45	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2400.0000.0000.0000
+19:46.691	ID:45	[DBG : AKES      ] package count received_acks: 3
+19:46.691	ID:45	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.691	ID:45	[INFO: AKES      ] revokation_send_ack
+19:46.691	ID:45	[DBG : AKES      ] package count sent_acks: 4
+19:46.697	ID:102	`@ffff3VdEsOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2400.0000.0000.0000
+19:46.697	ID:102	[DBG : AKES      ] package count received_acks: 8
+19:46.697	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:46.697	ID:102	[INFO: AKES      ] Adding 1a00.0000.0000.0000 as new neighbor
+19:46.697	ID:102	[INFO: AKES      ] Adding 2400.0000.0000.0000 as new reply
+19:46.770	ID:44	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2100.0000.0000.0000
+19:46.770	ID:44	[DBG : AKES      ] package count received_acks: 4
+19:46.770	ID:44	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:46.770	ID:44	[INFO: AKES      ] revokation_send_ack
+19:46.770	ID:44	[DBG : AKES      ] package count sent_acks: 5
+19:46.811	ID:102	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2100.0000.0000.0000
+19:46.811	ID:102	[DBG : AKES      ] package count received_acks: 9
+19:46.811	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:46.811	ID:102	[INFO: AKES      ] Adding 2000.0000.0000.0000 as new neighbor
+19:46.811	ID:102	[INFO: AKES      ] Received 1700.0000.0000.0000 as neighbor of 2100.0000.0000.0000. Going to ignore.
+19:46.811	ID:102	[INFO: AKES      ] Adding 1700.0000.0000.0000 as new neighbor
+19:46.811	ID:102	[INFO: AKES      ] Adding 2100.0000.0000.0000 as new reply
+19:47.456	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:47.500	ID:1	`}@33}@akesrevoke)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:47.517	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 1000.0000.0000.0000 1900.0000.0000.0000 
+19:47.517	ID:1	[INFO: AKES      ] Going to send revocation message to 1000.0000.0000.0000
+19:47.517	ID:1	[DBG : AKES      ] Will reach 1000.0000.0000.0000 in 4 hops
+19:47.517	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:47.517	ID:1	[DBG : AKES      ] package count sent_revokes: 10
+19:47.517	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 1000.0000.0000.0000, 
+19:47.517	ID:1	[DBG : AKES      ] NO DATA
+19:47.517	ID:1	[INFO: AKES      ] Going to send revocation message to 1900.0000.0000.0000
+19:47.517	ID:1	[DBG : AKES      ] Will reach 1900.0000.0000.0000 in 4 hops
+19:47.517	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:47.517	ID:1	[DBG : AKES      ] package count sent_revokes: 11
+19:47.517	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 1900.0000.0000.0000, 
+19:47.517	ID:1	[DBG : AKES      ] NO DATA
+19:47.517	ID:1	[DBG : AKES      ] Still waiting 
+19:47.547	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.547	ID:4	[DBG : AKES      ] package count received_revokes: 6
+19:47.547	ID:4	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.547	ID:4	[INFO: AKES      ] revokation_send_revoke
+19:47.547	ID:4	[DBG : AKES      ] package count sent_revokes: 5
+19:47.547	ID:4	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 1000.0000.0000.0000, 
+19:47.566	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:47.576	ID:4	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.576	ID:4	[DBG : AKES      ] package count received_revokes: 7
+19:47.576	ID:4	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.576	ID:4	[INFO: AKES      ] revokation_send_revoke
+19:47.576	ID:4	[DBG : AKES      ] package count sent_revokes: 6
+19:47.576	ID:4	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 1900.0000.0000.0000, 
+19:47.593	ID:5	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.593	ID:5	[DBG : AKES      ] package count received_revokes: 4
+19:47.593	ID:5	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.593	ID:5	[INFO: AKES      ] revokation_send_revoke
+19:47.593	ID:5	[DBG : AKES      ] package count sent_revokes: 3
+19:47.593	ID:5	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 1000.0000.0000.0000, 
+19:47.616	ID:102	`}@ffff33}@akesrevokeffff$! *^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:47.627	ID:5	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.627	ID:5	[DBG : AKES      ] package count received_revokes: 5
+19:47.627	ID:5	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.627	ID:5	[INFO: AKES      ] revokation_send_revoke
+19:47.627	ID:5	[DBG : AKES      ] package count sent_revokes: 4
+19:47.627	ID:5	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 1900.0000.0000.0000, 
+19:47.636	ID:6	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.636	ID:6	[DBG : AKES      ] package count received_revokes: 2
+19:47.636	ID:6	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.636	ID:6	[INFO: AKES      ] revokation_send_revoke
+19:47.636	ID:6	[DBG : AKES      ] package count sent_revokes: 1
+19:47.636	ID:6	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 4, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0600.0000.0000.0000, 1000.0000.0000.0000, 
+19:47.641	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 2, destinations: 2a00.0000.0000.0000 1a00.0000.0000.0000 
+19:47.641	ID:102	[INFO: AKES      ] Going to send revocation message to 2a00.0000.0000.0000
+19:47.641	ID:102	[DBG : AKES      ] Will reach 2a00.0000.0000.0000 in 3 hops
+19:47.641	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:47.641	ID:102	[DBG : AKES      ] package count sent_revokes: 10
+19:47.641	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2b00.0000.0000.0000, 2a00.0000.0000.0000, 
+19:47.641	ID:102	[DBG : AKES      ] NO DATA
+19:47.641	ID:102	[INFO: AKES      ] Going to send revocation message to 1a00.0000.0000.0000
+19:47.641	ID:102	[DBG : AKES      ] Will reach 1a00.0000.0000.0000 in 4 hops
+19:47.641	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:47.641	ID:102	[DBG : AKES      ] package count sent_revokes: 11
+19:47.641	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 4, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 1a00.0000.0000.0000, 
+19:47.641	ID:102	[DBG : AKES      ] NO DATA
+19:47.641	ID:102	[DBG : AKES      ] Still waiting 
+19:47.645	ID:16	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.645	ID:16	[DBG : AKES      ] package count received_revokes: 1
+19:47.645	ID:16	[INFO: AKES      ] revoke message is for myself.
+19:47.645	ID:16	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:47.645	ID:16	[INFO: AKES      ] revokation_send_ack
+19:47.645	ID:16	[DBG : AKES      ] package count sent_acks: 1
+19:47.645	ID:16	[INFO: AKES      ] build new ack message
+19:47.645	ID:16	[INFO: AKES      ] nbr entry: 0600.0000.0000.0000
+19:47.645	ID:16	[INFO: AKES      ] nbr entry: 1a00.0000.0000.0000
+19:47.645	ID:16	[INFO: AKES      ] nbr entry: 0f00.0000.0000.0000
+19:47.654	ID:15	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.654	ID:15	[DBG : AKES      ] package count received_revokes: 2
+19:47.654	ID:15	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.654	ID:15	[INFO: AKES      ] revokation_send_revoke
+19:47.654	ID:15	[DBG : AKES      ] package count sent_revokes: 1
+19:47.654	ID:15	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 4, 4, Route: 0001.0001.0001.0001, 0400.0000.0000.0000, 0500.0000.0000.0000, 0f00.0000.0000.0000, 1900.0000.0000.0000, 
+19:47.668	ID:25	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:47.668	ID:25	[DBG : AKES      ] package count received_revokes: 1
+19:47.668	ID:25	[INFO: AKES      ] revoke message is for myself.
+19:47.668	ID:25	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:47.668	ID:25	[INFO: AKES      ] revokation_send_ack
+19:47.668	ID:25	[DBG : AKES      ] package count sent_acks: 1
+19:47.668	ID:25	[INFO: AKES      ] build new ack message
+19:47.668	ID:25	[INFO: AKES      ] nbr entry: 2300.0000.0000.0000
+19:47.668	ID:25	[INFO: AKES      ] nbr entry: 1800.0000.0000.0000
+19:47.668	ID:25	[INFO: AKES      ] nbr entry: 0f00.0000.0000.0000
+19:47.668	ID:25	[INFO: AKES      ] nbr entry: 1a00.0000.0000.0000
+19:47.679	ID:15	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.679	ID:15	[DBG : AKES      ] package count received_acks: 1
+19:47.679	ID:15	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.679	ID:15	[INFO: AKES      ] revokation_send_ack
+19:47.679	ID:15	[DBG : AKES      ] package count sent_acks: 2
+19:47.683	ID:6	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1000.0000.0000.0000
+19:47.683	ID:6	[DBG : AKES      ] package count received_acks: 1
+19:47.683	ID:6	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.683	ID:6	[INFO: AKES      ] revokation_send_ack
+19:47.683	ID:6	[DBG : AKES      ] package count sent_acks: 2
+19:47.684	ID:45	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.684	ID:45	[DBG : AKES      ] package count received_revokes: 5
+19:47.684	ID:45	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.684	ID:45	[INFO: AKES      ] revokation_send_revoke
+19:47.684	ID:45	[DBG : AKES      ] package count sent_revokes: 4
+19:47.684	ID:45	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 4, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 1a00.0000.0000.0000, 
+19:47.690	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.690	ID:44	[DBG : AKES      ] package count received_revokes: 6
+19:47.690	ID:44	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.690	ID:44	[INFO: AKES      ] revokation_send_revoke
+19:47.690	ID:44	[DBG : AKES      ] package count sent_revokes: 5
+19:47.690	ID:44	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2b00.0000.0000.0000, 2a00.0000.0000.0000, 
+19:47.692	ID:5	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.692	ID:5	[DBG : AKES      ] package count received_acks: 3
+19:47.692	ID:5	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.692	ID:5	[INFO: AKES      ] revokation_send_ack
+19:47.692	ID:5	[DBG : AKES      ] package count sent_acks: 4
+19:47.696	ID:5	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1000.0000.0000.0000
+19:47.696	ID:5	[DBG : AKES      ] package count received_acks: 4
+19:47.696	ID:5	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.696	ID:5	[INFO: AKES      ] revokation_send_ack
+19:47.696	ID:5	[DBG : AKES      ] package count sent_acks: 5
+19:47.709	ID:43	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.709	ID:43	[DBG : AKES      ] package count received_revokes: 2
+19:47.709	ID:43	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.709	ID:43	[INFO: AKES      ] revokation_send_revoke
+19:47.709	ID:43	[DBG : AKES      ] package count sent_revokes: 1
+19:47.709	ID:43	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 3, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2b00.0000.0000.0000, 2a00.0000.0000.0000, 
+19:47.709	ID:15	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.709	ID:15	[DBG : AKES      ] package count received_acks: 2
+19:47.709	ID:15	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.709	ID:15	[INFO: AKES      ] revokation_send_ack
+19:47.709	ID:15	[DBG : AKES      ] package count sent_acks: 3
+19:47.727	ID:35	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.727	ID:35	[DBG : AKES      ] package count received_revokes: 3
+19:47.727	ID:35	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.727	ID:35	[INFO: AKES      ] revokation_send_revoke
+19:47.727	ID:35	[DBG : AKES      ] package count sent_revokes: 2
+19:47.727	ID:35	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 4, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 1a00.0000.0000.0000, 
+19:47.746	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.746	ID:4	[DBG : AKES      ] package count received_acks: 5
+19:47.746	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.746	ID:4	[INFO: AKES      ] revokation_send_ack
+19:47.746	ID:4	[DBG : AKES      ] package count sent_acks: 6
+19:47.751	ID:42	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.751	ID:42	[DBG : AKES      ] package count received_revokes: 1
+19:47.751	ID:42	[INFO: AKES      ] revoke message is for myself.
+19:47.751	ID:42	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:47.751	ID:42	[INFO: AKES      ] revokation_send_ack
+19:47.751	ID:42	[DBG : AKES      ] package count sent_acks: 1
+19:47.751	ID:42	[INFO: AKES      ] build new ack message
+19:47.751	ID:42	[INFO: AKES      ] nbr entry: 2000.0000.0000.0000
+19:47.751	ID:42	[INFO: AKES      ] nbr entry: 2b00.0000.0000.0000
+19:47.752	ID:1	`@3j)"dE@/OK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.752	ID:1	[DBG : AKES      ] package count received_acks: 10
+19:47.752	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:47.752	ID:1	[INFO: AKES      ] Adding 2300.0000.0000.0000 as new neighbor
+19:47.752	ID:1	[INFO: AKES      ] Adding 1a00.0000.0000.0000 as new neighbor
+19:47.752	ID:1	[INFO: AKES      ] Adding 1900.0000.0000.0000 as new reply
+19:47.762	ID:36	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.762	ID:36	[DBG : AKES      ] package count received_revokes: 2
+19:47.762	ID:36	[INFO: AKES      ] revoke message is going to be forwarded.
+19:47.762	ID:36	[INFO: AKES      ] revokation_send_revoke
+19:47.762	ID:36	[DBG : AKES      ] package count sent_revokes: 1
+19:47.762	ID:36	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 4, 4, Route: 0066.0066.0066.0066, 2d00.0000.0000.0000, 2300.0000.0000.0000, 2400.0000.0000.0000, 1a00.0000.0000.0000, 
+19:47.779	ID:43	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2a00.0000.0000.0000
+19:47.779	ID:43	[DBG : AKES      ] package count received_acks: 1
+19:47.779	ID:43	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.779	ID:43	[INFO: AKES      ] revokation_send_ack
+19:47.779	ID:43	[DBG : AKES      ] package count sent_acks: 2
+19:47.784	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1000.0000.0000.0000
+19:47.784	ID:4	[DBG : AKES      ] package count received_acks: 6
+19:47.784	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.784	ID:4	[INFO: AKES      ] revokation_send_ack
+19:47.784	ID:4	[DBG : AKES      ] package count sent_acks: 7
+19:47.798	ID:26	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:47.798	ID:26	[DBG : AKES      ] package count received_revokes: 1
+19:47.798	ID:26	[INFO: AKES      ] revoke message is for myself.
+19:47.798	ID:26	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:47.798	ID:26	[INFO: AKES      ] revokation_send_ack
+19:47.798	ID:26	[DBG : AKES      ] package count sent_acks: 1
+19:47.798	ID:26	[INFO: AKES      ] build new ack message
+19:47.798	ID:26	[INFO: AKES      ] nbr entry: 1900.0000.0000.0000
+19:47.798	ID:26	[INFO: AKES      ] nbr entry: 2400.0000.0000.0000
+19:47.798	ID:26	[INFO: AKES      ] nbr entry: 1000.0000.0000.0000
+19:47.802	ID:5	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.802	ID:5	[DBG : AKES      ] package count received_acks: 5
+19:47.802	ID:5	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.802	ID:5	[INFO: AKES      ] revokation_send_ack
+19:47.802	ID:5	[DBG : AKES      ] package count sent_acks: 6
+19:47.807	ID:44	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2a00.0000.0000.0000
+19:47.807	ID:44	[DBG : AKES      ] package count received_acks: 5
+19:47.807	ID:44	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.807	ID:44	[INFO: AKES      ] revokation_send_ack
+19:47.807	ID:44	[DBG : AKES      ] package count sent_acks: 6
+19:47.825	ID:102	`@ffff3uEdEOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2a00.0000.0000.0000
+19:47.825	ID:102	[DBG : AKES      ] package count received_acks: 10
+19:47.825	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:47.825	ID:102	[INFO: AKES      ] Adding 2a00.0000.0000.0000 as new reply
+19:47.838	ID:4	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.838	ID:4	[DBG : AKES      ] package count received_acks: 7
+19:47.838	ID:4	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.838	ID:4	[INFO: AKES      ] revokation_send_ack
+19:47.838	ID:4	[DBG : AKES      ] package count sent_acks: 8
+19:47.843	ID:36	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1a00.0000.0000.0000
+19:47.843	ID:36	[DBG : AKES      ] package count received_acks: 1
+19:47.843	ID:36	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.843	ID:36	[INFO: AKES      ] revokation_send_ack
+19:47.843	ID:36	[DBG : AKES      ] package count sent_acks: 2
+19:47.863	ID:35	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1a00.0000.0000.0000
+19:47.863	ID:35	[DBG : AKES      ] package count received_acks: 2
+19:47.863	ID:35	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.863	ID:35	[INFO: AKES      ] revokation_send_ack
+19:47.863	ID:35	[DBG : AKES      ] package count sent_acks: 3
+19:47.892	ID:45	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1a00.0000.0000.0000
+19:47.892	ID:45	[DBG : AKES      ] package count received_acks: 4
+19:47.892	ID:45	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:47.892	ID:45	[INFO: AKES      ] revokation_send_ack
+19:47.892	ID:45	[DBG : AKES      ] package count sent_acks: 5
+19:47.920	ID:102	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1a00.0000.0000.0000
+19:47.920	ID:102	[DBG : AKES      ] package count received_acks: 11
+19:47.920	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:47.920	ID:102	[INFO: AKES      ] Adding 1000.0000.0000.0000 as new neighbor
+19:47.920	ID:102	[INFO: AKES      ] Adding 1a00.0000.0000.0000 as new reply
+19:47.954	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:47.954	ID:1	[DBG : AKES      ] package count received_acks: 11
+19:47.954	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:47.976	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1000.0000.0000.0000
+19:47.976	ID:1	[DBG : AKES      ] package count received_acks: 12
+19:47.976	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:47.976	ID:1	[INFO: AKES      ] Adding 1000.0000.0000.0000 as new reply
+19:48.019	ID:1	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1900.0000.0000.0000
+19:48.019	ID:1	[DBG : AKES      ] package count received_acks: 13
+19:48.019	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:48.517	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:48.535	ID:1	`}@33}@akesrevoke#)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:48.560	ID:1	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 1, destinations: 1600.0000.0000.0000 
+19:48.560	ID:1	[INFO: AKES      ] Going to send revocation message to 1600.0000.0000.0000
+19:48.560	ID:1	[DBG : AKES      ] Will reach 1600.0000.0000.0000 in 4 hops
+19:48.560	ID:1	[INFO: AKES      ] revokation_send_revoke
+19:48.560	ID:1	[DBG : AKES      ] package count sent_revokes: 12
+19:48.560	ID:1	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 4, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 1600.0000.0000.0000, 
+19:48.560	ID:1	[DBG : AKES      ] NO DATA
+19:48.560	ID:1	[DBG : AKES      ] Still waiting 
+19:48.606	ID:3	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:48.606	ID:3	[DBG : AKES      ] package count received_revokes: 5
+19:48.606	ID:3	[INFO: AKES      ] revoke message is going to be forwarded.
+19:48.606	ID:3	[INFO: AKES      ] revokation_send_revoke
+19:48.606	ID:3	[DBG : AKES      ] package count sent_revokes: 4
+19:48.606	ID:3	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 4, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 1600.0000.0000.0000, 
+19:48.632	ID:2	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:48.632	ID:2	[DBG : AKES      ] package count received_revokes: 3
+19:48.632	ID:2	[INFO: AKES      ] revoke message is going to be forwarded.
+19:48.632	ID:2	[INFO: AKES      ] revokation_send_revoke
+19:48.632	ID:2	[DBG : AKES      ] package count sent_revokes: 2
+19:48.632	ID:2	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 4, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 1600.0000.0000.0000, 
+19:48.641	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:48.649	ID:12	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:48.649	ID:12	[DBG : AKES      ] package count received_revokes: 2
+19:48.649	ID:12	[INFO: AKES      ] revoke message is going to be forwarded.
+19:48.649	ID:12	[INFO: AKES      ] revokation_send_revoke
+19:48.649	ID:12	[DBG : AKES      ] package count sent_revokes: 1
+19:48.649	ID:12	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 4, 4, Route: 0001.0001.0001.0001, 0300.0000.0000.0000, 0200.0000.0000.0000, 0c00.0000.0000.0000, 1600.0000.0000.0000, 
+19:48.674	ID:22	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0001.0001.0001.0001
+19:48.674	ID:22	[DBG : AKES      ] package count received_revokes: 1
+19:48.674	ID:22	[INFO: AKES      ] revoke message is for myself.
+19:48.674	ID:22	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:48.674	ID:22	[INFO: AKES      ] revokation_send_ack
+19:48.674	ID:22	[DBG : AKES      ] package count sent_acks: 1
+19:48.674	ID:22	[INFO: AKES      ] build new ack message
+19:48.674	ID:22	[INFO: AKES      ] nbr entry: 0c00.0000.0000.0000
+19:48.674	ID:22	[INFO: AKES      ] nbr entry: 2000.0000.0000.0000
+19:48.674	ID:22	[INFO: AKES      ] nbr entry: 1700.0000.0000.0000
+19:48.720	ID:102	`}@ffff33}t@akesrevokeffff**^;)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:48.721	ID:12	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1600.0000.0000.0000
+19:48.721	ID:12	[DBG : AKES      ] package count received_acks: 1
+19:48.721	ID:12	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:48.721	ID:12	[INFO: AKES      ] revokation_send_ack
+19:48.721	ID:12	[DBG : AKES      ] package count sent_acks: 2
+19:48.748	ID:2	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1600.0000.0000.0000
+19:48.748	ID:2	[DBG : AKES      ] package count received_acks: 2
+19:48.748	ID:2	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:48.748	ID:2	[INFO: AKES      ] revokation_send_ack
+19:48.748	ID:2	[DBG : AKES      ] package count sent_acks: 3
+19:48.756	ID:102	[DBG : AKES      ] revoke node with state addr_revoke: 1700.0000.0000.0000, amount_dst: 1, destinations: 2000.0000.0000.0000 
+19:48.756	ID:102	[INFO: AKES      ] Going to send revocation message to 2000.0000.0000.0000
+19:48.756	ID:102	[DBG : AKES      ] Will reach 2000.0000.0000.0000 in 4 hops
+19:48.756	ID:102	[INFO: AKES      ] revokation_send_revoke
+19:48.756	ID:102	[DBG : AKES      ] package count sent_revokes: 12
+19:48.756	ID:102	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 1, 4, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 2000.0000.0000.0000, 
+19:48.756	ID:102	[DBG : AKES      ] NO DATA
+19:48.756	ID:102	[DBG : AKES      ] Still waiting 
+19:48.775	ID:3	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1600.0000.0000.0000
+19:48.775	ID:3	[DBG : AKES      ] package count received_acks: 4
+19:48.775	ID:3	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:48.775	ID:3	[INFO: AKES      ] revokation_send_ack
+19:48.775	ID:3	[DBG : AKES      ] package count sent_acks: 5
+19:48.783	ID:44	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:48.783	ID:44	[DBG : AKES      ] package count received_revokes: 7
+19:48.783	ID:44	[INFO: AKES      ] revoke message is going to be forwarded.
+19:48.783	ID:44	[INFO: AKES      ] revokation_send_revoke
+19:48.783	ID:44	[DBG : AKES      ] package count sent_revokes: 6
+19:48.783	ID:44	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 2, 4, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 2000.0000.0000.0000, 
+19:48.791	ID:34	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:48.791	ID:34	[DBG : AKES      ] package count received_revokes: 4
+19:48.791	ID:34	[INFO: AKES      ] revoke message is going to be forwarded.
+19:48.791	ID:34	[INFO: AKES      ] revokation_send_revoke
+19:48.791	ID:34	[DBG : AKES      ] package count sent_revokes: 3
+19:48.791	ID:34	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 3, 4, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 2000.0000.0000.0000, 
+19:48.818	ID:1	`@3U(dE,[(OK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 1600.0000.0000.0000
+19:48.818	ID:1	[DBG : AKES      ] package count received_acks: 14
+19:48.818	ID:1	[INFO: AKES      ] revocation ack is for myself.
+19:48.818	ID:1	[INFO: AKES      ] Adding 2000.0000.0000.0000 as new neighbor
+19:48.818	ID:1	[INFO: AKES      ] Received 1700.0000.0000.0000 as neighbor of 1600.0000.0000.0000. Going to ignore.
+19:48.818	ID:1	[INFO: AKES      ] Adding 1700.0000.0000.0000 as new neighbor
+19:48.818	ID:1	[INFO: AKES      ] Adding 1600.0000.0000.0000 as new reply
+19:48.818	ID:33	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:48.818	ID:33	[DBG : AKES      ] package count received_revokes: 2
+19:48.818	ID:33	[INFO: AKES      ] revoke message is going to be forwarded.
+19:48.818	ID:33	[INFO: AKES      ] revokation_send_revoke
+19:48.818	ID:33	[DBG : AKES      ] package count sent_revokes: 1
+19:48.818	ID:33	[INFO: AKES      ] Call Params: 1700.0000.0000.0000, 4, 4, Route: 0066.0066.0066.0066, 2c00.0000.0000.0000, 2200.0000.0000.0000, 2100.0000.0000.0000, 2000.0000.0000.0000, 
+19:48.853	ID:32	[INFO: AKES      ] received revocation Revoke for 1700.0000.0000.0000 from address 0066.0066.0066.0066
+19:48.853	ID:32	[DBG : AKES      ] package count received_revokes: 1
+19:48.853	ID:32	[INFO: AKES      ] revoke message is for myself.
+19:48.853	ID:32	[INFO: AKES      ] locally revoked 1700.0000.0000.0000
+19:48.853	ID:32	[INFO: AKES      ] revokation_send_ack
+19:48.853	ID:32	[DBG : AKES      ] package count sent_acks: 1
+19:48.853	ID:32	[INFO: AKES      ] build new ack message
+19:48.853	ID:32	[INFO: AKES      ] nbr entry: 2a00.0000.0000.0000
+19:48.853	ID:32	[INFO: AKES      ] nbr entry: 2100.0000.0000.0000
+19:48.853	ID:32	[INFO: AKES      ] nbr entry: 1600.0000.0000.0000
+19:48.891	ID:33	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2000.0000.0000.0000
+19:48.891	ID:33	[DBG : AKES      ] package count received_acks: 1
+19:48.891	ID:33	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:48.891	ID:33	[INFO: AKES      ] revokation_send_ack
+19:48.891	ID:33	[DBG : AKES      ] package count sent_acks: 2
+19:48.929	ID:34	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2000.0000.0000.0000
+19:48.929	ID:34	[DBG : AKES      ] package count received_acks: 3
+19:48.929	ID:34	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:48.929	ID:34	[INFO: AKES      ] revokation_send_ack
+19:48.929	ID:34	[DBG : AKES      ] package count sent_acks: 4
+19:48.940	ID:44	[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2000.0000.0000.0000
+19:48.940	ID:44	[DBG : AKES      ] package count received_acks: 6
+19:48.940	ID:44	[INFO: AKES      ] revocation ack is going to be forwarded.
+19:48.940	ID:44	[INFO: AKES      ] revokation_send_ack
+19:48.940	ID:44	[DBG : AKES      ] package count sent_acks: 7
+19:48.956	ID:102	`@ffff3FdEmOK[INFO: AKES      ] received revocation ACK for 1700.0000.0000.0000 from 2000.0000.0000.0000
+19:48.956	ID:102	[DBG : AKES      ] package count received_acks: 12
+19:48.956	ID:102	[INFO: AKES      ] revocation ack is for myself.
+19:48.956	ID:102	[INFO: AKES      ] Adding 1600.0000.0000.0000 as new neighbor
+19:48.956	ID:102	[INFO: AKES      ] Adding 2000.0000.0000.0000 as new reply
+19:49.560	ID:1	[INFO: AKES      ] Going to send response to coap://[fd00::1]:5683
+19:49.599	ID:1	`}@33}@akesrevoke *^;)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:49.756	ID:102	[INFO: AKES      ] Going to send response to coap://[fd01::1]:5683
+19:49.790	ID:102	`}@ffff33}@akesrevokeffff *^*^;)^*^h-^8*^^X*^A	^h*^[INFO: AKES      ] Received status code 65
+19:49.814	ID:1	[INFO: AKES      ] Revocation process terminated.
+19:49.838	ID:102	[INFO: AKES      ] Revocation process terminated.

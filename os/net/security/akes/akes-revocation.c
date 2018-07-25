@@ -72,6 +72,11 @@ LIST(traversal_list);
 static linkaddr_t addr_revoke_node;
 struct akes_revocation_request_state *request_state;
 
+uint16_t sent_acks;
+uint16_t sent_revokes;
+uint16_t received_acks;
+uint16_t received_revokes;
+
 static struct cmd_broker_subscription subscription;
 static enum cmd_broker_result on_revocation_revoke(uint8_t *payload);
 static enum cmd_broker_result on_revocation_ack(uint8_t *payload);
@@ -328,6 +333,8 @@ on_revocation_revoke(uint8_t *payload)
     LOG_INFO_LLADDR(addr_route);
     LOG_INFO_("\n");
 
+    received_revokes++;
+    LOG_DBG("package count received_revokes: %d\n", received_revokes);
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
@@ -385,6 +392,9 @@ on_revocation_ack(uint8_t *payload)
     LOG_INFO_(" from ");
     LOG_INFO_LLADDR(addr_route);
     LOG_INFO_("\n");
+
+    received_acks++;
+    LOG_DBG("package count received_acks: %d\n", received_acks);
 
     if (hop_index < 1 || hop_index > hop_count) return CMD_BROKER_ERROR;
 
@@ -450,6 +460,8 @@ on_revocation_ack(uint8_t *payload)
 void akes_revocation_send_revoke(const linkaddr_t * addr_revoke, const uint8_t hop_index, const uint8_t hop_count, const linkaddr_t *addr_route, const uint8_t *data){
     //TODO remove debug output
     LOG_INFO("revokation_send_revoke\n");
+    sent_revokes++;
+    LOG_DBG("package count sent_revokes: %d\n", sent_revokes);
 
     uint8_t *payload;
     uint8_t payload_len;
@@ -514,7 +526,8 @@ void akes_revocation_send_ack(const linkaddr_t * addr_revoke, const uint8_t hop_
     LOG_INFO("revokation_send_ack\n");
     uint8_t *payload;
     uint8_t payload_len;
-
+    sent_acks++;
+    LOG_DBG("package count sent_acks: %d\n", sent_acks);
     payload = akes_mac_prepare_command(AKES_REVOCATION_ACK, &addr_route[hop_index] ); // points to payload memory after cmd_id
 
     //the current hop
@@ -603,6 +616,10 @@ akes_revocation_init(void) {
     list_init(traversal_list);
     subscription.on_command = on_command;
     cmd_broker_subscribe(&subscription);
+    sent_acks = 0;
+    sent_revokes = 0;
+    received_acks = 0;
+    received_revokes = 0;
 #ifdef REVOCATION_BORDER
     static struct ctimer timer;
     ctimer_set(&timer, CLOCK_SECOND, akes_revocation_init_coap, NULL);
