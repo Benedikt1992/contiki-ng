@@ -60,7 +60,8 @@ setup(
     install_requires=[
         "aiocoap",
         "linkheader",
-        "tqdm"
+        "tqdm",
+        "colorama"
     ],
 
     # packages

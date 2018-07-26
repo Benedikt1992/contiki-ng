@@ -4,6 +4,7 @@ from asyncio import sleep
 from threading import RLock, current_thread
 import asyncio
 from aiocoap import *
+from colorama import Fore
 from tqdm import tqdm
 
 from base_station.node_store import NodeStore
@@ -42,7 +43,11 @@ class RevokeProcess:
                 self._start_time = time.time()
                 self._in_progress = True
                 self._revocation_id = selection
-                self._progress = tqdm(total=self.nodes.network_size() - 1, ascii=True, unit="nodes", )
+                self._progress = tqdm(total=self.nodes.network_size() - 1,
+                                      ascii=False,
+                                      unit="nodes",
+                                      bar_format="{l_bar}%s{bar}%s{r_bar}" % (Fore.GREEN, Fore.RESET)
+                                      )
                 # TODO check if it is the only left border router
                 # TODO only send to border routers that are not revoked if it is a border router
                 for border_router_id, border_router_ip in self.nodes.iter_border_router():
