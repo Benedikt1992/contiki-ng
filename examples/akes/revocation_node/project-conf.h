@@ -44,6 +44,9 @@
     #include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
     /* configure MAC layer */
     #include "net/mac/csl/csl-autoconf.h"
+
+    /* use short mac addresses */
+    #define LINKADDR_CONF_SIZE 2
 #else
     /* max number of packets scheduled for sending */
     #define CSMA_CONF_MAX_NEIGHBOR_QUEUES 8

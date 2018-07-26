@@ -46,6 +46,16 @@
 #ifdef ON_MOTE
     /* max number of packets scheduled for sending */
     #define QUEUEBUF_CONF_NUM 20
+
+    /* SLIP does not work otherwise */
+    #undef LPM_CONF_MAX_PM
+    #define LPM_CONF_MAX_PM 0
+    #undef LPM_CONF_ENABLED
+    #define LPM_CONF_ENABLED 0
+
+    /* use short mac addresses */
+    #define LINKADDR_CONF_SIZE 2
+
     /* configure RADIO layer */
     #include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
     /* configure MAC layer */
