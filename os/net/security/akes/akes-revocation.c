@@ -691,10 +691,11 @@ PROCESS_THREAD(request_responder, ev, data)
     payload += LINKADDR_SIZE;
     *payload = request_state->amount_replies;
     payload++;
-    memcpy(payload,request_state->revoke_reply_secrets,request_state->amount_replies * LINKADDR_SIZE);
-    payload += request_state->amount_replies * LINKADDR_SIZE;
     *payload = request_state->amount_new_neighbors;
     payload++;
+    memcpy(payload,request_state->revoke_reply_secrets,request_state->amount_replies * LINKADDR_SIZE);
+    payload += request_state->amount_replies * LINKADDR_SIZE;
+
     memcpy(payload,request_state->new_neighbors,request_state->amount_new_neighbors * LINKADDR_SIZE);
 
     coap_set_payload(response, msg, sizeof(msg) - 1);

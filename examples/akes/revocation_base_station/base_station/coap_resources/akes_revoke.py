@@ -25,14 +25,17 @@ class AkesRevokeResource(resource.Resource):
         start = end
         end += 1
         number_of_replies = int.from_bytes(request.payload[start:end], byteorder='big')
+
+        start = end
+        end += 1
+        number_of_neighbors = int.from_bytes(request.payload[start: end], byteorder='big')
+
         replies = []
         for i in range(number_of_replies):
             start = end
             end += CONFIG["ll_address_size"]
             replies.append(request.payload[start:end])
-        start = end
-        end += 1
-        number_of_neighbors = int.from_bytes(request.payload[start: end], byteorder='big')
+
         neighbors = []
         for i in range(number_of_neighbors):
             start = end
