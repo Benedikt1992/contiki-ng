@@ -26,12 +26,13 @@ class NodeStore:
         return list(filter(lambda t: t[0] == router_id, self.border_router))[0][1]
 
     def remove_node_id(self, node_id):
-        node = self.get_node_with_id(node_id)
-        self.border_router = list(filter(
-            lambda t: t[0] != node,
-            self.border_router
-        ))
-        self.network_nodes.remove(node)
+        with self._lock:
+            node = self.get_node_with_id(node_id)
+            self.border_router = list(filter(
+                lambda t: t[0] != node,
+                self.border_router
+            ))
+            self.network_nodes.remove(node)
 
     def network_size(self):
         return len(self.network_nodes)
